@@ -1,0 +1,34 @@
+{
+  "mResList": [
+    {
+      "ResName": "Assets/Game/UIForm/Image 1.prefab",
+      "ABName": "assets/game/uiform/image 1.prefab",
+      "DependList": []
+    },
+    {
+      "ResName": "Assets/Game/UIForm/Image 2.prefab",
+      "ABName": "assets/game/uiform/image 2.prefab",
+      "DependList": []
+    },
+    {
+      "ResName": "Assets/Game/UIForm/Image 3.prefab",
+      "ABName": "assets/game/uiform/image 3.prefab",
+      "DependList": []
+    },
+    {
+      "ResName": "Assets/Game/UIForm/Image.prefab",
+      "ABName": "assets/game/uiform/image.prefab",
+      "DependList": []
+    },
+    {
+      "ResName": "Assets/Game/Prefab/Image.prefab",
+      "ABName": "assets/game/prefab/image.prefab",
+      "DependList": []
+    },
+    {
+      "ResName": "Assets/Game/Prefab/Panel.prefab",
+      "ABName": "assets/game/prefab/panel.prefab",
+      "DependList": []
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+    "name": "AION.CoreFramework",
+    "rootNamespace": "",
+    "references": [
+        "GUID:7e644e6a74990594ebc1718d2136eb7f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
