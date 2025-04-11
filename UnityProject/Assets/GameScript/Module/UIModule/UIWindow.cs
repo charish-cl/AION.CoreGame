@@ -258,7 +258,7 @@ namespace AION.CoreFramework
         {
             _prepareCallback = prepareCallback;
             this.userDatas = userDatas;
-            var  resource = Game.Resource.LoadAsset<GameObject>(location);
+            var  resource = GameModule.Resource.LoadAsset<GameObject>(location);
             GameObject panel = Object.Instantiate(resource, UIModule.UIRootStatic);
             Handle_Completed(panel);
         }
@@ -422,7 +422,7 @@ namespace AION.CoreFramework
 
         protected virtual void Close()
         {
-            Game.UI.CloseWindow(this.GetType());
+            GameModule.UI.CloseWindow(this.GetType());
         }
     }
 }

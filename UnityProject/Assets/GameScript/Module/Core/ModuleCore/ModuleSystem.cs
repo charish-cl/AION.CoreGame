@@ -86,7 +86,7 @@ namespace AION.CoreFramework
             }
             _modules.Clear();
 
-            Game.Shutdown(shutdownType);
+            GameModule.Shutdown(shutdownType);
             // GameEvent.Shutdown();
             
             if (shutdownType == ShutdownType.None)
@@ -117,7 +117,7 @@ namespace AION.CoreFramework
         {
             if (module == null)
             {
-                Log.Error("TEngine Module is invalid.");
+                Log.Error("AION.CoreFramework Module is invalid.");
                 return;
             }
 

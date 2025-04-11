@@ -106,6 +106,15 @@ namespace UnityToolbarExtender
 		{
 			var handler = OnToolbarGUI;
 			if (handler != null) handler();
+			
+		
+		}
+
+		public static void RepaintToolbar()
+		{
+			//反射RepaintToolbar()方法
+			var method = m_toolbarType.GetMethod("RepaintToolbar", BindingFlags.Static | BindingFlags.NonPublic);
+			if (method != null) method.Invoke(null, null);
 		}
 	}
 }

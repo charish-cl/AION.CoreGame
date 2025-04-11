@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using UnityToolbarExtender;
@@ -9,7 +12,7 @@ namespace AION.CoreFramework
     public class UIFormSwitcher
     {
         // 提取 UIForm 存放路径为常量
-        private const string UI_FORM_PATH = "Assets/Game/UIForm/LocalResources";
+        private const string UI_FORM_PATH = "Assets/Game/UIForm/";
 
         static UIFormSwitcher()
         {
@@ -19,25 +22,25 @@ namespace AION.CoreFramework
         static readonly string ButtonStyleName = "Tab middle";
         static GUIStyle _buttonGuiStyle;
         static GUIStyle _popGuiStyle;
+        
 
-        static string[] _uiNames;
-        static string[] _uiPaths;
-
-        static int currentSceneIndex
+        static string m_UiName
         {
             get
             {
-                return EditorPrefs.GetInt("UIFormIndex", 0);
+                return EditorPrefs.GetString("UIFormName", "");
             }
             set
             {
-                EditorPrefs.SetInt("UIFormIndex", value);
+                EditorPrefs.SetString("UIFormName", value);
+                //刷新工具栏
+                ToolbarCallback.RepaintToolbar();
             }
         }
 
         static void OnToolbarGUI()
         {
-            GUILayout.Space(250);
+            GUILayout.FlexibleSpace();
             _buttonGuiStyle ??= new GUIStyle(ButtonStyleName)
             {
                 fixedWidth = 100,
@@ -51,60 +54,74 @@ namespace AION.CoreFramework
                 alignment = TextAnchor.MiddleCenter,
                 fontStyle = FontStyle.Bold
             };
-
-            // 路径判空操作
-            if (!Directory.Exists(UI_FORM_PATH))
-            {
-                
-                EditorGUILayout.BeginHorizontal();
-                //绘制提示信息
-                GUILayout.Label("未找到UIWindow目录，请检查路径是否正确。", _popGuiStyle);
-                
-                EditorGUILayout.BeginHorizontal();
-                return;
-            }
-
-            // 获取所有带有 UIFormLogicExtend 的类
-            _uiPaths ??= Directory.GetFiles(UI_FORM_PATH, "*.prefab");
-            if (_uiPaths.Length == 0)
-            {
-                Debug.LogWarning($"在 {UI_FORM_PATH} 路径下未找到任何 .prefab 文件。");
-            }
-            _uiNames ??= new string[_uiPaths.Length];
-            for (int i = 0; i < _uiPaths.Length; i++)
-            {
-                _uiNames[i] = Path.GetFileNameWithoutExtension(_uiPaths[i]);
-            }
-
-            EditorGUILayout.BeginHorizontal();
+            
             // 下拉框选择所有的 UI
-            currentSceneIndex = EditorGUILayout.Popup("", currentSceneIndex, _uiNames, _popGuiStyle);
             GUILayout.FlexibleSpace();
 
-            if (currentSceneIndex < _uiPaths.Length)
+     
+            if (EditorGUILayout.DropdownButton(new GUIContent("Switch UI"), FocusType.Passive, _buttonGuiStyle))
             {
-                if (EditorGUILayout.DropdownButton(new GUIContent("Switch UI"), FocusType.Passive, _buttonGuiStyle))
+                if (!Application.isPlaying)
                 {
-                    if (!Application.isPlaying)
-                    {
-                        return;
-                    }
-                    ShowUI(_uiPaths[currentSceneIndex]);
+                    return;
                 }
-                GUILayout.FlexibleSpace();
-                if (EditorGUILayout.DropdownButton(new GUIContent("打开UI预制体"), FocusType.Passive, _buttonGuiStyle))
-                {
-                    AssetDatabase.OpenAsset(AssetDatabase.LoadAssetAtPath<GameObject>(_uiPaths[currentSceneIndex]));
-                }
+                ShowUI();
             }
+            GUILayout.FlexibleSpace();
+            if (EditorGUILayout.DropdownButton(new GUIContent("打开UI预制体"), FocusType.Passive, _buttonGuiStyle))
+            {
+                AssetDatabase.OpenAsset(AssetDatabase.LoadAssetAtPath<GameObject>(UI_FORM_PATH + m_UiName + ".prefab"));
+            }
+        
 
             GUILayout.FlexibleSpace();
-            EditorGUILayout.EndHorizontal();
         }
 
-        private static void ShowUI(string uiPath)
+        
+        private static Dictionary<string,Type> _uiTypes;
+
+        private static Dictionary<string, Type> UITypes
+        {
+            get
+            {
+                //反射继承了UIWindwow的类
+                if (_uiTypes == null)
+                {
+                    _uiTypes = new Dictionary<string, Type>();
+                
+                    var types = TypeCache.GetTypesDerivedFrom<UIWindow>();
+                    foreach (Type type in types)
+                    {
+                        _uiTypes[type.FullName] = type;
+                    }
+            
+                }
+                return _uiTypes;
+            }
+        }
+        private static void ShowUI()
         {
             // 此处可添加显示 UI 的具体逻辑
+            //反射调用Game.UI.ShowWindow反省方法
+            CallShowWindow(m_UiName);
+
+        }
+        static void CallShowWindow(string windowTypeName)
+        {
+            // 解析目标窗口类型
+            Type windowType = Type.GetType(windowTypeName); // 例如"YourNamespace.MainWindow"[1](@ref)
+    
+            // 获取UI成员
+            PropertyInfo uiProp = typeof(GameModule).GetProperty("UI");
+            object uiInstance = uiProp.GetValue(null);
+
+            // 绑定泛型方法
+            MethodInfo genericShow = uiProp.PropertyType
+                .GetMethod("ShowWindow")
+                .MakeGenericMethod(windowType);
+
+            // 执行调用
+            genericShow.Invoke(uiInstance, new object[] { null });
         }
     }
 }

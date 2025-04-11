@@ -13,7 +13,7 @@ namespace AION.CoreFramework
         /// <remarks>有增删可以自行修改减少内存分配与GCAlloc。</remarks>
         /// </summary>
         internal const int DesignModuleCount = 16;
-        private const string ModuleRootNameSpace = "TEngine.";
+        private const string ModuleRootNameSpace = "AION.CoreFramework.";
 
         private static readonly Dictionary<Type, ModuleImp> _moduleMaps = new Dictionary<Type, ModuleImp>(DesignModuleCount);
         private static readonly GameFrameworkLinkedList<ModuleImp> _modules = new GameFrameworkLinkedList<ModuleImp>();

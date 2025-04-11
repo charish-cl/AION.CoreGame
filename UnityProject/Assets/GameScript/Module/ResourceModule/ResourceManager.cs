@@ -52,7 +52,7 @@ namespace AION.CoreFramework
             m_UnloadBundleList = new List<BundleObject>();
             m_UnloadAssetList = new List<AssetObject>();
             
-            var poolModule = Game.Get<ObjectPoolModule>();
+            var poolModule = GameModule.Get<ObjectPoolModule>();
             m_AssetPool = poolModule.CreateObjectPool<AssetObject>();
             m_BundlePool = poolModule.CreateObjectPool<BundleObject>();
         }

@@ -126,7 +126,7 @@ namespace AION.CoreFramework
             {
                 throw new Exception($"不存在索引为{index}的Tab的路径");
             }
-            var go = await Game.Resource.LoadAssetAsync<GameObject>(DynammicTabPathDic[index]);
+            var go = await GameModule.Resource.LoadAssetAsync<GameObject>(DynammicTabPathDic[index]);
             if (go == null)
             {
                 throw new Exception($"资源加载失败，路径为{DynammicTabPathDic[index]}");

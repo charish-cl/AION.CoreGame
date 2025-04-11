@@ -253,7 +253,7 @@ namespace AION.CoreFramework
 
                 _entity = new GameObject("[Unity.Utility]");
                 _entity.SetActive(true);
-                _entity.transform.SetParent(Game.Base.transform);
+                _entity.transform.SetParent(GameModule.Base.transform);
 
                 UnityEngine.Assertions.Assert.IsFalse(_behaviour);
                 _behaviour = _entity.AddComponent<MainBehaviour>();

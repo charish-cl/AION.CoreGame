@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using GameBase;
 using AION.CoreFramework;
+using UI;
 
 /// <summary>
 /// 游戏App。
@@ -36,7 +37,8 @@ public partial class GameApp:Singleton<GameApp>
     /// </summary>
     private void StartGameLogic()
     {
-        
+        GameModule.UI.ShowWindow<MainUI>();
+
     }
 
     /// <summary>

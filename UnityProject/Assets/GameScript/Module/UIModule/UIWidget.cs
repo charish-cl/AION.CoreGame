@@ -168,7 +168,7 @@ namespace AION.CoreFramework
         /// <returns></returns>
         public bool CreateByPath(string resPath, UIBase parentUI, Transform parentTrans = null, bool visible = true)
         {
-            GameObject goInst = Game.Resource.LoadAsset<GameObject>(resPath);
+            GameObject goInst = GameModule.Resource.LoadAsset<GameObject>(resPath);
             
             if (goInst == null)
             {

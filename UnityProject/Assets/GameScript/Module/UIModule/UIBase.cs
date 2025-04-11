@@ -199,7 +199,7 @@ namespace AION.CoreFramework
         /// <returns>UIWidget实例。</returns>
         public T CreateWidgetByPath<T>(Transform parentTrans, string assetLocation, bool visible = true) where T : UIWidget, new()
         {
-            GameObject goInst = Game.Resource.LoadAsset<GameObject>(assetLocation);
+            GameObject goInst = GameModule.Resource.LoadAsset<GameObject>(assetLocation);
             goInst.transform.SetParent(parentTrans, false);
             return CreateWidget<T>(goInst, visible);
         }
@@ -214,7 +214,7 @@ namespace AION.CoreFramework
         /// <returns>UIWidget实例。</returns>
         public async UniTask<T> CreateWidgetByPathAsync<T>(Transform parentTrans, string assetLocation, bool visible = true) where T : UIWidget, new()
         {
-            GameObject goInst = await Game.Resource.LoadAssetAsync<GameObject>(assetLocation);
+            GameObject goInst = await GameModule.Resource.LoadAssetAsync<GameObject>(assetLocation);
             goInst.transform.SetParent(parentTrans, false);
             return CreateWidget<T>(goInst, visible);
         }

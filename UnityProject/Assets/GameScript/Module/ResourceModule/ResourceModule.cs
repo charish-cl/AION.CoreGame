@@ -24,12 +24,28 @@ namespace AION.CoreFramework
             // PrefixPath = Path.GetFullPath(Path.Combine(Application.dataPath, "../../AssetBundle")).Replace("\\", "/");
             // PrefixPath += $"/{Platform}";
             PrefixPath = "Assets/Game/Config";
-            LoadConfig();
+          
         }
 
-        public IResourceManager ResourceManager { get; private set; }
-        
-        
+        private IResourceManager _resourceManager;
+
+        public IResourceManager ResourceManager
+        {
+            get
+            {
+                if (_resourceManager == null)
+                {
+                    LoadConfig();
+                }
+                return _resourceManager;
+            }
+            private set
+            {
+                _resourceManager = value;
+            }
+        }
+
+
         public async void LoadConfig()
         {
             //编辑器模式下，直接加载资源
@@ -103,5 +119,9 @@ namespace AION.CoreFramework
             }
         }
 
+        public void UnloadAsset(TextAsset textAsset)
+        {
+            
+        }
     }
 }

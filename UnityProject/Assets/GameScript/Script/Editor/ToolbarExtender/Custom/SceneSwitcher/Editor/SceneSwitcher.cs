@@ -34,7 +34,6 @@ namespace AION.CoreFramework
             };
             EditorGUI.BeginDisabledGroup(EditorApplication.isPlayingOrWillChangePlaymode);
             {
-                GUILayout.Space(50);
                 if (_scenePaths == null)
                 {
                     string[] guids = AssetDatabase.FindAssets("t:scene ", null);
@@ -68,7 +67,6 @@ namespace AION.CoreFramework
                     currentSceneIndex = selectedIndex;
                     _sceneNames = null;
                 }
-                GUILayout.Space(100);
             }
             EditorGUI.EndDisabledGroup();
         }

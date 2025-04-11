@@ -149,9 +149,24 @@ namespace UnityToolbarExtender
 				GUILayout.EndArea();
 			}
 		}
+
+		private static bool IsShowToolbar
+		{
+			get { return EditorPrefs.GetBool("ShowToolbar", true); }
+			set { EditorPrefs.SetBool("ShowToolbar", value); }
+		}
 		
 		public static void GUILeft() {
 			GUILayout.BeginHorizontal();
+
+			IsShowToolbar = GUILayout.Toggle(IsShowToolbar, "ShowToolbar", EditorStyles.toolbarButton, GUILayout.Width(100));
+
+			if (!IsShowToolbar)
+			{
+				GUILayout.EndHorizontal();
+				return;
+			}
+			
 			//排序按照元组的第一个元素,从小到大
 			LeftToolbarGUI.Sort((a, b) => a.Item1.CompareTo(b.Item1));
 			foreach (var handler in LeftToolbarGUI)
