@@ -8,16 +8,14 @@ namespace UI
     public partial class MainUI 
     {
         
-        public TextMeshProUGUI TestTxt { get;  set; }
-        public Button TestButton { get;  set; }
+        public Button LevelEndBtn { get;  set; }
 
     
         public override void ScriptGenerator()
         {
             
-            TestTxt = transform.Find("TestButton/TestTxt").GetComponent<TextMeshProUGUI>();
-            TestButton = transform.Find("TestButton").GetComponent<Button>();
-            TestButton.onClick.AddListener(() => OnClick_TestButton());
+            LevelEndBtn = transform.Find("Mid/LevelEndBtn").GetComponent<Button>();
+            LevelEndBtn.onClick.AddListener(() => OnClick_LevelEndBtn());
 
         }
     }

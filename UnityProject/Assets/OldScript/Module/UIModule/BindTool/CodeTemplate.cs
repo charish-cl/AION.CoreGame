@@ -75,11 +75,9 @@ namespace #命名空间#
     public partial class #类名# 
     {
         #绑定变量#
-        public override void OnInit(object userData)
+        public override void ScriptGenerator()
         {
-            base.OnInit(userData);
             #绑定代码#
-            BindOtherData(userData);
         }
     }
 }";

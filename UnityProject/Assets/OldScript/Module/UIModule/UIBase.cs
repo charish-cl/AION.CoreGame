@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace AION.CoreFramework
 {
@@ -199,8 +200,8 @@ namespace AION.CoreFramework
         /// <returns>UIWidget实例。</returns>
         public T CreateWidgetByPath<T>(Transform parentTrans, string assetLocation, bool visible = true) where T : UIWidget, new()
         {
-            GameObject goInst = GameModule.Resource.LoadAsset<GameObject>(assetLocation);
-            goInst.transform.SetParent(parentTrans, false);
+            GameObject go = GameModule.Resource.LoadAsset<GameObject>(assetLocation);
+            var goInst=Object.Instantiate(go, parentTrans, false);
             return CreateWidget<T>(goInst, visible);
         }
 
@@ -214,8 +215,8 @@ namespace AION.CoreFramework
         /// <returns>UIWidget实例。</returns>
         public async UniTask<T> CreateWidgetByPathAsync<T>(Transform parentTrans, string assetLocation, bool visible = true) where T : UIWidget, new()
         {
-            GameObject goInst = await GameModule.Resource.LoadAssetAsync<GameObject>(assetLocation);
-            goInst.transform.SetParent(parentTrans, false);
+            GameObject go = await GameModule.Resource.LoadAssetAsync<GameObject>(assetLocation);
+            var goInst=Object.Instantiate(go, parentTrans, false);
             return CreateWidget<T>(goInst, visible);
         }
 

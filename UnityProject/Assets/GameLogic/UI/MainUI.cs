@@ -17,6 +17,7 @@ namespace UI
         {
             // var tables = new cfg.Tables(file => return new ByteBuf(File.ReadAllBytes($"{gameConfDir}/{file}.bytes")));
 
+            CreateWidgetByType<CurrencyItem>(transform);
         }
 
         private void OnClick_TestButton()
@@ -24,6 +25,11 @@ namespace UI
             Log.Info("OnClick_TestButtotn");
             Close();
             
+            
+        }
+
+        private void OnClick_LevelEndBtn()
+        {
             
         }
     }

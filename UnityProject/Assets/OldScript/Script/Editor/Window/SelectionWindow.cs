@@ -31,7 +31,39 @@ namespace GameDevKitEditor
 
         public static string folder => SelectionExtend.GetCurrentAssetDirectory();
 
-        [MenuItem("Assets/选中导出当前文件夹子路径List", priority = 4)]
+        [MenuItem("Assets/SelectTool/生成或移动到UIForm")]
+        public static void MoveSelectPrefabToUIForm()
+        {
+            var selectObj = Selection.activeGameObject;
+            if (selectObj == null)
+            {
+                return;
+            }
+
+            string uiFormPath = "Assets/Game/UIForm";
+            
+            //看选中对象有没有挂载ComponentAutoBind
+            var autoBind = selectObj.GetComponent<ComponentAutoBindTool>();
+            if (autoBind == null)
+            {
+                selectObj.AddComponent<ComponentAutoBindTool>();
+            }
+
+            if ( PrefabUtility.IsPartOfAnyPrefab(Selection.activeObject))
+            {
+                string fileName  = Path.GetFileName(AssetDatabase.GetAssetPath(selectObj));
+                AssetDatabase.MoveAsset(AssetDatabase.GetAssetPath(selectObj), Path.Combine(uiFormPath, fileName));
+                Debug.Log($"已移动到 {uiFormPath}");
+            }
+            else
+            {
+                string fileName = Path.GetFileNameWithoutExtension(AssetDatabase.GetAssetPath(selectObj));
+                PrefabUtility.SaveAsPrefabAssetAndConnect((GameObject)selectObj, Path.Combine(uiFormPath, fileName + ".prefab"),InteractionMode.UserAction);
+                Debug.Log($"已生成Prefab并移动到 {uiFormPath}");
+            }
+
+        }
+        [MenuItem("Assets/SelectTool/选中导出当前文件夹子路径List", priority = 4)]
         public static void GeneratelistResouseCode()
         {
             var folder = IOUtility.GetCurrentAssetDirectory();
@@ -48,7 +80,7 @@ namespace GameDevKitEditor
             GUIUtility.systemCopyBuffer = stringBuilder.ToString();
         }
 
-        [MenuItem("Assets/选中导出当前文件夹子NameList", priority = 4)]
+        [MenuItem("Assets/SelectTool/选中导出当前文件夹子NameList", priority = 4)]
         public static void GeneratelistNameResouseCode()
         {
             var folder = IOUtility.GetCurrentAssetDirectory();
@@ -67,7 +99,7 @@ namespace GameDevKitEditor
 
         
         //删除选中文件夹下所有xml文件
-        [MenuItem("Assets/删除选中文件夹下所有xml文件", priority = 2)]
+        [MenuItem("Assets/SelectTool/删除选中文件夹下所有xml文件", priority = 2)]
         [Button("删除选中文件夹下所有xml文件")]
         public static void DeleteXml()
         {

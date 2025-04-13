@@ -188,17 +188,34 @@ public class ComponentAutoBindTool : SerializedMonoBehaviour
     };
 
     public static Dictionary<string, int> dicIndex;
-    public string className;
-
+    string className;
+    
     public enum UIType
     {
-        [LabelText("窗口")] UIForm,
-        [LabelText("WindowItem或Window")] WindowItemOrWindow,
+        [LabelText("UIWindow")] UIForm,
         [LabelText("UIWidget")] UIWidget,
+        [LabelText("WindowItem或Window")] WindowItemOrWindow,
     }
 
     [LabelText("是否是UIWidget")] public UIType uiType = UIType.UIForm;
 
+    private void OnEnable()
+    {
+        var selectedTransform = Selection.activeTransform;
+        if (selectedTransform == null)
+        {
+            return;
+        }
+        //如果名字里含有Item，则认为是UIWidget
+        if (selectedTransform.name.Contains("Item"))
+        {
+            uiType = UIType.UIWidget;
+        }
+        else
+        {
+            uiType = UIType.UIForm;
+        }
+    }
 #if UNITY_EDITOR
     [ButtonGroup("Tools")]
     [Button("生成代码", ButtonHeight = 40)]
@@ -277,13 +294,11 @@ public class ComponentAutoBindTool : SerializedMonoBehaviour
 
         string uiBindCode = "";
         string uiFormCode = "";
+        
+        className = selectedTransform.name;
+
         if (uiType == UIType.UIForm)
         {
-            if (string.IsNullOrEmpty(className))
-            {
-                className = selectedTransform.name;
-            }
-
             //绑定的类
             uiBindCode =CodeTemplate.uiFormBindClass
                 .Replace("#命名空间#", Namespace)
@@ -315,11 +330,6 @@ public class ComponentAutoBindTool : SerializedMonoBehaviour
         }
         else if (uiType == UIType.UIWidget)
         {
-            if (string.IsNullOrEmpty(className))
-            {
-                className = selectedTransform.name + "Item";
-            }
-
             // 定义 UIComponent 目录的基本路径
             uiBindCode = CodeTemplate.UIWidgetBindClass
                 .Replace("#命名空间#", Namespace)
