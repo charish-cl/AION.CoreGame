@@ -14,4 +14,7 @@
         <var name="z" type="float"/>
         <var name="w" type="float"/>
     </bean>
+
+    <!-- <table name="TbBooty" value="UnionMultiKey" index="id+price" input="booty.xlsx"/> -->
+
 </module>

@@ -1,9 +1,7 @@
 {
-    "name": "GameProto",
+    "name": "Luban",
     "rootNamespace": "",
-    "references": [
-        "GUID:480bfafd09f904241b8d817ae09f4533"
-    ],
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": true,
