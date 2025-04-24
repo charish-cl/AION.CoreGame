@@ -361,7 +361,7 @@ namespace AION.CoreFramework
         {
             _isCreate = false;
 
-            // RemoveAllUIEvent();
+            RemoveAllUIEvent();
 
             for (int i = 0; i < ListChild.Count; i++)
             {

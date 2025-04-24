@@ -163,6 +163,7 @@ PlayerSettings:
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
     Standalone: com.DefaultCompany.GameEditor
+    iPhone: com.DefaultCompany.GameEditor
   buildNumber:
     Standalone: 0
     VisionOS: 0

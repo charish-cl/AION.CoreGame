@@ -1,4 +1,3 @@
-using AION.CoreFramework.Core.Event;
 
 namespace AION.CoreFramework
 {
