@@ -58,7 +58,7 @@ namespace GameDevKit
         {
         
             var start = fRect.center + new Vector2(-fRect.width / 2, -fRect.height / 2);
-            Gizmos.color = Color.green;
+            Gizmos.color = color;
             var a = start;
             var b = start + new Vector2(fRect.width, 0);
             var c = start + new Vector2(fRect.width, 0) + new Vector2(0, fRect.height);

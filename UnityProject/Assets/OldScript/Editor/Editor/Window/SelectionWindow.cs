@@ -113,6 +113,13 @@ namespace GameDevKitEditor
             AssetDatabase.Refresh();
         }
 
+        [Button("移除选中对象丢失的脚本")]
+        public static void RemoveAllMissingScripts()
+        {
+            
+        }
+
+
 
         public GameObject SelectionObj;
 
