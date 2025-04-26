@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using GameDevKit;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 
 [RequireComponent(typeof(Grid))]
@@ -35,41 +37,58 @@ public class MapCreate : SerializedMonoBehaviour
         grid = GetComponent<Grid>();
     }
 
-    public enum MapCellType
-    {
-        Obstacle,
-        Road,
-    }
-    
+ 
     public Dictionary<MapCellType,Color> DrawColor = new Dictionary<MapCellType, Color>()
     {
         {MapCellType.Obstacle,Color.red},
         {MapCellType.Road,Color.green},
     };
-    [Serializable]
-    public class MapCell
-    {
-        //这里的Position是左下角的坐标
-        public Vector2 Position;
-        public MapCellType cellType;
-    }
-    public List<MapCell> MapCells = new List<MapCell>();
+
+    public List<MapCell> ObstacleMapCells = new List<MapCell>();
 
     public List<MapCell> CanWalkMapCells = new List<MapCell>();
     [Button]
     public void CreateMap()
     {
-        MapCells.Clear();
+        ObstacleMapCells.Clear();
         // 获取所有障碍物
-        MapCells = GetMapCellsByTilemap(obstacle, MapCellType.Obstacle);
+        ObstacleMapCells = GetMapCellsByTilemap(obstacle, MapCellType.Obstacle);
 
         //获取所有的道路
         List<MapCell> roadsMapCells = GetMapCellsByTilemap(roads, MapCellType.Road);
         
         //去除重合的
         
-        var dictionary = MapCells.ToDictionary(e=>e.Position.x * 10000+ e.Position.y );
+        var dictionary = ObstacleMapCells.ToDictionary(e=>e.Position.x * 10000+ e.Position.y );
         CanWalkMapCells = roadsMapCells.Where(e => !dictionary.ContainsKey(e.Position.x* 10000+ e.Position.y)).ToList();
+        
+        //用二进制保存行走信息
+        
+        SaveMap();
+    }
+
+    private void SaveMap()
+    {
+        //TODO:保存行走信息
+        StreamWriter writer = new StreamWriter(Application.streamingAssetsPath + "/MapData.txt");
+        for (int i = 0; i < CanWalkMapCells.Count; i++)
+        {
+            writer.Write(CanWalkMapCells[i].Position.x + " " + CanWalkMapCells[i].Position.y + " ");
+        }
+        writer.Close();
+    }
+    public void LoadMap()
+    {
+        //TODO:加载行走信息
+        StreamReader reader = new StreamReader(Application.streamingAssetsPath + "/MapData.txt");
+        string line;
+        while ((line = reader.ReadLine()) != null)
+        {
+            string[] strs = line.Split(' ');
+            Vector2 pos = new Vector2(int.Parse(strs[0]), int.Parse(strs[1]));
+            CanWalkMapCells.Add(new MapCell(pos, MapCellType.Road));
+        }
+        reader.Close();
     }
 
     public List<MapCell> GetMapCellsByTilemap(Tilemap tilemap, MapCellType cellType = MapCellType.Obstacle)
@@ -82,7 +101,7 @@ public class MapCreate : SerializedMonoBehaviour
                 TileBase tile = tilemap.GetTile(pos);
                 if (tile != null)
                 {                    
-                    mapCells.Add(new MapCell(){Position = new Vector2(x+cellSize.x/2,y+cellSize.y/2), cellType = cellType});
+                    mapCells.Add(new MapCell(new Vector2(x,y), cellType = cellType));
                 }
             }
         }
@@ -102,14 +121,17 @@ public class MapCreate : SerializedMonoBehaviour
         {
             return;
         }
-        if (MapCells == null) return;
-        foreach (var cell in MapCells)
+        if (ObstacleMapCells == null) return;
+        foreach (var cell in ObstacleMapCells)
         {
-            FDraw.GimzoDrawRectangle(GetColor(cell.cellType), new FRect(cell.Position, cellSize.x, cellSize.y));
+            FDraw.GimzoDrawRectangle(GetColor(cell.cellType),cell.Position, cellSize.x, cellSize.y);
         }
         foreach (var cell in CanWalkMapCells)
         {
-            FDraw.GimzoDrawRectangle(GetColor(cell.cellType), new FRect(cell.Position, cellSize.x, cellSize.y));
+            FDraw.GimzoDrawRectangle(GetColor(cell.cellType), cell.Position, cellSize.x, cellSize.y);
         }
     }
+
+
+
 }

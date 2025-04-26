@@ -20,21 +20,16 @@ namespace GameDevKit
         private List<AstarNode> openList;
         private List<AstarNode> closedList;
 
-        public AStarPathfinding(int width, int height)
+        public AStarPathfinding(Func<Grid<AstarNode>, Vector2Int, AstarNode> CreateGridObject, int width, int height)
         {
             Instance = this;
-            grid = new Grid<AstarNode>(width, height, CreateGridObject, true);
+            grid = new Grid<AstarNode>(CreateGridObject, width, height);
         }
 
-        private AstarNode CreateGridObject(Grid<AstarNode> arg1, int arg2, int arg3)
+        public List<Vector2> FindPath(Vector2 startWorldPosition, Vector2 endWorldPosition)
         {
-            return new AstarNode(arg1, arg2, arg3);
-        }
-
-        public List<Vector3> FindPath(Vector3 startWorldPosition, Vector3 endWorldPosition)
-        {
-            grid.GeCellXY(startWorldPosition, out int startX, out int startY);
-            grid.GeCellXY(endWorldPosition, out int endX, out int endY);
+            var (startX,startY) = grid.GetGridCoordinates(startWorldPosition);
+            var (endX,endY) = grid.GetGridCoordinates(endWorldPosition);
 
             List<AstarNode> path = FindPath(startX, startY, endX, endY);
             if (path == null)
@@ -43,10 +38,10 @@ namespace GameDevKit
             }
             else
             {
-                List<Vector3> vectorPath = new List<Vector3>();
+                List<Vector2> vectorPath = new List<Vector2>();
                 foreach (AstarNode pathNode in path)
                 {
-                    vectorPath.Add(grid.GetCellPosition(pathNode.coordinate));
+                    vectorPath.Add(grid.GetCellWorldPosition(pathNode.coordinate.x, pathNode.coordinate.y));
                 }
 
                 return vectorPath;
@@ -55,8 +50,8 @@ namespace GameDevKit
 
         public List<AstarNode> FindPath(int startX, int startY, int endX, int endY)
         {
-            AstarNode startNode = grid.GetGridObject(startX, startY);
-            AstarNode endNode = grid.GetGridObject(endX, endY);
+            AstarNode startNode = grid.GetValue(startX, startY);
+            AstarNode endNode = grid.GetValue(endX, endY);
 
             if (startNode == null || endNode == null)
             {
@@ -91,7 +86,7 @@ namespace GameDevKit
                 openList.Remove(currentNode);
                 closedList.Add(currentNode);
 
-                foreach (AstarNode neighbourNode in grid.GetFourSidesNeighbors(currentNode.coordinate))
+                foreach (AstarNode neighbourNode in grid.GetNeighbors(currentNode.coordinate))
                 {
                     if (closedList.Contains(neighbourNode)) continue;
                     if (!neighbourNode.isWalkable)

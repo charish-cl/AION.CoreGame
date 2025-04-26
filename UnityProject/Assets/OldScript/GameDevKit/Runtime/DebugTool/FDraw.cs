@@ -48,27 +48,26 @@ namespace GameDevKit
             // 恢复默认矩阵
             Gizmos.matrix = defaultMatrix;
         }
-
-        /// <summary>
-        /// 绘制一个矩形或正方形
-        /// </summary>
-        /// <param name="color"></param>
-        /// <param name="fRect></param>
-        public static void GimzoDrawRectangle(Color color, FRect fRect)
-        {
         
-            var start = fRect.center + new Vector2(-fRect.width / 2, -fRect.height / 2);
+        public static void GimzoDrawRectangle(Color color, Vector2 leftBottom, float width, float height)
+        {
+            var start = leftBottom;
             Gizmos.color = color;
-            var a = start;
-            var b = start + new Vector2(fRect.width, 0);
-            var c = start + new Vector2(fRect.width, 0) + new Vector2(0, fRect.height);
-            var d = start + new Vector2(0, fRect.height);
+            Vector2 a = start;  
+            Vector2 b = start;  
+            Vector2 d = start;  
+            Vector2 c = start;  
+            b.x += width;
+            c.x += width;  
+            c.y += height;  
+            d.y += height;  
             
             Gizmos.DrawLine(a, b);
             Gizmos.DrawLine(b, c);
             Gizmos.DrawLine(c, d);
             Gizmos.DrawLine(d, a);
         }
+        //以左下角为原点，更方便回止血
         public static void DebugDrawRectangle(Vector3 minXY, Vector3 maxXY, Color color, float duration) {
             Debug.DrawLine(new Vector3(minXY.x, minXY.y), new Vector3(maxXY.x, minXY.y), color, duration);
             Debug.DrawLine(new Vector3(minXY.x, minXY.y), new Vector3(minXY.x, maxXY.y), color, duration);
