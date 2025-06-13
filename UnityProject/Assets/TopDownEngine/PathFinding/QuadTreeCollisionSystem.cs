@@ -1,4 +1,4 @@
-namespace TopDownEngine.PathFinding
+namespace AION.PathFinding
 {
    using UnityEngine;
 using System.Collections.Generic;

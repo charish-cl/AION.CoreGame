@@ -63,10 +63,9 @@ public class MapCreate : SerializedMonoBehaviour
         CanWalkMapCells = roadsMapCells.Where(e => !dictionary.ContainsKey(e.Position.x* 10000+ e.Position.y)).ToList();
         
         //用二进制保存行走信息
-        
-        SaveMap();
     }
 
+    [Button("保存地图",ButtonSizes.Large)]
     private void SaveMap()
     {
         //TODO:保存行走信息

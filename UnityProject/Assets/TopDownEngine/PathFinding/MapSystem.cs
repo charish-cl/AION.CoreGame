@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace TopDownEngine.PathFinding
+namespace AION.PathFinding
 {
     public class MapSystem:SerializedMonoBehaviour
     {
