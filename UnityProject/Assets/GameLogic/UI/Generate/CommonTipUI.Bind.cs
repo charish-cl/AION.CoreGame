@@ -3,7 +3,7 @@ using AION.CoreFramework;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-namespace UI
+namespace GameLogic
 {
     public partial class CommonTipUI 
     {

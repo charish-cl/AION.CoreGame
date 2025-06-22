@@ -83,6 +83,5 @@ public sealed partial class Booty : Luban.BeanBase
         + "}";
     }
 }
-
 }
 

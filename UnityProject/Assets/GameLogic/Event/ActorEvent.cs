@@ -1,1 +1,0 @@
-namespace AION.CoreFramework{    public class ActorEvent    {        public void OnGetReward()        {                    }        public void OnUpGrade()        {                    }    }}

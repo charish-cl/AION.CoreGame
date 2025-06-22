@@ -13,7 +13,7 @@ namespace GameDevKitEditor
         /// <summary>
         /// ` ctrl+Space都不行啊，暂时用ctrl+g吧
         /// </summary>
-        [MenuItem("GameTools/打开UI预制体 %p")]
+        // [MenuItem("GameTools/打开UI预制体 %p")]
         public static void Open()
         {
             _treeWindow = GetWindow<UIPrefabTreeWindow>();

@@ -176,7 +176,7 @@ public class ComponentAutoBindTool : SerializedMonoBehaviour
     private const string GeneratePartialCodePath = "Assets/GameLogic/UI/Generate/";
     private const string GenerateFormCodePath = "Assets/GameLogic/UI/";
 
-    private const string Namespace = "UI";
+    private const string Namespace = "GameLogic";
    
 
     // UI元素名与类型的映射字典

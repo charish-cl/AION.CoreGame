@@ -15,11 +15,13 @@ public partial class Tables
 {
     public item.TbItem TbItem {get; }
     public booty.TbBooty TbBooty {get; }
+    public funcConfig.TbFuncConfig TbFuncConfig {get; }
 
     public Tables(System.Func<string, ByteBuf> loader)
     {
         TbItem = new item.TbItem(loader("item_tbitem"));
         TbBooty = new booty.TbBooty(loader("booty_tbbooty"));
+        TbFuncConfig = new funcConfig.TbFuncConfig(loader("funcconfig_tbfuncconfig"));
         ResolveRef();
     }
     
@@ -27,6 +29,7 @@ public partial class Tables
     {
         TbItem.ResolveRef(this);
         TbBooty.ResolveRef(this);
+        TbFuncConfig.ResolveRef(this);
     }
 }
 

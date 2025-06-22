@@ -7,7 +7,7 @@ set CONF_ROOT=.
 set DATA_OUTPATH=%WORKSPACE%/UnityProject/Assets/AssetRaw/Configs/bytes/
 set CODE_OUTPATH=%WORKSPACE%/UnityProject/Assets/GameProto/GameConfig/
 
-xcopy /s /e /i /y "%CONF_ROOT%\CustomTemplate\ConfigSystem.cs" "%WORKSPACE%\UnityProject\Assets\GameScripts\HotFix\GameProto\ConfigSystem.cs"
+:: xcopy /s /e /i /y "%CONF_ROOT%\CustomTemplate\ConfigSystem.cs" "%WORKSPACE%\UnityProject\Assets\GameScripts\HotFix\GameProto\ConfigSystem.cs"
 
 dotnet %LUBAN_DLL% ^
     -t client ^

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using GameBase;
 using AION.CoreFramework;
 
-namespace GameLogic.UISys
+namespace GameLogic
 {
     public enum RedNodeType
     {

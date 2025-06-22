@@ -20,10 +20,16 @@ namespace GameScripts.Editor
         [Button("Luban 生成代码",ButtonHeight = 50)]
         public  void BuildLubanExcel()
         {
-          string filename = "gen_code_bin_to_project.sh";
-          string workPath = Path.Combine(LubanPath,filename);
-          Debug.Log(Path.GetFullPath(workPath));
-          ShellHelper.Run("sh",workPath);
+#if UNITY_EDITOR_OSX
+            string filename = "gen_code_bin_to_project.sh";
+            string workPath = Path.Combine(LubanPath,filename);
+            Debug.Log(Path.GetFullPath(workPath));
+            ShellHelper.Run("sh",workPath);
+#else
+            string filename = "gen_code_bin_to_project.bat";
+            ShellHelper.Run($"./{filename}",LubanPath);
+#endif
+            
         }
         
         public string LubanPath =Path.Combine(Application.dataPath, "..", "..", "Configs", "GameConfig");

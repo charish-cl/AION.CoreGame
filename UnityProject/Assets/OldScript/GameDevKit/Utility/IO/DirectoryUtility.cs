@@ -7,14 +7,7 @@
     
     public static class DirectoryUtility
     {
-        public static void CreateDirectoryIfNotExists(string path)
-        {
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-        }
-
+        
         public static void RenameLastDirectory(string originalDirectoryPath, string newDirectoryName)
         {
             try
@@ -70,6 +63,12 @@
             {
                 Debug.LogError("发生错误: " + ex.Message);
             }
+        }
+
+
+        public static string GetFolder(string path)
+        {
+            return Path.GetDirectoryName(path);
         }
         
     }

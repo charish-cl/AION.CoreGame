@@ -6,61 +6,31 @@ namespace GameDevKit.Utility
 {
     public class FileUtility
     {
-        //TryCreateDirectory if not exist,return true if success,out  DirectoryInfo
-        public static bool TryCreateDirectory(string path, out DirectoryInfo directoryInfo)
+        public void CopyFolder(string sourceFolder, string destinationFolder,string pattern = "*",string notPattern = "")
         {
-            directoryInfo = null;
-            if (string.IsNullOrEmpty(path))
+            if (!Directory.Exists(sourceFolder))
             {
-                return false;
+                Debug.Log("源文件夹不存在！");
+                return;
             }
-
-            if (Directory.Exists(path))
+            if (!Directory.Exists(destinationFolder))
             {
-                directoryInfo = new DirectoryInfo(path);
-                return true;
+                Directory.CreateDirectory(destinationFolder);
             }
-
-            try
+            string[] files = Directory.GetFiles(sourceFolder, pattern, SearchOption.AllDirectories);
+            foreach (string file in files)
             {
-                directoryInfo = Directory.CreateDirectory(path);
-                return true;
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(e);
-                return false;
-            }
-        }
-        // TryCreateFile if not exist, return true if success, out FileInfo
-        public static bool TryCreateFile(string filePath, out FileInfo fileInfo)
-        {
-            fileInfo = null;
-            if (string.IsNullOrEmpty(filePath))
-            {
-                return false;
-            }
-
-            if (File.Exists(filePath))
-            {
-                fileInfo = new FileInfo(filePath);
-                return true;
-            }
-
-            try
-            {
-                fileInfo = new FileInfo(filePath);
-                using (var stream = fileInfo.Create())
+                if (notPattern == "" || !file.Contains(notPattern))
                 {
-                    // Do nothing.
+                    string destFile = Path.Combine(destinationFolder, file.Substring(sourceFolder.Length + 1));
+                    if (!Directory.Exists(Path.GetDirectoryName(destFile)))
+                    {
+                        Directory.CreateDirectory(Path.GetDirectoryName(destFile));
+                    }
+                    File.Copy(file, destFile, true);
                 }
-                return true;
             }
-            catch (Exception e)
-            {
-                Debug.LogError(e);
-                return false;
-            }
+            
         }
         
         

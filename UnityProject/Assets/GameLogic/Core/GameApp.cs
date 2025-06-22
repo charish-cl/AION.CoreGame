@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using GameBase;
 using AION.CoreFramework;
-using UI;
+using GameLogic;
 
 /// <summary>
 /// 游戏App。
@@ -16,7 +16,7 @@ public partial class GameApp:Singleton<GameApp>
     /// <param name="objects"></param>
     public  void Entrance()
     {
-      
+        EventRegister.Init();
         Log.Warning("======= 看到此条日志代表你成功运行了热更新代码 =======");
         Log.Warning("======= Entrance GameApp =======");
         Instance.Active();
@@ -37,7 +37,7 @@ public partial class GameApp:Singleton<GameApp>
     /// </summary>
     private void StartGameLogic()
     {
-        GameModule.UI.ShowWindow<MainUI>();
+        GameModule.UI.ShowWindow<GameMainUI>();
 
     }
 

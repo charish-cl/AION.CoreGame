@@ -27,7 +27,7 @@ namespace AION.CoreFramework
         /// <returns>接口实例。</returns>
         public T GetInterface<T>()
         {
-            string typeName = typeof(T).FullName;
+            string typeName = typeof(T).Name;
             if (typeName != null && _eventEntryMap.TryGetValue(typeName, out var entry))
             {
                 return (T)entry.InterfaceWrap;

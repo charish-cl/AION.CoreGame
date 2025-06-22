@@ -1,7 +1,7 @@
 using System;
 using AION.CoreFramework;
 
-namespace GameLogic.UISys
+namespace GameLogic
 {
     /// <summary>
     /// 通用的红点Icon UI
