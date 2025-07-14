@@ -1,0 +1,17 @@
+﻿
+using AION.CoreFramework;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+namespace {{ namespace }}
+{
+    public partial class {{ class_name }}
+    {
+        
+        public override void OnCreate()
+        {
+        }
+    }
+}
+
+

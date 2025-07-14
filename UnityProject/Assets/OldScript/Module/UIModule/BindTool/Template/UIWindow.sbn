@@ -1,0 +1,39 @@
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+namespace {{ namespace }}
+{
+    public partial class {{ class_name }} : UIWindow
+    {
+        #region 通用
+        {{~if event_list.size > 0  ~}}
+        public override void RegisterEvent()
+        {
+            {{~for event in event_list ~}}
+            AddUIEvent({{event.EventClassName}}_Event.{{event.EventMethod}}, RefreshUI);
+            {{~end~}}
+        }
+        {{~end~}}
+
+        public override void OnCreate()
+        {
+             {{~if data_list.size > 0  ~}}
+               {{~for data in data_list ~}}
+                {{data.listParent}} {{data.childItem}}
+               {{~end}}
+             {{~end~}}
+        }
+
+        public void OnClickBtnClose()
+        {
+            Close();
+        }
+        #endregion
+
+        public void RefreshUI()
+        {
+        }
+
+        
+    }
+}
