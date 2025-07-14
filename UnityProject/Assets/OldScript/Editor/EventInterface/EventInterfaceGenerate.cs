@@ -39,7 +39,7 @@ public static class EventInterfaceGenerate
         if (BOpenAutoGenerate)
         {
         } 
-        Generate();
+        // Generate();
     }
 
     [MenuItem("TEngine/EventInterface/OpenAutoGenerate", false, 300)]

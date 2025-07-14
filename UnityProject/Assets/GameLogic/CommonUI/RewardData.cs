@@ -1,4 +1,4 @@
-namespace AION.CoreFramework
+namespace GameLogic
 {
     public class RewardData
     {

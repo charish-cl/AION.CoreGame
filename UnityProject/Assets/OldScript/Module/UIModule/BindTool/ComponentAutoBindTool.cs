@@ -18,29 +18,7 @@ using Object = UnityEngine.Object;
 /// </summary>
 public class ComponentAutoBindTool : SerializedMonoBehaviour
 {
-    [Serializable]
-    public class BindData
-    {
-        public BindData()
-        {
-        }
-
-        public BindData(Object bindCom, string TypeName)
-        {
-            BindCom = bindCom;
-            this.TypeName = TypeName;
-        }
-
-        public Object BindCom;
-
-        [ValueDropdown("GetTypeName")] public string TypeName;
-
-        public List<string> GetTypeName()
-        {
-            return dicWidget;
-        }
-    }
-
+   
     [Title("UI控件")] [TableList] [ValueDropdown("TreeViewAdd", ExpandAllMenuItems = true, IsUniqueList = false, DrawDropdownForListElements = true)]
     public List<BindData> BindDatas = new List<BindData>();
 
@@ -241,7 +219,7 @@ public class ComponentAutoBindTool : SerializedMonoBehaviour
 
         foreach (BindData bindData in BindDatas)
         {
-            string name = bindData.BindCom.name;
+            string name = bindData.BindCom.ToString();
             string type = bindData.TypeName;
             Transform tr = (bindData.BindCom as GameObject).GetComponent<Transform>();
             string path = GetTransformPath(selectedTransform, tr);

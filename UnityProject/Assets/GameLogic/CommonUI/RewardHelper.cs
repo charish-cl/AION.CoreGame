@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace AION.CoreFramework
+namespace GameLogic
 {
     public class RewardHelper
     {

@@ -1,4 +1,6 @@
-﻿namespace AION.CoreFramework
+﻿using AION.CoreFramework;
+
+namespace GameLogic
 {
     [EventInterface(EEventGroup.GroupUI)]
     //一般这种事件都是不影响当前流程的和执行顺序的，需要确认取消的，不调用这个

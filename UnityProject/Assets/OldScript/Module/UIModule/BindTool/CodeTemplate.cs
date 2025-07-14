@@ -47,6 +47,13 @@ namespace #命名空间#
         {
             #绑定代码#
         }
+
+
+    }
+
+    public partial struct #动态成员变量#
+    {
+        #动态成员变量#
     }
 }";
 

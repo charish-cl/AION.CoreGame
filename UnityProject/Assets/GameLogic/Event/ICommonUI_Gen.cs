@@ -38,11 +38,11 @@ namespace GameLogic
             _dispatcher.Send(ICommonUI_Event.ShowError,error);
         }
 
-        public void ShowReward(AION.CoreFramework.RewardData reward)
+        public void ShowReward(RewardData reward)
         {
-            _dispatcher.Send(ICommonUI_Event.ShowReward,reward);
+	        
         }
-
+     
         public void ShowAnnouncement(System.String announcement)
         {
             _dispatcher.Send(ICommonUI_Event.ShowAnnouncement,announcement);

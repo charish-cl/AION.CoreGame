@@ -10,6 +10,7 @@ namespace GameLogic
     {
         public override void RegisterEvent()
         {
+            AddUIEvent<string>(ICommonUI_Event.ShowTip, ShowTip);
         }
         public override void OnCreate()
         {
@@ -29,7 +30,7 @@ namespace GameLogic
         {
             Log.Info("OnClick_TestButtotn");
             Close();
-            
+            // AdjustIconNum();
             
         }
 
