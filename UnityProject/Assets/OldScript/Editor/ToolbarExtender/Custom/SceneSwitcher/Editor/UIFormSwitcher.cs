@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
@@ -37,7 +38,8 @@ namespace AION.CoreFramework
                 ToolbarCallback.RepaintToolbar();
             }
         }
-
+// 在 EditorWindow 或 Editor 脚本中调用
+        private static int selectedIndex;
         static void OnToolbarGUI()
         {
             GUILayout.FlexibleSpace();
@@ -58,7 +60,19 @@ namespace AION.CoreFramework
             // 下拉框选择所有的 UI
             GUILayout.FlexibleSpace();
 
-     
+            GUIStyle toggleStyle = new GUIStyle(EditorStyles.toolbarButton);
+            GUIStyle dropdownStyle = new GUIStyle(EditorStyles.foldout);
+
+          
+            //绘制一个下拉搜索框
+            selectedIndex = SearchableDropdown.ShowDropdown(
+                new GUIContent(UINameList[selectedIndex]), // 当前选中项
+                UINameList,                                // 所有选项
+                toggleStyle,                            // 主按钮样式
+                dropdownStyle                          // 下拉箭头样
+            );
+            m_UiName = UINameList[selectedIndex];
+            GUILayout.FlexibleSpace();
             if (EditorGUILayout.DropdownButton(new GUIContent("Switch UI"), FocusType.Passive, _buttonGuiStyle))
             {
                 if (!Application.isPlaying)
@@ -70,13 +84,40 @@ namespace AION.CoreFramework
             GUILayout.FlexibleSpace();
             if (EditorGUILayout.DropdownButton(new GUIContent("打开UI预制体"), FocusType.Passive, _buttonGuiStyle))
             {
-                AssetDatabase.OpenAsset(AssetDatabase.LoadAssetAtPath<GameObject>(UI_FORM_PATH + m_UiName + ".prefab"));
+                var guids = AssetDatabase.FindAssets("t:prefab " + m_UiName, new string[] { UI_FORM_PATH });
+                if (guids!= null && guids.Length > 0)
+                {
+                    var go =AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(guids[0]));
+                    AssetDatabase.OpenAsset(go);
+                    EditorGUIUtility.PingObject(go);
+                }
+                else
+                {
+                    Debug.LogWarning("没有找到预制体");
+                }
             }
         
 
             GUILayout.FlexibleSpace();
         }
 
+        private static List<string> m_UiNameList;
+        public  static List<string> UINameList
+        {
+            get
+            {
+                if (m_UiNameList == null)
+                {
+                    m_UiNameList = new List<string>();
+                    foreach (var file in Directory.GetFiles(UI_FORM_PATH, "*.prefab", SearchOption.AllDirectories))
+                    {
+                        var fileName = Path.GetFileNameWithoutExtension(file);
+                        m_UiNameList.Add(fileName);
+                    }
+                }
+                return m_UiNameList;
+            }
+        }
         
         private static Dictionary<string,Type> _uiTypes;
 

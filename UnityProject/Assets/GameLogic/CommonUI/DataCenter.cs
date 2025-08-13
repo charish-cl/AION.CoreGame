@@ -1,6 +1,6 @@
 namespace AION.CoreFramework
 {
-    public class DataCenterBase
+    public class DataCenter:BaseLogicSys<DataCenter>
     {
         
     }

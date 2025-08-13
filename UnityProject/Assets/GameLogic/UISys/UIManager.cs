@@ -10,5 +10,10 @@ namespace GameLogic
         {
             GameModule.UI.ShowWindow<CommonSelectTipUI>();
         }
+
+        public void ShowWindow<T>(System.Action<T> onInit)
+        {
+            GameModule.UI.ShowWindow<CommonSelectTipUI>();
+        }
     }
 }

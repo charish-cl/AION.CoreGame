@@ -5,7 +5,7 @@ using TMPro;
 
 namespace {{ namespace }}
 {
-    public partial class {{ class_name }} : {{ derive_class_name }}
+    public partial class {{ class_name }} : {{ derived_class_name }}
     {
         {{~ for item in bind_datas ~}}
         public {{ item.TypeName }} {{ item.propName }} { get; set; }

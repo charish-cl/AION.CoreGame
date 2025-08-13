@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AION.CoreFramework;
 using UnityEditor;
 using UnityEngine;
 
@@ -79,10 +80,11 @@ namespace GameDevKitEditor
                     }
                 }
 
-                GUI.Label(new Rect(selectionRect.x + 100, selectionRect.y, 120, selectionRect.height), $"{uiTypes[preIndex]}");
+                if (preIndex >= 0 && preIndex < uiTypes.Count)
+                    GUI.Label(new Rect(selectionRect.x + 100, selectionRect.y, 120, selectionRect.height), $"{uiTypes[preIndex]}");
             }
         }
 
-        private static readonly List<string> uiTypes = ComponentAutoBindTool.dicWidget;
+        private static readonly List<string> uiTypes = UIConfigDefine.dicWidget;
     }
 }

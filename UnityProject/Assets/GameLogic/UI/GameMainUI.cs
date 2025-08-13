@@ -6,7 +6,7 @@ using GameLogic;
 namespace GameLogic
 {
     [Window(UILayer.UI)]
-    public partial class GameMainUI : UIWindow
+    public partial class GameMainUI
     {
         public override void RegisterEvent()
         {
@@ -26,7 +26,7 @@ namespace GameLogic
             Log.Info(s);
         }
 
-        private void OnClick_TestButton()
+        private void OnClick_boardBg()
         {
             Log.Info("OnClick_TestButtotn");
             Close();

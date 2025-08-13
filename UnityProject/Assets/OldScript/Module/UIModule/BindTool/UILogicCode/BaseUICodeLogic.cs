@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 namespace AION.CoreFramework
@@ -17,13 +20,25 @@ namespace AION.CoreFramework
     public abstract class BaseUICodeLogic
     {
         [HideInInspector]
-        public GameObject Parent;
-        
-        protected UIDataSource DataSource;
+        public UIDataSourceBindData Parent;
+
+        protected UIDataSource DataSource
+        {
+            get
+            {
+                if (Parent!=null)
+                {
+                    return Parent.UIDataSource;
+                }
+                return null;
+            }
+        }
         
         public abstract string FieldName { get; } 
         
-        public abstract string FieldCode { get; }
+        public abstract string FieldType { get; }
+        
+        public string FieldCode => $"{FieldType} {FieldName};";
         /// <summary>
         /// 方法的代码
         /// </summary>
@@ -32,7 +47,7 @@ namespace AION.CoreFramework
         /// <summary>
         /// 初始化代码
         /// </summary>
-        public virtual string InitalizeCode { get; } = "";
+        public virtual string RefreshCode { get; } = "";
         
         /// <summary>
         /// show代码
@@ -41,9 +56,29 @@ namespace AION.CoreFramework
         {
             
         }
-        public void InitParent( GameObject parent)
+        public void InitParent( UIDataSourceBindData parent)
         {
             Parent = parent;
         }
+        //获取小写第一个字母的名字
+        public string GetLowerFirstLetterName(string name)
+        {
+            return name.Substring(0, 1).ToLower() + name.Substring(1);
+        }
+
+        public Type GetTypeByAssemblies(string typeName)
+        {
+            Assembly assembly = Assembly.Load("GameLogic");
+            var type = assembly.GetType("GameLogic." + typeName);
+            return type;
+        }
+        public Type GetTypeMByAssemblies(string typeName)
+        {
+            Assembly assembly = Assembly.Load("GameLogic");
+            var type = assembly.GetType("GameLogic." + typeName);
+            return type;
+        }
+  
+        
     }
 }

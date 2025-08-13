@@ -2142,8 +2142,8 @@ GameObject:
   - component: {fileID: 4538454434314779282}
   - component: {fileID: 2770466449040118825}
   - component: {fileID: 807048387052785504}
-  - component: {fileID: 8580367944294646418}
   - component: {fileID: 7757740109508527305}
+  - component: {fileID: 9040439132840965914}
   m_Layer: 5
   m_Name: GameMainUI
   m_TagString: Untagged
@@ -2252,37 +2252,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 55
---- !u!114 &8580367944294646418
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5974631940454488063}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f58cba4d11ba4123a22f8f797a6ec4d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes: []
-  BindDatas:
-  - path: 
-    BindCom: {fileID: 5096998255627910689}
-    TypeName: Button
-  SubItems: []
-  AddData:
-    path: 
-    BindCom: {fileID: 0}
-    TypeName: 
-  uiType: 0
 --- !u!114 &7757740109508527305
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2310,11 +2279,40 @@ MonoBehaviour:
     TypeName: Button
   - path: PlayerArear/UnitPlaceHolder/Warrior/Image
     BindCom: {fileID: 5937367750205064176}
-    TypeName: Button
+    TypeName: Image
   AddData:
     path: 
     BindCom: {fileID: 0}
     TypeName: 
+--- !u!114 &9040439132840965914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5974631940454488063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f68a94b4b4e04e11bf2c2fcfc6f7656e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  TabParent: {fileID: 6690267847378108144}
+  BindGo: []
+  SelectTabName: 
+  LastSelectTabName: 
+  TabPath: GameMainUI
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &6143753140349975463
 GameObject:
   m_ObjectHideFlags: 0
@@ -2970,7 +2968,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2247753452283650565}
-  - component: {fileID: 1598234704502267299}
   m_Layer: 5
   m_Name: Mid
   m_TagString: Untagged
@@ -2998,70 +2995,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 187.52}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1598234704502267299
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7633608242955940225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd309dc9f0b14054a6f27db4beab9471, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes:
-    - Name: TabDics
-      Entry: 7
-      Data: 0|System.Collections.Generic.List`1[[AION.CoreFramework.TabBindTool+TabDicClass,
-        AION.CoreFramework]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 1|AION.CoreFramework.TabBindTool+TabDicClass, AION.CoreFramework
-    - Name: SelectTabName
-      Entry: 6
-      Data: 
-    - Name: TabName
-      Entry: 6
-      Data: 
-    - Name: TabLis
-      Entry: 7
-      Data: 2|System.Collections.Generic.List`1[[System.ValueTuple`2[[System.String,
-        mscorlib],[System.Collections.Generic.List`1[[UnityEngine.GameObject, UnityEngine.CoreModule]],
-        mscorlib]], mscorlib]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: TabParent
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-  TabInitCode: '  public TabModule {0};\n              tabModule = TabModule.Create({1});'
 --- !u!1 &7989486779270585968
 GameObject:
   m_ObjectHideFlags: 0

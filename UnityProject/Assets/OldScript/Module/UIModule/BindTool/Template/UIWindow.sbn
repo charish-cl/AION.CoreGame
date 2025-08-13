@@ -1,3 +1,16 @@
+{{~ 
+    # 定义渲染代码列表的函数
+    func render_code_list(code_list)
+        if code_list.size > 0
+            for data in code_list
+                # 根据缩进级别生成前缀
+                "\n"+data
+                #换行
+               
+            end
+        end
+    end
+~}}
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -5,6 +18,10 @@ namespace {{ namespace }}
 {
     public partial class {{ class_name }} : UIWindow
     {
+        #region 变量
+        {{render_code_list(field_codelist)}}
+        #endregion
+
         #region 通用
         {{~if event_list.size > 0  ~}}
         public override void RegisterEvent()
@@ -17,23 +34,18 @@ namespace {{ namespace }}
 
         public override void OnCreate()
         {
-             {{~if data_list.size > 0  ~}}
-               {{~for data in data_list ~}}
-                {{data.listParent}} {{data.childItem}}
-               {{~end}}
-             {{~end~}}
+            
         }
 
-        public void OnClickBtnClose()
-        {
-            Close();
-        }
-        #endregion
 
         public void RefreshUI()
         {
+            {{render_code_list(refresh_ui_codelist)}}
         }
+        #endregion
 
-        
+        #region 生成方法
+        {{render_code_list(method_codelist)}}
+        #endregion
     }
 }

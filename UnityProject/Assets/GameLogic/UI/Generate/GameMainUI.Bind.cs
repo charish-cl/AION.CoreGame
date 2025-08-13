@@ -1,21 +1,22 @@
-
 using AION.CoreFramework;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+
 namespace GameLogic
 {
-    public partial class GameMainUI 
+    public partial class GameMainUI : UIWindow
     {
-        
-        public Button LevelEndBtn { get;  set; }
+        public Button boardBg { get; set; }
+        public Image image { get; set; }
 
-    
         public override void ScriptGenerator()
         {
+            boardBg = transform.Find("BoardBg").GetComponent<Button>();
+            boardBg.onClick.AddListener(() => OnClick_boardBg());
             
-            LevelEndBtn = transform.Find("Mid/LevelEndBtn").GetComponent<Button>();
-            LevelEndBtn.onClick.AddListener(() => OnClick_LevelEndBtn());
+
+            image = transform.Find("PlayerArear/UnitPlaceHolder/Warrior/Image").GetComponent<Image>();
 
         }
     }

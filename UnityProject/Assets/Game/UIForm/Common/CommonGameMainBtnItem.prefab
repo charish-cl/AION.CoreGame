@@ -403,7 +403,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8455845383263930345}
-  - component: {fileID: 8556655099631472806}
   m_Layer: 5
   m_Name: CommonGameMainBtnItem
   m_TagString: Untagged
@@ -434,38 +433,3 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 130, y: 130}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &8556655099631472806
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8455845383263930344}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f58cba4d11ba4123a22f8f797a6ec4d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes: []
-  BindDatas:
-  - BindCom: {fileID: 8455845382768278553}
-    TypeName: Image
-  - BindCom: {fileID: 8455845382442130092}
-    TypeName: Transform
-  - BindCom: {fileID: 8455845383159708447}
-    TypeName: TextMeshProUGUI
-  - BindCom: {fileID: 6150336757701056406}
-    TypeName: Button
-  SubItems: []
-  AddData:
-    BindCom: {fileID: 0}
-    TypeName: 
-  uiType: 1

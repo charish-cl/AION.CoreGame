@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace AION.CoreFramework
 {
-    //不用管这个列表叫什么名字，只管它对应的Item类型数据类型
+    //不用管这个列表叫什么名字，只管它对应的Item类型数据类型 这里面可以涵盖标签页/无限列表/选择列表 反正就是item的集合
     [LabelText("数据列表")]
     public class UIDataListCode :BaseUICodeLogic
     {
@@ -22,30 +22,28 @@ namespace AION.CoreFramework
             }
             
         }
-
-
-
-        public override string FieldCode
+        
+        public override string FieldType
         {
             get
             {
-              return $"public List<{ItemTypeName}> {FieldName} = new List<{ItemTypeName}>();";   
+              return $"List<{ItemTypeName}>";   
             }
         }
 
-        public override string InitalizeCode
+        public override string RefreshCode
         {
             get
             {
-             
+               
                 StringBuilder sd = new StringBuilder();
                 if (childItem!=null)
                 {
-                    sd.AppendLine($"AdjustIconNum({FieldName}, {DataSource.DataSourceName}.Count, {listParent}, {childItem});");
+                    sd.AppendLine($"AdjustIconNum({FieldName}, {DataSource?.FieldName}.Count, {listParent}, {childItem});");
                 }
                 else
                 {
-                    sd.AppendLine($"AdjustIconNum({FieldName}, {DataSource.DataSourceName}.Count, {listParent});");
+                    sd.AppendLine($"AdjustIconNum({FieldName}, {DataSource?.FieldName}.Count, {listParent});");
                 }
                 
                 
@@ -83,7 +81,7 @@ namespace AION.CoreFramework
         
         public IEnumerable GetHierarchyPath()
         {
-            var gameObject = Parent;
+            var gameObject = Parent.prefab;
             if (gameObject == null)
             {
                 return null;

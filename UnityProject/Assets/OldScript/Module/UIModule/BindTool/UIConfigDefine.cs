@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Scriban;
 using Sirenix.OdinInspector;
+using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -21,6 +22,13 @@ namespace AION.CoreFramework
             "None",
             "TextMeshProUGUI", "GameObject", "Image", "Transform", "RectTransform", "Text", "Button",
             "RawImage", "ScrollRect", "InputField", "TMP_InputField", "Slider", "ToggleGroup", "Toggle", "TabModule"
+        };
+        
+        public static Dictionary<string,int> dicWidgetIndex = new Dictionary<string, int>()
+        {
+            {"None",0},
+            {"TextMeshProUGUI",1}, {"GameObject",2}, {"Image",3}, {"Transform",4}, {"RectTransform",5}, {"Text",6}, {"Button",7},            
+            {"RawImage",8}, {"ScrollRect",9}, {"InputField",10}, {"TMP_InputField",11}, {"Slider",12}, {"ToggleGroup",13}, {"Toggle",14}, {"TabModule",15}
         };
         
         public const string prefix = "Assets/OldScript/Module/UIModule/BindTool/Template/";
@@ -46,7 +54,13 @@ namespace AION.CoreFramework
             string result = template.Render(data,memberRenamer: member => member.Name);
             
             Debug.Log(result);
+            string className = gameObject.name;
+            string folderPath = IsItem?  GenerateFormCodePath+"/UIWidget":GeneratePartialCodePath;
+            string BindCodeFilePath = $"{folderPath}/{className}.Bind.cs";
             
+            //UIFormCodeFilePath只生成一次,搜索整个脚本目录
+            File.WriteAllText(BindCodeFilePath, result);
+            AssetDatabase.Refresh();
             
         }
 
