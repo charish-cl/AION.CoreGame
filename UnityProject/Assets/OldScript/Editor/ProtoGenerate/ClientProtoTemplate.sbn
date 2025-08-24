@@ -1,0 +1,12 @@
+﻿namespace GameProto
+{
+    public partial class MessageDispatcher
+    {
+        static MessageDispatcher()
+        {
+          {{~for kv in messageNameToId ~}}
+           Register<{{kv.Key}}>({{kv.Value}});
+          {{~end~}}
+        }
+    }
+}

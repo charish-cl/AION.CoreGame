@@ -1,0 +1,27 @@
+﻿import { {{~for pair in messageNameToEnumName ~}}{{pair.Item1}},{{~end~}} } from "../protots/main";
+import { ProtocolType } from "../protots/prototype";
+class ProtoIndex {
+
+    private static _req2Id = new Map<any, number>([
+         {{~for pair in messageNameToEnumName ~}}
+            [{{pair.Item1}}, ProtocolType.{{pair.Item2}}],
+         {{~end~}}
+    ]);
+
+    private static _Id2Str = new Map<number, string>([
+         {{~for pair in messageNameToEnumName ~}}
+            [ProtocolType.{{pair.Item2}}, "{{pair.Item1}}"],
+         {{~end~}}
+
+    ]);
+
+    public static getReqId(req: any): number {
+        return ProtoIndex._req2Id.get(req) || ProtocolType.None;
+    }
+
+    public static getIdStr(id: number): string {
+        return ProtoIndex._Id2Str.get(id) || "None";
+    }
+}
+
+export default ProtoIndex;

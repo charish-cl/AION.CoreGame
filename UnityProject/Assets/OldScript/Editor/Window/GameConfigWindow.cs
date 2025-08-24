@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using GameLogic.Config;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Demos.RPGEditor;
 using Sirenix.OdinInspector.Editor;
