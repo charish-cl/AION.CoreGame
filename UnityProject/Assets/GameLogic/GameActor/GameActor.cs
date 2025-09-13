@@ -1,8 +1,22 @@
 using System.Collections.Generic;
+using AION.CoreFramework;
 using UnityEngine;
 
-namespace AION.CoreFramework
+namespace GameLogic
 {
+   
+    public enum BuffState
+    {
+        None,
+        
+    }
+    public enum UnitTag
+    {
+        Player,
+        Enemy,
+        Tower,
+        Bullet,
+    }
     public class GameActor
     {
         public LinkedList<GameActorCmp> cmps = new LinkedList<GameActorCmp>();
@@ -12,7 +26,23 @@ namespace AION.CoreFramework
         public GameObject m_Owner;
         //事件
 
-
+        public UnitTag Tag { get; private set; }
+        public Vector2 Position { get;private set; }
+        
+        public bool IsDestroyed { get;private set; }
+        
+        public void Destroy()
+        {
+            IsDestroyed = true;
+        }
+        public void SetTag(UnitTag tag)
+        {
+            Tag = tag;
+        }
+        public void SetPosition(Vector2 pos)
+        {
+            Position = pos;
+        }
         #region 事件
 
         public ActorEventDispatcher EventDispatcher;
@@ -21,29 +51,44 @@ namespace AION.CoreFramework
 
         #region 生命周期
 
+        public void BindGo(GameObject owner)
+        {
+            m_Owner = owner;
+            m_transform = owner.transform;
+            
+            SetPosition(m_transform.position);
+        }
         protected virtual void BindCmp()
         {
             
         }
-        protected virtual void OnInit()
+        public  void OnInit()
         {
             EventDispatcher = MemoryPool.Acquire<ActorEventDispatcher>();
             //这里添加组件
             BindCmp();
+            
+            
+            foreach (var gameActorCmp in cmps)
+            {
+                gameActorCmp.OnInit();
+            }
         }
         
-        protected virtual void OnUpdate()
+        public void OnUpdate()
         {
             foreach (var gameActorCmp in cmps)
             {
-                gameActorCmp.OnUpdate();
+                if (gameActorCmp.Enable)
+                {
+                    gameActorCmp.OnUpdate();
+                }
             }
         }
 
 
-        protected virtual void OnDestroy()
+        public void OnDestroy()
         {
-            
             foreach (var gameActorCmp in cmps)
             {
                 gameActorCmp.OnDestroy();
@@ -52,7 +97,6 @@ namespace AION.CoreFramework
             MemoryPool.Release(EventDispatcher);
             
             Object.Destroy(m_Owner);
-            
         }
 
 
@@ -82,12 +126,13 @@ namespace AION.CoreFramework
             if (!HasComponent<T>())
             {
                 newCmp = new T();
+                newCmp.Actor = this;
                 cmps.AddLast(newCmp);
             }
             return newCmp;
         }
 
-        public T GetComponet<T>() where T : GameActorCmp, new()
+        public T GetComponent<T>() where T : GameActorCmp, new()
         {
             T newCmp = null;
 
@@ -101,10 +146,15 @@ namespace AION.CoreFramework
 
             return newCmp;
         }
+        public bool TryGetComponent<T>(out T cmp) where T : GameActorCmp, new()
+        {
+            cmp = GetComponent<T>();
+            return cmp!= null;
+        }
 
         public bool RemoveComponent<T>() where T : GameActorCmp, new()
         {
-            var gameActorCmp = GetComponet<T>();
+            var gameActorCmp = GetComponent<T>();
             if (gameActorCmp!=null)
             {
                 cmps.Remove(gameActorCmp);

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using AION.Config.Buff;
 
-namespace AION.CoreFramework
+namespace GameLogic
 {
     public class BuffComponent:GameActorCmp
     {

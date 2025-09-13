@@ -1,13 +1,24 @@
 using System;
+using AION.CoreFramework;
 
-namespace AION.CoreFramework
+namespace GameLogic
 {
     //组件
     public class GameActorCmp
     {
         public GameActor Actor;
 
-
+        public bool Enable = true;
+        
+        public bool IsDestroy = false;
+        public T GetComponent<T>() where T : GameActorCmp, new()
+        {
+            return Actor.GetComponent<T>(); 
+        }
+        public bool CheckIsEnable(GameActorCmp cmp)
+        {
+            return cmp!= null && cmp.Enable;
+        }
         public void AddEvent<T>(int eventId, Action<T> eventCallback)
         {
             if (Actor.EventDispatcher == null)
@@ -56,5 +67,6 @@ namespace AION.CoreFramework
             
         }
       
+        
     }
 }

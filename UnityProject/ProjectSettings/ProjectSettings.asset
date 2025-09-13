@@ -834,7 +834,7 @@ PlayerSettings:
     WebGL: TextMeshPro;ENABLE_LOG
     Windows Store Apps: ENABLE_LOG
     XboxOne: TextMeshPro
-    iPhone: TextMeshPro;ENABLE_LOG;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1
+    iPhone: TextMeshPro;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;ENABLE_LOG
     tvOS: TextMeshPro
   additionalCompilerArguments: {}
   platformArchitecture: {}

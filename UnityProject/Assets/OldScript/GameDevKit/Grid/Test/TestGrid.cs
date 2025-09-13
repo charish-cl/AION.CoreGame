@@ -61,5 +61,10 @@ namespace GameDevKit
             
             Gizmos.DrawLine(worldPos, new Vector2(worldPos.x, worldPos.y) + new Vector2(1, 0));
         }
+        [Button]
+        public void SetVectorRight(Vector2 vector)
+        {
+            transform.right = (vector - (Vector2)transform.position).normalized;
+        }
     }
 }
