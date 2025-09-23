@@ -24,12 +24,12 @@ namespace AION.CoreFramework
             {
                 mObjectPool.Update(elapseSeconds, realElapseSeconds);
             }
-            //轮询所有对象池，回收对象池中的对象
+           
         }
 
         internal override void Shutdown()
         {
-            
+            m_ObjectPools.Clear();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿using DamageNumbersPro;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace GameLogic
@@ -11,17 +12,23 @@ namespace GameLogic
         [LabelText("路径")]
         public Transform PathStart;
         
-        
+        [LabelText("HP条")]
+        public Canvas HPBarCanvas;
         
         [LabelText("怪物预制体")]
         public GameObject MonsterPrefab;
 
         [LabelText("塔预制体")]
         public GameObject TowerPrefab;
+        
+        [LabelText("玩家预制体")]
+        public GameObject PlayerPrefab;
 
         [LabelText("子弹预制体")]
         public GameObject BulletPrefab;
 
+
+        [LabelText("伤害预制体")] public DamageNumber numberPrefab;
 
         public Vector2[] GetPath()
         {

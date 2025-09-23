@@ -16,6 +16,12 @@ namespace AION.CoreFramework
         /// 逻辑层内部相关的交互。
         /// </summary>
         GroupLogic,
+        
+        
+        /// <summary>
+        /// 战斗相关的交互。
+        /// </summary>
+        BattleLogic,
     }
 
     [System.AttributeUsage(System.AttributeTargets.Interface)]

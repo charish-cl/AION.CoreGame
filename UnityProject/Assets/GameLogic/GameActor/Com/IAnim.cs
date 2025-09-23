@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace AION.CoreFramework
+namespace GameLogic
 {
     public interface IAnim
     {
@@ -25,6 +25,7 @@ namespace AION.CoreFramework
         void PauseAnima();
         
         void ResumeAnim();
+        
         
     }
 

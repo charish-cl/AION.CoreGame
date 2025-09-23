@@ -29,9 +29,18 @@ namespace AION.CoreFramework
             this.releaseInterval = releaseInterval;
         }
 
-        public void Register(T item,bool isLock)
+        public void Register(T item,bool isLock = false)
         {
             var obj = new Object<T>(item,isLock);
+            if (string.IsNullOrEmpty(item.Name))
+            {
+                item.Name = item.GetType().Name;
+            }
+
+            obj.ReferenceCnt++;
+            
+            obj.OnSpawn();
+            
             mPool.Add(item.Name,obj );
             objMap.Add(item, obj);
         }

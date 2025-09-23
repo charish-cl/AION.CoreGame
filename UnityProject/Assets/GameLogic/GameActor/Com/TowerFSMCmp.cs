@@ -117,11 +117,12 @@ namespace GameLogic
         }
 
         float stateTime;
-        float coolingTime = 2;
+        float coolingTime;
         public override async void OnEnter()
         {
             base.OnEnter();
             stateTime = 0;
+            coolingTime =1/ Actor.NumericComponent.GetAsFloat(NumericType.AttackSpeed);
             DisableComponent<OrientationViewCmp>();
         }
 
@@ -130,7 +131,6 @@ namespace GameLogic
             base.OnUpdate();
             
             stateTime += Time.deltaTime;
-            
         }
     }
 

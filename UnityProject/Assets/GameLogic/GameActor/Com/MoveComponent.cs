@@ -15,8 +15,9 @@ namespace GameLogic
 
         public virtual Vector2 GetInput()
         {
-            return UnityEngine.Input.GetAxis("Horizontal") * Vector2.right +
-                   UnityEngine.Input.GetAxis("Vertical") * Vector2.up;
+            //GetAxis 需要急停，GetAxisRaw 不需要
+            return UnityEngine.Input.GetAxisRaw("Horizontal") * Vector2.right +
+                   UnityEngine.Input.GetAxisRaw("Vertical") * Vector2.up;
         }
 
         public Vector2 GetMouseWorldPosition()
@@ -37,9 +38,11 @@ namespace GameLogic
         public Vector2 Position { get; set; }
 
         public Vector2 MoveDirection { get; set; }
-        public float Velocity { get; set; } = 1;
-
-
+        public float Velocity { get; set; }
+        
+        public bool IsMoving => RunTimeSpeed > 0;
+        
+        public float RunTimeSpeed { get; set; }
         public bool IsStrict4Direction { get; set; } = true;
 
         public override void OnInit()
@@ -47,16 +50,29 @@ namespace GameLogic
             base.OnInit();
             input = GetComponent<InputLogicCmp>();
             Position = Actor.m_transform.position;
+            RunTimeSpeed = 0;
         }
 
+        float epsilon = 0.01f;
         public override void OnUpdate()
         {
+            Velocity = Actor.NumericComponent.GetAsFloat(NumericType.Speed);
+
             Vector2 direction = Vector2.zero;
 
             if (input == null)
                 return;
 
             direction = input.GetInput();
+
+            if (Mathf.Abs(direction.x) < epsilon && Mathf.Abs(direction.y) < epsilon)
+            {
+                RunTimeSpeed = 0;
+                return;
+            }
+
+            RunTimeSpeed = Velocity;
+            
             if (IsStrict4Direction)
             {
                 direction = GetFourDirection(direction);
@@ -111,7 +127,8 @@ namespace GameLogic
         public override void OnUpdate()
         {
             //计算得出下一步的位置
-            
+            Velocity = Actor.NumericComponent.GetAsFloat(NumericType.Speed);
+
             if( index < Path.Count  )
             {
                 Vector2 direction = (Path[index] - Position).normalized;
@@ -135,13 +152,11 @@ namespace GameLogic
 
         public override void OnInit()
         {
-            base.OnInit();
             move = GetComponent<MoveLogicCmp>();
         }
 
         public override void OnUpdate()
         {
-            base.OnUpdate();
             if (move == null)
                 return;
             Actor.m_transform.position = move.Position;
@@ -161,14 +176,12 @@ namespace GameLogic
         {
             base.OnInit();
             move = GetComponent<MoveLogicCmp>();
-            spriteRenderer = Actor.m_transform.GetComponent<SpriteRenderer>();
+            spriteRenderer = Actor.m_transform.GetComponentInChildren<SpriteRenderer>();
         }
 
         public float lastX;
         public override void OnUpdate()
         {
-            base.OnUpdate();
-            
             if(!CheckIsEnable(move)) return;
             
             
@@ -204,7 +217,6 @@ namespace GameLogic
 
         public override void OnUpdate()
         {
-            base.OnUpdate();
             if (CheckHasRotatedToTarget(m_target))
             {
                 return;

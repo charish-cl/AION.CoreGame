@@ -10,7 +10,6 @@ namespace GameLogic
 
         public bool Enable = true;
         
-        public bool IsDestroy = false;
         public T GetComponent<T>() where T : GameActorCmp, new()
         {
             return Actor.GetComponent<T>(); 
@@ -45,10 +44,6 @@ namespace GameLogic
         public void SendEvent<T>(int eventId, Action<T> eventCallback)
         {
             Actor.EventDispatcher.SendEvent(eventId, eventCallback);
-        }
-        public T GetService<T>() where T : class
-        {
-            return Actor.GetSevice<T>();
         }
         
         public virtual void OnInit()

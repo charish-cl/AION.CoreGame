@@ -1,12 +1,15 @@
 using UnityEngine;
 
-namespace AION.CoreFramework
+namespace GameLogic
 {
     public class AnimatorComponent: IAnim
     {
         public Animator animator;
-
-
+        
+        public AnimatorComponent(Animator animator)
+        {   
+            this.animator = animator;
+        }
         public float PauseSpeed { get; set; }
         public bool IsPaused { get; set; }
 

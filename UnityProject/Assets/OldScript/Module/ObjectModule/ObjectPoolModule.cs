@@ -2,6 +2,9 @@
 
 namespace AION.CoreFramework
 {
+    /// <summary>
+    /// 从GameFramework.ObjectPoolModule移植过来的ObjectPoolModule ，一点个人修改
+    /// </summary>
     public class ObjectPoolModule:Module
     {
         private IObjectPoolManager _objectPoolManager;

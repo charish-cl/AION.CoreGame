@@ -19,10 +19,11 @@ namespace GameDevKit
         private Grid<GameObject> grid;
         private void Start()
         {
+            return;
             grid = new Grid<GameObject>(CreateGridObject,new Vector2Int(10,10),Vector2.one*4 ,-Vector2.one*20, true);
             foreach (var o in grid)
             {
-                Debug.Log(o);
+                // Debug.Log(o);
             }
         }
 

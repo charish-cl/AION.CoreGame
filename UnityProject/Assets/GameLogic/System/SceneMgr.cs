@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AION.CoreFramework;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace GameLogic
 {
@@ -42,13 +44,37 @@ namespace GameLogic
             actor.OnDestroy();
             Actors.Remove(actor);
         }
-        
+
+        public void CreatePlayer()
+        {
+            var actor = new GameActor();
+            actor.AddComponent<NumericComponent>();
+            actor.AddComponent<MoveLogicCmp>();
+            actor.AddComponent<DirectionViewCmp>();
+            actor.AddComponent<BuffCmp>();
+            actor.AddComponent<HealthCmp>();
+            actor.AddComponent<InputLogicCmp>();
+            actor.AddComponent<MoveViewCmp>();
+            actor.AddComponent<ActorAnimViewCmp>();
+            
+            GameObject go = GameObject.Instantiate(SceneBehavior.PlayerPrefab, SceneBehavior.transform);
+            go.transform.position = SceneBehavior.SpawnPoint.position;
+            
+            AddActor(actor, go, UnitTag.Player, (numeric) =>
+            {
+                numeric.Set(NumericType.SpeedBase, 5f);
+            });    
+        }
         public void CreateMonsterActor()
         {
             var actor = new GameActor();
+            actor.AddComponent<NumericComponent>();
             actor.AddComponent<SimplePathFindingLogicCmp>();
             actor.AddComponent<MoveViewCmp>();
             actor.AddComponent<DirectionViewCmp>();
+            actor.AddComponent<BuffCmp>();
+            actor.AddComponent<HealthCmp>();
+            actor.AddComponent<HPBarCmp>();
             
             
             GameObject go = GameObject.Instantiate(SceneBehavior.MonsterPrefab, SceneBehavior.transform);
@@ -60,6 +86,7 @@ namespace GameLogic
         public void CreateTower()
         {
             var actor = new GameActor();
+            actor.AddComponent<NumericComponent>();
             actor.AddComponent<TowerFSMCmp>();
             actor.AddComponent<OrientationViewCmp>();
             
@@ -71,21 +98,38 @@ namespace GameLogic
         
         public void SpawnBullet(Vector2 actorPosition, Vector2 monsterPosition)
         {
-           
             
             GameObject go = GameObject.Instantiate(SceneBehavior.BulletPrefab, SceneBehavior.transform);
             go.transform.position = actorPosition;
             
             var actor = new GameActor();
+            actor.AddComponent<NumericComponent>();
             actor.AddComponent<BulletCmp>().Init(monsterPosition);
             actor.AddComponent<MoveViewCmp>();
             actor.AddComponent<OrientationViewCmp>().SetTarget(monsterPosition);
             
+            
             AddActor(actor, go, UnitTag.Bullet);
         }
 
-        public void AddActor(GameActor actor, GameObject go, UnitTag tag)
+        public void SetBaseValue(NumericComponent NumericDic)
         {
+            NumericDic.Set(NumericType.SpeedBase, 1.0f);
+            NumericDic.Set(NumericType.AttackSpeedBase, 0.3f);
+            NumericDic.Set(NumericType.HpBase, 100);
+            NumericDic.Set(NumericType.AttackBase, 20);
+            NumericDic.Set(NumericType.DefenseBase, 5);
+        }
+
+        public void AddActor(GameActor actor, GameObject go, UnitTag tag,Action<NumericComponent> onInit = null)
+        {
+            SetBaseValue(actor.GetComponent<NumericComponent>());
+            
+            if (onInit!= null)
+            {
+                onInit(actor.GetComponent<NumericComponent>());    
+            }
+            go.SetActive(true);
             actor.BindGo(go);
             actor.OnInit();
             actor.SetTag(tag);
@@ -93,6 +137,7 @@ namespace GameLogic
         }
         public override bool OnInit()
         {
+            CreatePlayer();
             
             CreateMonsterActor();
             
@@ -130,17 +175,7 @@ namespace GameLogic
             }
          
         }
-
-        public override void OnRoleLogin()
-        {
-            base.OnRoleLogin();
-        }
-
-        public override void OnRoleLogout()
-        {
-            base.OnRoleLogout();
-        }
-
+        
         public override void OnDestroy()
         {
             base.OnDestroy();

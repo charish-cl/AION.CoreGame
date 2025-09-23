@@ -28,7 +28,15 @@ namespace GameLogic
 
         public UnitTag Tag { get; private set; }
         public Vector2 Position { get;private set; }
-        
+
+        public NumericComponent NumericComponent
+        {
+            get
+            {
+                return GetComponent<NumericComponent>();   
+            }
+        }
+
         public bool IsDestroyed { get;private set; }
         
         public void Destroy()
@@ -45,7 +53,19 @@ namespace GameLogic
         }
         #region 事件
 
-        public ActorEventDispatcher EventDispatcher;
+        private ActorEventDispatcher m_EventDispatcher;
+
+        public ActorEventDispatcher EventDispatcher
+        {
+            get
+            {
+                if (m_EventDispatcher == null)
+                {
+                    m_EventDispatcher = MemoryPool.Acquire<ActorEventDispatcher>();   
+                }
+                return m_EventDispatcher;
+            }
+        }
 
         #endregion
 
@@ -60,11 +80,9 @@ namespace GameLogic
         }
         protected virtual void BindCmp()
         {
-            
         }
         public  void OnInit()
         {
-            EventDispatcher = MemoryPool.Acquire<ActorEventDispatcher>();
             //这里添加组件
             BindCmp();
             
@@ -101,25 +119,7 @@ namespace GameLogic
 
 
         #endregion
-     
-        /// <summary>
-        /// 简单的依赖注入，使用关联性很强的组件
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public T GetSevice<T>() where T:class
-        {
-            //这里要等一帧，再执行，等所有的组件收集完
-            foreach (var gameActorCmp in cmps)
-            {
-                if (gameActorCmp is T t)
-                {
-                    return t;
-                }
-            }
-            return null;
-        }
-
+        
         public T AddComponent<T>() where T : GameActorCmp, new()
         {
             T newCmp = null;
