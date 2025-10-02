@@ -12,17 +12,6 @@ namespace GameDevKit
         {
             go.GetComponent<SpriteRenderer>().sprite = sprite;
         }
-        /// <summary>
-        /// 通过包围盒 获取到Rect
-        /// </summary>
-        /// <param name="sprite"></param>
-        /// <returns></returns>
-        public static FRect GetFRect(this SpriteRenderer sprite)
-        {
-           var bounds= sprite.bounds;
-           
-           return new FRect(bounds.center, bounds.size.x, bounds.size.y);
-        }
         
         public static Texture2D SpriteToTexture2d(this Sprite sprite)
         {

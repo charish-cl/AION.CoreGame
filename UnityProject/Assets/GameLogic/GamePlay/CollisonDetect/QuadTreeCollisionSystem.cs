@@ -18,7 +18,12 @@ namespace GameLogic
         private QuadTree tree;
         private List<FCollider> allColliders = new List<FCollider>();
 
-        void Start()
+        public void Build(Grid grid)
+        {
+            
+        }
+
+    void Start()
         {
             allColliders = new List<FCollider>();
             
