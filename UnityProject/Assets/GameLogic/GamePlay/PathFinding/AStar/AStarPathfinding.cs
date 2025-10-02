@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GameDevKit.GameLogic;
 using UnityEngine;
 
 namespace GameDevKit
@@ -164,7 +163,7 @@ namespace GameDevKit
         //获取最小f花费的元素
         private AstarNode GetLowestFCostNode(List<AstarNode> pathNodeList)
         {
-            return pathNodeList.Closest(e => e.fcost);
+            return pathNodeList.OrderBy(e => e.fcost).First();
         }
     }
 }

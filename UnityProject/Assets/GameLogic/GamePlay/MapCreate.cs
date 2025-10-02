@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using GameDevKit;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -119,14 +120,14 @@ public class MapCreate : SerializedMonoBehaviour
             return;
         }
         if (ObstacleMapCells == null) return;
-        // foreach (var cell in ObstacleMapCells)
-        // {
-        //     FDraw.GimzoDrawRectangle(GetColor(cell.cellType),cell.Position, cellSize.x, cellSize.y);
-        // }
-        // foreach (var cell in CanWalkMapCells)
-        // {
-        //     FDraw.GimzoDrawRectangle(GetColor(cell.cellType), cell.Position, cellSize.x, cellSize.y);
-        // }
+        foreach (var cell in ObstacleMapCells)
+        {
+            FDraw.GimzoDrawRectangle(GetColor(cell.cellType),cell.Position, cellSize.x, cellSize.y);
+        }
+        foreach (var cell in CanWalkMapCells)
+        {
+            FDraw.GimzoDrawRectangle(GetColor(cell.cellType), cell.Position, cellSize.x, cellSize.y);
+        }
     }
 
 

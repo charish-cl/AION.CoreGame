@@ -1,5 +1,4 @@
-﻿using System;
-using GameDevKit.GameLogic;
+﻿
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -9,13 +8,13 @@ namespace GameDevKit
     public class TestGrid:MonoBehaviour
     {
         public SpriteRenderer sprite;
-        [Button]
-        public void GetDefaultTexture(Texture2D texture)
-        {
-            Debug.Log( texture.width/25.2578);    
-            Debug.Log( texture.height/25.2578);    
-            sprite.sprite = texture.Texture2dToSprite();
-        }
+        // [Button]
+        // public void GetDefaultTexture(Texture2D texture)
+        // {
+        //     Debug.Log( texture.width/25.2578);    
+        //     Debug.Log( texture.height/25.2578);    
+        //     sprite.sprite = texture.Texture2dToSprite();
+        // }
         private Grid<GameObject> grid;
         private void Start()
         {

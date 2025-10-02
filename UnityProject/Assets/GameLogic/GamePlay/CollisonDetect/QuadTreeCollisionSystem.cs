@@ -23,7 +23,7 @@ namespace GameLogic
             
         }
 
-    void Start()
+        void Start()
         {
             allColliders = new List<FCollider>();
             
