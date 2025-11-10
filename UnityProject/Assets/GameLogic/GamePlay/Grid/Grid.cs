@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace GameDevKit
 {
-    public class Grid<T> : IEnumerable<T> 
+    public class Grid<T> : IEnumerable<T>
     {
         private T[,] gridData;
         private int width;
@@ -25,6 +25,7 @@ namespace GameDevKit
         public Vector2 GridOrigin => gridOrigin;
         public int Width => width;
         public int Height => height;
+
         /// <summary>
         /// 基础构造函数
         /// </summary>
@@ -41,7 +42,8 @@ namespace GameDevKit
             InitializeDebugSystem();
         }
 
-        public Grid(Func<Grid<T>, Vector2Int, T> getData,Vector2Int cellNum, Vector2 cellSize, Vector2 origin, bool enableDebug = false)
+        public Grid(Func<Grid<T>, Vector2Int, T> getData, Vector2Int cellNum, Vector2 cellSize, Vector2 origin,
+            bool enableDebug = false)
         {
             this.width = cellNum.x;
             this.height = cellNum.y;
@@ -54,16 +56,17 @@ namespace GameDevKit
         }
 
         //调使用
-        public Grid(Func<Grid<T>, Vector2Int, T> getData,int width, int height)
+        public Grid(Func<Grid<T>, Vector2Int, T> getData, int width, int height)
         {
             this.width = width;
             this.height = height;
-            this.cellSize = new Vector2(5,5);
-            this.gridOrigin = Vector2.zero-new Vector2(this.width/2*cellSize.x,this.height/2*cellSize.y);
+            this.cellSize = new Vector2(5, 5);
+            this.gridOrigin = Vector2.zero - new Vector2(this.width / 2 * cellSize.x, this.height / 2 * cellSize.y);
             this.enableDebug = true;
             InitializeGridData(getData);
             InitializeDebugSystem();
         }
+
         //自动初始化默认的Grid
         private void InitializeGridData(Func<Grid<T>, Vector2Int, T> getData)
         {
@@ -72,16 +75,17 @@ namespace GameDevKit
             {
                 for (int y = 0; y < height; y++)
                 {
-                    gridData[x, y] = getData(this,new Vector2Int(x, y));
+                    gridData[x, y] = getData(this, new Vector2Int(x, y));
                 }
             }
         }
+
         private void InitializeDebugSystem()
         {
             if (!enableDebug) return;
 
             debugTexts = new TextMesh[width, height];
-            
+
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
@@ -134,17 +138,18 @@ namespace GameDevKit
         public (int x, int y) GetGridCoordinates(Vector2 worldPosition)
         {
             Vector2 localPos = worldPosition - gridOrigin;
-            var (x,y) = (
+            var (x, y) = (
                 Mathf.FloorToInt(localPos.x / cellSize.x),
                 Mathf.FloorToInt(localPos.y / cellSize.y)
             );
-            return (x,y);
+            return (x, y);
         }
 
         public T GetValue(int x, int y)
         {
             return IsValidCoordinate(x, y) ? gridData[x, y] : default;
         }
+
         private bool IsValidCoordinate(int x, int y)
         {
             return x >= 0 && y >= 0 && x < width && y < height;
@@ -157,12 +162,13 @@ namespace GameDevKit
         /// <param name="xNum"></param>
         /// <param name="yNum"></param>
         /// <returns></returns>
-        public List<T> GetBoundCell(Vector2Int point,int xNum, int yNum)
+        public List<T> GetBoundCell(Vector2Int point, int xNum, int yNum)
         {
             if (!IsValidCoordinate(point.x, point.y))
             {
                 return null;
             }
+
             List<T> boundCell = new List<T>();
             //选择起点
             int startX = point.x - xNum / 2;
@@ -178,18 +184,17 @@ namespace GameDevKit
                     }
                 }
             }
+
             return boundCell;
         }
 
         #endregion
-       
 
-        
-        
+
         public void SetValue(int x, int y, T value)
         {
             if (!IsValidCoordinate(x, y)) return;
-            
+
             gridData[x, y] = value;
             OnCellValueChanged?.Invoke(x, y, value);
         }
@@ -197,11 +202,11 @@ namespace GameDevKit
         public void RefreshAllValues()
         {
             for (int x = 0; x < width; x++)
-                for (int y = 0; y < height; y++)
-                    OnCellValueChanged?.Invoke(x, y, gridData[x, y]);
+            for (int y = 0; y < height; y++)
+                OnCellValueChanged?.Invoke(x, y, gridData[x, y]);
         }
 
- 
+
         // 实现枚举器接口
         public IEnumerator<T> GetEnumerator()
         {
@@ -219,9 +224,24 @@ namespace GameDevKit
             return GetValue(x, y);
         }
 
+
+        public bool TryGetValueByWorldPosition(Vector2 worldPosition, out T value)
+        {
+            value = default(T);
+
+            var (x, y) = GetGridCoordinates(worldPosition);
+            if (IsValidCoordinate(x, y))
+            {
+                value = gridData[x, y];
+                return true;
+            }
+
+            return false;
+        }
+
         public T GetByMousePosition()
         {
-            var worldPos = Camera.main.ScreenToWorldPoint(new Vector2( Input.mousePosition.x, Input.mousePosition.y));
+            var worldPos = Camera.main.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
             var cell = GetValueByWorldPosition(worldPos);
             return cell;
         }
@@ -232,12 +252,12 @@ namespace GameDevKit
             int y = position.y;
             return GetNeighbors(x, y, includeDiagonal);
         }
+
         public IEnumerable<T> GetNeighbors(int x, int y, bool includeDiagonal = false)
         {
             List<T> neighbors = new List<T>();
-            Vector2Int[] directions = includeDiagonal ? 
-                GridDirections.AllDirections : 
-                GridDirections.CardinalDirections;
+            Vector2Int[] directions =
+                includeDiagonal ? GridDirections.AllDirections : GridDirections.CardinalDirections;
 
             foreach (var dir in directions)
             {
@@ -246,7 +266,29 @@ namespace GameDevKit
                 if (IsValidCoordinate(newX, newY))
                     neighbors.Add(gridData[newX, newY]);
             }
+
             return neighbors;
+        }
+
+        public List<T> GetCellsInRect(Rect selectArea)
+        {
+            int startX = (int)(selectArea.x / cellSize.x);
+            int startY = (int)(selectArea.y / cellSize.y);
+            int endX = (int)(selectArea.xMax / cellSize.x);
+            int endY = (int)(selectArea.yMax / cellSize.y);
+
+            List<T> cells = new List<T>();
+            for (int x = startX; x <= endX; x++)
+            {
+                for (int y = startY; y <= endY; y++)
+                {
+                    if (IsValidCoordinate(x, y))
+                    {
+                        cells.Add(gridData[x, y]);
+                    }
+                }
+            }
+            return cells;
         }
     }
 

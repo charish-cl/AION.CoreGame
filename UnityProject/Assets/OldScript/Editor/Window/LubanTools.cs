@@ -27,7 +27,8 @@ namespace GameScripts.Editor
             ShellHelper.Run("sh",workPath);
 #else
             string filename = "gen_code_bin_to_project.bat";
-            ShellHelper.Run($"./{filename}",LubanPath);
+            // 用 cmd /c 执行 .bat 文件
+            ShellHelper.Run($"{filename}", LubanPath);
 #endif
             
         }

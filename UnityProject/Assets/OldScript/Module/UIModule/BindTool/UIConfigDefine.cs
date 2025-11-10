@@ -41,7 +41,7 @@ namespace AION.CoreFramework
             var template = Template.Parse(templateText);
             
             
-            bool IsItem = gameObject.name.Contains("Item");
+            bool IsItem = gameObject.name.Contains("Item") || gameObject.name.Contains("Widget");
             
             
             var data = new {

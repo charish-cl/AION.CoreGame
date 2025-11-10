@@ -118,6 +118,10 @@ namespace GameLogic
         {
             if (!Application.isPlaying) return;
 
+            if (tree == null)
+            {
+                return;
+            }
             if (drawTree) tree.DrawGizmos();
 
             if (drawColliders)

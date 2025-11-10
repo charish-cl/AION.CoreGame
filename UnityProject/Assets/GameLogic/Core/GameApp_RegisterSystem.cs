@@ -29,6 +29,7 @@ public partial class GameApp : Singleton<GameApp>
     {
         //带生命周期的单例系统。
         AddLogicSys(BehaviourSingleSystem.Instance);
+        ConfigSystem.Instance.Active();   
         AddLogicSys(HPBarLogicSystem.Instance);
         AddLogicSys(SceneMgr.Instance);
     }

@@ -9,7 +9,7 @@
 
 
 
-namespace GameConfig.test
+namespace GameConfig
 { 
     [System.Flags]
     public enum AccessFlag

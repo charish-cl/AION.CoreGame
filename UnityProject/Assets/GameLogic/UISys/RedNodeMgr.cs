@@ -62,7 +62,8 @@ namespace GameLogic
                     m_RedNodes[item.Key] = new RedNodeBase(item.Key);
                 }
             }
-
+            
+            
             //绑定红点
             foreach (var item in m_RedNodeRelationDic)
             {

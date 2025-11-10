@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Serialization;
@@ -70,6 +71,25 @@ namespace GameDevKitEditor
             {
                 Application.OpenURL(Path);
             }
+        }
+
+        public Dictionary<string, List<string>> testring = new Dictionary<string, List<string>>();
+        
+        [Button]
+        public void Test()
+        {
+            List<string> list = new List<string>();
+            list = default(List<string>);
+            
+            Debug.Log(list);
+            
+            list.Add("1");
+
+            testring.TryGetValue("1", out list);
+            
+            Debug.Log(list);
+            Debug.Log(list.Count);
+
         }
     }
 }

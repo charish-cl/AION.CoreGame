@@ -15,6 +15,7 @@ namespace AION.CoreFramework
         // 提取 UIForm 存放路径为常量
         private const string UI_FORM_PATH = "Assets/Game/UIForm/";
 
+        const string NAMESPACE = "GameLogic";
         static UIFormSwitcher()
         {
             ToolbarExtender.LeftToolbarGUI.Add((1, OnToolbarGUI));
@@ -24,7 +25,8 @@ namespace AION.CoreFramework
         static GUIStyle _buttonGuiStyle;
         static GUIStyle _popGuiStyle;
         
-
+        
+        
         static string m_UiName
         {
             get
@@ -150,7 +152,7 @@ namespace AION.CoreFramework
         static void CallShowWindow(string windowTypeName)
         {
             // 解析目标窗口类型
-            Type windowType = Type.GetType(windowTypeName); // 例如"YourNamespace.MainWindow"[1](@ref)
+            Type windowType = Type.GetType(NAMESPACE + "." + windowTypeName); // 例如"YourNamespace.MainWindow"[1](@ref)
     
             // 获取UI成员
             PropertyInfo uiProp = typeof(GameModule).GetProperty("UI");
@@ -159,10 +161,11 @@ namespace AION.CoreFramework
             // 绑定泛型方法
             MethodInfo genericShow = uiProp.PropertyType
                 .GetMethod("ShowWindow")
-                .MakeGenericMethod(windowType);
+                ?.MakeGenericMethod(windowType);
 
             // 执行调用
-            genericShow.Invoke(uiInstance, new object[] { null });
+            if (genericShow != null) 
+                genericShow.Invoke(uiInstance, new object[] { null });
         }
     }
 }

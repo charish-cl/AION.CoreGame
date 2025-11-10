@@ -9,7 +9,7 @@
 
 
 
-namespace GameConfig.funcConfig
+namespace GameConfig
 { 
     [System.Flags]
     public enum FuncType

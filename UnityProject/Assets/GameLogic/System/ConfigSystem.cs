@@ -45,6 +45,8 @@ public class ConfigSystem : Singleton<ConfigSystem>
         TextAsset textAsset = GameModule.Resource.LoadAsset<TextAsset>(file);
         byte[] bytes = textAsset.bytes;
         GameModule.Resource.UnloadAsset(textAsset);
+        
+        Log.Info("Load config file: " + file);
         return new ByteBuf(bytes);
     }
 }

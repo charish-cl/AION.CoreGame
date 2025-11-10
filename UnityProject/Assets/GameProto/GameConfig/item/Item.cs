@@ -19,14 +19,11 @@ public sealed partial class Item : Luban.BeanBase
         Id = _buf.ReadInt();
         Name = _buf.ReadString();
         Desc = _buf.ReadString();
-        Price = _buf.ReadInt();
-        UpgradeToItemId = _buf.ReadInt();
-        UpgradeToItemId_Ref = null;
-        if(_buf.ReadBool()){ ExpireTime = _buf.ReadLong(); } else { ExpireTime = null; }
-        BatchUseable = _buf.ReadBool();
-        ExchangeStream = global::GameConfig.item.ItemExchange.DeserializeItemExchange(_buf);
+        Icon = _buf.ReadString();
         {int n0 = System.Math.Min(_buf.ReadSize(), _buf.Size);ExchangeList = new System.Collections.Generic.List<item.ItemExchange>(n0);for(var i0 = 0 ; i0 < n0 ; i0++) { item.ItemExchange _e0;  _e0 = global::GameConfig.item.ItemExchange.DeserializeItemExchange(_buf); ExchangeList.Add(_e0);}}
-        ExchangeColumn = global::GameConfig.item.ItemExchange.DeserializeItemExchange(_buf);
+        Test = global::GameConfig.item.ItemExchange.DeserializeItemExchange(_buf);
+        Getways = _buf.ReadInt();
+        Getways_Ref = null;
     }
 
     public static Item DeserializeItem(ByteBuf _buf)
@@ -43,45 +40,32 @@ public sealed partial class Item : Luban.BeanBase
     /// </summary>
     public readonly string Name;
     /// <summary>
-    /// 描述
+    /// 介绍
     /// </summary>
     public readonly string Desc;
     /// <summary>
-    /// 价格
+    /// 图标
     /// </summary>
-    public readonly int Price;
-    /// <summary>
-    /// 引用当前表
-    /// </summary>
-    public readonly int UpgradeToItemId;
-    public item.Item UpgradeToItemId_Ref;
-    /// <summary>
-    /// 过期时间
-    /// </summary>
-    public readonly long? ExpireTime;
-    /// <summary>
-    /// 能否批量使用
-    /// </summary>
-    public readonly bool BatchUseable;
-    /// <summary>
-    /// 道具兑换配置
-    /// </summary>
-    public readonly item.ItemExchange ExchangeStream;
+    public readonly string Icon;
     public readonly System.Collections.Generic.List<item.ItemExchange> ExchangeList;
     /// <summary>
     /// 道具兑换配置
     /// </summary>
-    public readonly item.ItemExchange ExchangeColumn;
+    public readonly item.ItemExchange Test;
+    /// <summary>
+    /// 获取途径
+    /// </summary>
+    public readonly int Getways;
+    public item.ItemGetWay Getways_Ref;
    
     public const int __ID__ = 2107285806;
     public override int GetTypeId() => __ID__;
 
     public  void ResolveRef(Tables tables)
     {
-        UpgradeToItemId_Ref = tables.TbItem.GetOrDefault(UpgradeToItemId);
-        ExchangeStream?.ResolveRef(tables);
         foreach (var _e in ExchangeList) { _e?.ResolveRef(tables); }
-        ExchangeColumn?.ResolveRef(tables);
+        Test?.ResolveRef(tables);
+        Getways_Ref = tables.TbGetWay.GetOrDefault(Getways);
     }
 
     public override string ToString()
@@ -90,13 +74,10 @@ public sealed partial class Item : Luban.BeanBase
         + "id:" + Id + ","
         + "name:" + Name + ","
         + "desc:" + Desc + ","
-        + "price:" + Price + ","
-        + "upgradeToItemId:" + UpgradeToItemId + ","
-        + "expireTime:" + ExpireTime + ","
-        + "batchUseable:" + BatchUseable + ","
-        + "exchangeStream:" + ExchangeStream + ","
+        + "icon:" + Icon + ","
         + "exchangeList:" + Luban.StringUtil.CollectionToString(ExchangeList) + ","
-        + "exchangeColumn:" + ExchangeColumn + ","
+        + "test:" + Test + ","
+        + "getways:" + Getways + ","
         + "}";
     }
 }
