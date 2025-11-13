@@ -8,14 +8,14 @@ public static class UICommon
     {
         if (string.IsNullOrEmpty(spriteName))
         {
-            Log.Error("Sprite name is null or empty.");
+            Log.Warning("Sprite name is null or empty.");
             return;
         }
 
         Sprite sprite = GameModule.Resource.LoadAsset<Sprite>(spriteName);
         if (sprite == null)
         {
-            Log.Error("Sprite not found: " + spriteName);
+            Log.Warning("Sprite not found: " + spriteName);
             return;
         }
 

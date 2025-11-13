@@ -84,6 +84,11 @@ namespace AION.CoreFramework
                 Debug.LogError($"资源加载失败 {assetUrl}");
                 return null;
             }
+            if (asset.target == null)
+            {
+                Debug.LogError($"资源加载失败 {assetUrl}");
+                return null;
+            }
             Debug.Log($"资源加载成功 {asset.target.GetType()} {asset.target}");
             return (T)asset.target;
         }

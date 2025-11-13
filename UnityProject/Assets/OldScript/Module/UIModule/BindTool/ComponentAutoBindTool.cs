@@ -64,6 +64,56 @@ namespace AION.CoreFramework
             UIConfigDefine.BuildBindCode(BindDatas, transform.gameObject);
             return "";
         }
+        
+            // ⭐ 新增功能：检查并补齐组件
+        [ButtonGroup("Tools")]
+        [Button("检查补齐组件", ButtonHeight = 40)]
+        public void CheckAndFixBindings()
+        {
+            foreach (var bindData in BindDatas)
+            {
+                if (bindData.BindCom == null)
+                    continue;
+
+                GameObject go = bindData.BindCom as GameObject;
+                if (go == null)
+                    continue;
+
+                // 根据TypeName检查相应组件
+                Type bindType = GetTypeByName(bindData.TypeName);
+                if (bindType != null)
+                {
+                    var comp = go.GetComponent(bindType);
+                    if (comp == null)
+                    {
+                        go.AddComponent(bindType);
+                        Debug.Log($"[AutoBind] {go.name} 缺少 {bindType.Name}，已自动添加。");
+                    }
+                }
+            }
+
+            EditorUtility.SetDirty(this);
+            Debug.Log("✅ 检查完毕。所有缺失的组件已自动补齐。");
+        }
+
+        private Type GetTypeByName(string typeName)
+        {
+            if (string.IsNullOrEmpty(typeName))
+                return null;
+
+            // 可以扩展映射表，更精确地处理
+            switch (typeName)
+            {
+                case "Button": return typeof(UnityEngine.UI.Button);
+                case "Image": return typeof(UnityEngine.UI.Image);
+                case "Text": return typeof(UnityEngine.UI.Text);
+                case "InputField": return typeof(UnityEngine.UI.InputField);
+                case "Toggle": return typeof(UnityEngine.UI.Toggle);
+                default:
+                    // 试图动态解析类型
+                    return Type.GetType(typeName) ?? null;
+            }
+        }
 #endif
 
         public bool HashComponent(Object selectobj)

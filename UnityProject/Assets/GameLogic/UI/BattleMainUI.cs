@@ -1,7 +1,9 @@
-﻿using GameConfig.item;
+﻿using AION.CoreFramework;
+using GameConfig.item;
 
 namespace GameLogic
 {
+    [Window(UILayer.UI)]
     public partial class BattleMainUI
     {
         public override void OnCreate()

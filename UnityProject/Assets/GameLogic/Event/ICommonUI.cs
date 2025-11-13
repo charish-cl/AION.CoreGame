@@ -1,4 +1,5 @@
 ﻿using AION.CoreFramework;
+using GameConfig.item;
 
 namespace GameLogic
 {

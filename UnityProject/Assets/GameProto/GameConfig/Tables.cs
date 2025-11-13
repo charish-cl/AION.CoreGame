@@ -15,17 +15,29 @@ public partial class Tables
 {
     public item.TbItem TbItem {get; }
     public booty.TbBooty TbBooty {get; }
-    public funcConfig.TbFuncConfig TbFuncConfig {get; }
+    public funcConfig.TbFunc TbFunc {get; }
     public item.TbGetWay TbGetWay {get; }
-    public item.TbCurrencyConfig TbCurrencyConfig {get; }
+    public item.TbCurrency TbCurrency {get; }
+    public item.TbItemExchange TbItemExchange {get; }
+    public battle.TbTower TbTower {get; }
+    public battle.TbBullet TbBullet {get; }
+    public battle.TbUnit TbUnit {get; }
+    public battle.TbBuff TbBuff {get; }
+    public battle.TbStatus TbStatus {get; }
 
     public Tables(System.Func<string, ByteBuf> loader)
     {
         TbItem = new item.TbItem(loader("item_tbitem"));
         TbBooty = new booty.TbBooty(loader("booty_tbbooty"));
-        TbFuncConfig = new funcConfig.TbFuncConfig(loader("funcconfig_tbfuncconfig"));
+        TbFunc = new funcConfig.TbFunc(loader("funcconfig_tbfunc"));
         TbGetWay = new item.TbGetWay(loader("item_tbgetway"));
-        TbCurrencyConfig = new item.TbCurrencyConfig(loader("item_tbcurrencyconfig"));
+        TbCurrency = new item.TbCurrency(loader("item_tbcurrency"));
+        TbItemExchange = new item.TbItemExchange(loader("item_tbitemexchange"));
+        TbTower = new battle.TbTower(loader("battle_tbtower"));
+        TbBullet = new battle.TbBullet(loader("battle_tbbullet"));
+        TbUnit = new battle.TbUnit(loader("battle_tbunit"));
+        TbBuff = new battle.TbBuff(loader("battle_tbbuff"));
+        TbStatus = new battle.TbStatus(loader("battle_tbstatus"));
         ResolveRef();
     }
     
@@ -33,9 +45,15 @@ public partial class Tables
     {
         TbItem.ResolveRef(this);
         TbBooty.ResolveRef(this);
-        TbFuncConfig.ResolveRef(this);
+        TbFunc.ResolveRef(this);
         TbGetWay.ResolveRef(this);
-        TbCurrencyConfig.ResolveRef(this);
+        TbCurrency.ResolveRef(this);
+        TbItemExchange.ResolveRef(this);
+        TbTower.ResolveRef(this);
+        TbBullet.ResolveRef(this);
+        TbUnit.ResolveRef(this);
+        TbBuff.ResolveRef(this);
+        TbStatus.ResolveRef(this);
     }
 }
 

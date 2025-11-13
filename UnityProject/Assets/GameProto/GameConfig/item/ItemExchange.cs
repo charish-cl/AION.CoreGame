@@ -12,6 +12,9 @@ using Luban;
 
 namespace GameConfig.item
 {
+/// <summary>
+/// 道具转化
+/// </summary>
 public sealed partial class ItemExchange : Luban.BeanBase
 {
     public ItemExchange(ByteBuf _buf) 

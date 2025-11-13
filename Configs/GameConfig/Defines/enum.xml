@@ -1,0 +1,48 @@
+<module name="">
+  <!-- 塔类型 -->
+<enum name="ETowerType">
+    <var name="ATTACK" value="1"/>
+    <var name="SPAWN" value="2"/>
+    <var name="AURA" value="3"/>
+</enum>
+
+<!-- 子弹类型 -->
+<enum name="EBulletType">
+    <var name="PROJECTILE" value="1"/>
+    <var name="SPAWN_UNIT" value="2"/>
+    <var name="INSTANT_AURA" value="3"/>
+</enum>
+
+<!-- 单位类型 -->
+<enum name="EUnitType">
+    <var name="ENEMY" value="1"/>
+    <var name="HERO" value="2"/>
+</enum>
+
+<!-- 减益类型 -->
+<enum name="EDebuffType">
+    <var name="ATTACK_BOOST" value="1"/>
+    <var name="SLOW" value="2"/>
+</enum>
+
+
+<enum name="EBuffType">
+    <var name="PropertyMod" value="1" comment="属性修改：提升或降低目标属性（如攻击力）"/>
+    <var name="Heal" value="2" comment="治疗：恢复目标生命值"/>
+    <var name="Damage" value="3" comment="伤害：对目标造成伤害"/>
+    <var name="Status" value="4" comment="状态：施加特殊状态（如眩晕、击退）"/>
+</enum>
+
+<enum name="ETargetType">
+    <var name="Friendly" value="1" comment="对友方单位生效"/>
+    <var name="Enemy" value="2" comment="对敌方单位生效"/>
+    <!-- 未来可扩展 Self (仅自己), All (全场) 等 -->
+</enum>
+
+<enum name="ETriggerType">
+    <var name="Immediate" value="1" comment="立即触发：Buff生效时立即触发一次效果"/>
+    <var name="Interval" value="2" comment="间隔触发：按固定时间间隔周期性触发效果"/>
+    <var name="Probability" value="3" comment="概率触发：满足条件时按一定概率触发效果"/>
+</enum>
+
+</module>

@@ -14,23 +14,23 @@ namespace GameConfig.booty
 {
 public partial class TbBooty
 {
-    private readonly System.Collections.Generic.List<booty.Booty> _dataList;
+    private readonly System.Collections.Generic.List<booty.BootyConfig> _dataList;
 
-    private System.Collections.Generic.Dictionary<int, booty.Booty> _dataMap_id;
-    private System.Collections.Generic.Dictionary<int, booty.Booty> _dataMap_sub_id;
+    private System.Collections.Generic.Dictionary<int, booty.BootyConfig> _dataMap_id;
+    private System.Collections.Generic.Dictionary<int, booty.BootyConfig> _dataMap_sub_id;
 
     public TbBooty(ByteBuf _buf)
     {
-        _dataList = new System.Collections.Generic.List<booty.Booty>();
+        _dataList = new System.Collections.Generic.List<booty.BootyConfig>();
         
         for(int n = _buf.ReadSize() ; n > 0 ; --n)
         {
-            booty.Booty _v;
-            _v = global::GameConfig.booty.Booty.DeserializeBooty(_buf);
+            booty.BootyConfig _v;
+            _v = global::GameConfig.booty.BootyConfig.DeserializeBootyConfig(_buf);
             _dataList.Add(_v);
         }
-        _dataMap_id = new System.Collections.Generic.Dictionary<int, booty.Booty>();
-        _dataMap_sub_id = new System.Collections.Generic.Dictionary<int, booty.Booty>();
+        _dataMap_id = new System.Collections.Generic.Dictionary<int, booty.BootyConfig>();
+        _dataMap_sub_id = new System.Collections.Generic.Dictionary<int, booty.BootyConfig>();
     foreach(var _v in _dataList)
     {
         _dataMap_id.Add(_v.Id, _v);
@@ -38,10 +38,10 @@ public partial class TbBooty
     }
     }
 
-    public System.Collections.Generic.List<booty.Booty> DataList => _dataList;
+    public System.Collections.Generic.List<booty.BootyConfig> DataList => _dataList;
 
-    public booty.Booty GetById(int key) => _dataMap_id.TryGetValue(key, out booty.Booty __v) ? __v : null;
-    public booty.Booty GetBySubId(int key) => _dataMap_sub_id.TryGetValue(key, out booty.Booty __v) ? __v : null;
+    public booty.BootyConfig GetById(int key) => _dataMap_id.TryGetValue(key, out booty.BootyConfig __v) ? __v : null;
+    public booty.BootyConfig GetBySubId(int key) => _dataMap_sub_id.TryGetValue(key, out booty.BootyConfig __v) ? __v : null;
     
     public void ResolveRef(Tables tables)
     {

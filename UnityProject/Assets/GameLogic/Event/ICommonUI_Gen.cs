@@ -8,6 +8,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using AION.CoreFramework;
+using GameConfig.item;
 
 namespace GameLogic
 {
@@ -38,7 +39,7 @@ namespace GameLogic
             _dispatcher.Send(ICommonUI_Event.ShowError,error);
         }
 
-        public void ShowReward(GameLogic.RewardData reward)
+        public void ShowReward(RewardData reward)
         {
             _dispatcher.Send(ICommonUI_Event.ShowReward,reward);
         }

@@ -35,6 +35,7 @@ public class ConfigSystem : Singleton<ConfigSystem>
         _init = true;
     }
 
+    const string ConfigPath = "Assets/AssetRaw/Configs/bytes/{0}.bytes";
     /// <summary>
     /// 加载二进制配置。
     /// </summary>
@@ -42,7 +43,7 @@ public class ConfigSystem : Singleton<ConfigSystem>
     /// <returns>ByteBuf</returns>
     private ByteBuf LoadByteBuf(string file)
     {
-        TextAsset textAsset = GameModule.Resource.LoadAsset<TextAsset>(file);
+        TextAsset textAsset = GameModule.Resource.LoadAsset<TextAsset>(string.Format(ConfigPath, file));
         byte[] bytes = textAsset.bytes;
         GameModule.Resource.UnloadAsset(textAsset);
         

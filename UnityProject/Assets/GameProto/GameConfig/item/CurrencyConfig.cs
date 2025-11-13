@@ -40,7 +40,7 @@ public sealed partial class CurrencyConfig : Luban.BeanBase
     /// 对应道具Id
     /// </summary>
     public readonly int Item;
-    public item.Item Item_Ref;
+    public item.ItemConfig Item_Ref;
     /// <summary>
     /// 货币不足提示
     /// </summary>

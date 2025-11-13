@@ -32,6 +32,9 @@ public partial class GameApp : Singleton<GameApp>
         ConfigSystem.Instance.Active();   
         AddLogicSys(HPBarLogicSystem.Instance);
         AddLogicSys(SceneMgr.Instance);
+        
+        
+        GameModule.UI.ShowWindow<BattleMainUI>();
     }
 
     /// <summary>

@@ -14,29 +14,29 @@ namespace GameConfig.item
 {
 public partial class TbItem
 {
-    private readonly System.Collections.Generic.Dictionary<int, item.Item> _dataMap;
-    private readonly System.Collections.Generic.List<item.Item> _dataList;
+    private readonly System.Collections.Generic.Dictionary<int, item.ItemConfig> _dataMap;
+    private readonly System.Collections.Generic.List<item.ItemConfig> _dataList;
     
     public TbItem(ByteBuf _buf)
     {
-        _dataMap = new System.Collections.Generic.Dictionary<int, item.Item>();
-        _dataList = new System.Collections.Generic.List<item.Item>();
+        _dataMap = new System.Collections.Generic.Dictionary<int, item.ItemConfig>();
+        _dataList = new System.Collections.Generic.List<item.ItemConfig>();
         
         for(int n = _buf.ReadSize() ; n > 0 ; --n)
         {
-            item.Item _v;
-            _v = global::GameConfig.item.Item.DeserializeItem(_buf);
+            item.ItemConfig _v;
+            _v = global::GameConfig.item.ItemConfig.DeserializeItemConfig(_buf);
             _dataList.Add(_v);
             _dataMap.Add(_v.Id, _v);
         }
     }
 
-    public System.Collections.Generic.Dictionary<int, item.Item> DataMap => _dataMap;
-    public System.Collections.Generic.List<item.Item> DataList => _dataList;
+    public System.Collections.Generic.Dictionary<int, item.ItemConfig> DataMap => _dataMap;
+    public System.Collections.Generic.List<item.ItemConfig> DataList => _dataList;
 
-    public item.Item GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : null;
-    public item.Item Get(int key) => _dataMap[key];
-    public item.Item this[int key] => _dataMap[key];
+    public item.ItemConfig GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : null;
+    public item.ItemConfig Get(int key) => _dataMap[key];
+    public item.ItemConfig this[int key] => _dataMap[key];
 
     public void ResolveRef(Tables tables)
     {

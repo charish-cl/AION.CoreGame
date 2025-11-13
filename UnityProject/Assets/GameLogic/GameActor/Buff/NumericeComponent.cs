@@ -44,6 +44,12 @@ namespace GameLogic
         Defense = 1005,
         DefenseBase = Defense * 10 + 1,
         DefenseAdd = Defense * 10 + 2,
+        
+        //护甲
+        Armor = 1006,
+        
+        //暴击
+        Critical = 1007,
     }
 
     public class NumericComponent : GameActorCmp

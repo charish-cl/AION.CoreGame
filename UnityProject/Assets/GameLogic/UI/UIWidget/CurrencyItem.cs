@@ -17,7 +17,7 @@ namespace UI
 
         public void Init(CurrencyType currencyType)
         {
-            TbCurrencyConfig tbCurrencyConfig = ConfigSystem.Instance.Tables.TbCurrencyConfig;
+            TbCurrency tbCurrencyConfig = ConfigSystem.Instance.Tables.TbCurrency;
 
             CurrencyConfig currencyConfig = tbCurrencyConfig.Get((int)currencyType);
             

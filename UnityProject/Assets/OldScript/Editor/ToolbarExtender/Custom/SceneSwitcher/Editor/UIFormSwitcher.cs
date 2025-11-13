@@ -15,7 +15,8 @@ namespace AION.CoreFramework
         // 提取 UIForm 存放路径为常量
         private const string UI_FORM_PATH = "Assets/Game/UIForm/";
 
-        const string NAMESPACE = "GameLogic";
+        const string Namespace = "GameLogic";
+        const string AssemblyName = "GameLogic";
         static UIFormSwitcher()
         {
             ToolbarExtender.LeftToolbarGUI.Add((1, OnToolbarGUI));
@@ -27,21 +28,37 @@ namespace AION.CoreFramework
         
         
         
-        static string m_UiName
+        static string m_UiName;
+        private const string SELECTED_INDEX_KEY = "UIFormSelectedIndex";
+
+        // 在 EditorWindow 或 Editor 脚本中调用
+        private static int selectedIndex
         {
             get
             {
-                return EditorPrefs.GetString("UIFormName", "");
+               return EditorPrefs.GetInt(SELECTED_INDEX_KEY, 0); // 默认值为0
             }
             set
             {
-                EditorPrefs.SetString("UIFormName", value);
-                //刷新工具栏
+                EditorPrefs.SetInt(SELECTED_INDEX_KEY, value);
                 ToolbarCallback.RepaintToolbar();
             }
         }
-// 在 EditorWindow 或 Editor 脚本中调用
-        private static int selectedIndex;
+        /// <summary>
+        /// 同步选中的索引，使其与已保存的UI名称对应
+        /// </summary>
+        private static void SyncSelectedIndexWithSavedName()
+        {
+            // string savedName = m_UiName;
+            // if (!string.IsNullOrEmpty(savedName) && UINameList.Count > 0)
+            // {
+            //     int index = UINameList.IndexOf(savedName);
+            //     if (index >= 0)
+            //     {
+            //         selectedIndex = index; // 这里会触发 setter，持久化保存
+            //     }
+            // }
+        }
         static void OnToolbarGUI()
         {
             GUILayout.FlexibleSpace();
@@ -64,16 +81,27 @@ namespace AION.CoreFramework
 
             GUIStyle toggleStyle = new GUIStyle(EditorStyles.toolbarButton);
             GUIStyle dropdownStyle = new GUIStyle(EditorStyles.foldout);
-
+            
+            // 绘制下拉搜索框前，确保索引与保存的名称同步
+            SyncSelectedIndexWithSavedName();
           
             //绘制一个下拉搜索框
-            selectedIndex = SearchableDropdown.ShowDropdown(
-                new GUIContent(UINameList[selectedIndex]), // 当前选中项
-                UINameList,                                // 所有选项
-                toggleStyle,                            // 主按钮样式
-                dropdownStyle                          // 下拉箭头样
+            int newSelectedIndex = SearchableDropdown.ShowDropdown(
+                new GUIContent(UINameList[selectedIndex]),
+                UINameList,
+                toggleStyle,
+                dropdownStyle
             );
+
+            // 只有当索引真正发生变化时才更新
+            if (newSelectedIndex != selectedIndex)
+            {
+                selectedIndex = newSelectedIndex;
+                m_UiName = UINameList[selectedIndex]; // 这会触发 m_UiName 的 setter
+            }
+            
             m_UiName = UINameList[selectedIndex];
+            
             GUILayout.FlexibleSpace();
             if (EditorGUILayout.DropdownButton(new GUIContent("Switch UI"), FocusType.Passive, _buttonGuiStyle))
             {
@@ -152,20 +180,30 @@ namespace AION.CoreFramework
         static void CallShowWindow(string windowTypeName)
         {
             // 解析目标窗口类型
-            Type windowType = Type.GetType(NAMESPACE + "." + windowTypeName); // 例如"YourNamespace.MainWindow"[1](@ref)
+            Type windowType =ReflectionHelper.GetTypeFromAssembly(AssemblyName , Namespace + "." + windowTypeName); // 例如"YourNamespace.MainWindow"[1](@ref)
     
+            if (windowType == null)
+            {
+                Debug.LogError("没有找到窗口类型：" + windowTypeName);
+                return;
+            }
             // 获取UI成员
             PropertyInfo uiProp = typeof(GameModule).GetProperty("UI");
-            object uiInstance = uiProp.GetValue(null);
+            
+            
+            if (uiProp != null)
+            {
+                object uiInstance = uiProp.GetValue(null);
 
-            // 绑定泛型方法
-            MethodInfo genericShow = uiProp.PropertyType
-                .GetMethod("ShowWindow")
-                ?.MakeGenericMethod(windowType);
+                // 绑定泛型方法
+                MethodInfo genericShow = uiProp.PropertyType
+                    .GetMethod("ShowWindow")
+                    ?.MakeGenericMethod(windowType);
 
-            // 执行调用
-            if (genericShow != null) 
-                genericShow.Invoke(uiInstance, new object[] { null });
+                // 执行调用
+                if (genericShow != null) 
+                    genericShow.Invoke(uiInstance, new object[] { null });
+            }
         }
     }
 }

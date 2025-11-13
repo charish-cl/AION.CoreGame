@@ -14,29 +14,29 @@ namespace GameConfig.item
 {
 public partial class TbGetWay
 {
-    private readonly System.Collections.Generic.Dictionary<int, item.ItemGetWay> _dataMap;
-    private readonly System.Collections.Generic.List<item.ItemGetWay> _dataList;
+    private readonly System.Collections.Generic.Dictionary<int, item.ItemGetWayConfig> _dataMap;
+    private readonly System.Collections.Generic.List<item.ItemGetWayConfig> _dataList;
     
     public TbGetWay(ByteBuf _buf)
     {
-        _dataMap = new System.Collections.Generic.Dictionary<int, item.ItemGetWay>();
-        _dataList = new System.Collections.Generic.List<item.ItemGetWay>();
+        _dataMap = new System.Collections.Generic.Dictionary<int, item.ItemGetWayConfig>();
+        _dataList = new System.Collections.Generic.List<item.ItemGetWayConfig>();
         
         for(int n = _buf.ReadSize() ; n > 0 ; --n)
         {
-            item.ItemGetWay _v;
-            _v = global::GameConfig.item.ItemGetWay.DeserializeItemGetWay(_buf);
+            item.ItemGetWayConfig _v;
+            _v = global::GameConfig.item.ItemGetWayConfig.DeserializeItemGetWayConfig(_buf);
             _dataList.Add(_v);
             _dataMap.Add(_v.Id, _v);
         }
     }
 
-    public System.Collections.Generic.Dictionary<int, item.ItemGetWay> DataMap => _dataMap;
-    public System.Collections.Generic.List<item.ItemGetWay> DataList => _dataList;
+    public System.Collections.Generic.Dictionary<int, item.ItemGetWayConfig> DataMap => _dataMap;
+    public System.Collections.Generic.List<item.ItemGetWayConfig> DataList => _dataList;
 
-    public item.ItemGetWay GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : null;
-    public item.ItemGetWay Get(int key) => _dataMap[key];
-    public item.ItemGetWay this[int key] => _dataMap[key];
+    public item.ItemGetWayConfig GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : null;
+    public item.ItemGetWayConfig Get(int key) => _dataMap[key];
+    public item.ItemGetWayConfig this[int key] => _dataMap[key];
 
     public void ResolveRef(Tables tables)
     {
