@@ -21,8 +21,10 @@ public sealed partial class TowerConfig : Luban.BeanBase
         Desc = _buf.ReadString();
         BulletId = _buf.ReadInt();
         BulletId_Ref = null;
+        AttackRange = _buf.ReadFloat();
         {int n0 = System.Math.Min(_buf.ReadSize(), _buf.Size);AttackInterals = new System.Collections.Generic.List<float>(n0);for(var i0 = 0 ; i0 < n0 ; i0++) { float _e0;  _e0 = _buf.ReadFloat(); AttackInterals.Add(_e0);}}
-        PrefabPath = _buf.ReadString();
+        ModelId = _buf.ReadInt();
+        ModelId_Ref = null;
     }
 
     public static TowerConfig DeserializeTowerConfig(ByteBuf _buf)
@@ -48,13 +50,18 @@ public sealed partial class TowerConfig : Luban.BeanBase
     public readonly int BulletId;
     public battle.BulletConfig BulletId_Ref;
     /// <summary>
+    /// 攻击距离
+    /// </summary>
+    public readonly float AttackRange;
+    /// <summary>
     /// 攻击间隔等级配置
     /// </summary>
     public readonly System.Collections.Generic.List<float> AttackInterals;
     /// <summary>
-    /// 预制体路径
+    /// 模型
     /// </summary>
-    public readonly string PrefabPath;
+    public readonly int ModelId;
+    public res.ModelConfig ModelId_Ref;
    
     public const int __ID__ = 949782357;
     public override int GetTypeId() => __ID__;
@@ -62,6 +69,7 @@ public sealed partial class TowerConfig : Luban.BeanBase
     public  void ResolveRef(Tables tables)
     {
         BulletId_Ref = tables.TbBullet.GetOrDefault(BulletId);
+        ModelId_Ref = tables.TbModel.GetOrDefault(ModelId);
     }
 
     public override string ToString()
@@ -71,8 +79,9 @@ public sealed partial class TowerConfig : Luban.BeanBase
         + "name:" + Name + ","
         + "desc:" + Desc + ","
         + "bulletId:" + BulletId + ","
+        + "attackRange:" + AttackRange + ","
         + "attackInterals:" + Luban.StringUtil.CollectionToString(AttackInterals) + ","
-        + "prefabPath:" + PrefabPath + ","
+        + "modelId:" + ModelId + ","
         + "}";
     }
 }

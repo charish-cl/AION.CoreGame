@@ -6,18 +6,36 @@ namespace GameLogic
 {
     public class InputLogicCmp : GameActorCmp
     {
-        Vector2 Input;
+        private Vector2 m_input;
+        private bool m_hasManualInput = false; // 标记是否有手动设置的输入
 
         public void SetInput(Vector2 input)
         {
-            Input = input;
+            m_input = input;
+            m_hasManualInput = true;
         }
 
         public virtual Vector2 GetInput()
         {
+            // 如果有手动设置的输入，优先使用手动输入
+            if (m_hasManualInput)
+            {
+                return m_input;
+            }
+            
+            // 否则从Unity Input获取
             //GetAxis 需要急停，GetAxisRaw 不需要
             return UnityEngine.Input.GetAxisRaw("Horizontal") * Vector2.right +
                    UnityEngine.Input.GetAxisRaw("Vertical") * Vector2.up;
+        }
+        
+        /// <summary>
+        /// 清除手动输入，恢复使用Unity Input
+        /// </summary>
+        public void ClearManualInput()
+        {
+            m_hasManualInput = false;
+            m_input = Vector2.zero;
         }
 
         public Vector2 GetMouseWorldPosition()
@@ -56,7 +74,16 @@ namespace GameLogic
         float epsilon = 0.01f;
         public override void OnUpdate()
         {
-            Velocity = Actor.NumericComponent.GetAsFloat(NumericType.Speed);
+            // 优先从 UnitConfig 读取速度，如果没有则从 NumericComponent 获取
+            var unitComponent = Actor.GetComponent<UnitComponent>();
+            if (unitComponent != null && unitComponent.IsConfigValid && unitComponent.Config != null)
+            {
+                Velocity = unitComponent.Config.MoveSpeed;
+            }
+            else
+            {
+                Velocity = Actor.NumericComponent.GetAsFloat(NumericType.Speed);
+            }
 
             Vector2 direction = Vector2.zero;
 
@@ -127,7 +154,16 @@ namespace GameLogic
         public override void OnUpdate()
         {
             //计算得出下一步的位置
-            Velocity = Actor.NumericComponent.GetAsFloat(NumericType.Speed);
+            // 优先从 UnitConfig 读取速度，如果没有则从 NumericComponent 获取
+            var unitComponent = Actor.GetComponent<UnitComponent>();
+            if (unitComponent != null && unitComponent.IsConfigValid && unitComponent.Config != null)
+            {
+                Velocity = unitComponent.Config.MoveSpeed;
+            }
+            else
+            {
+                Velocity = Actor.NumericComponent.GetAsFloat(NumericType.Speed);
+            }
 
             if( index < Path.Count  )
             {

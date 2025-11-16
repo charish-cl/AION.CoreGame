@@ -16,5 +16,10 @@
     </bean>
 
     <!-- <table name="TbBooty" value="UnionMultiKey" index="id+price" input="booty.xlsx"/> -->
-
+    <bean name="SpawnGroup">
+        <var name="unitId" type="int" comment="敌人单位ID（引用UnitConfig）"/>
+        <var name="spawnCount" type="int" comment="生成数量"/>
+        <var name="spawnInterval" type="float" comment="生成间隔（秒）"/>
+        <var name="spawnDelay" type="float" comment="延迟开始生成时间（秒）"/>
+    </bean>
 </module>

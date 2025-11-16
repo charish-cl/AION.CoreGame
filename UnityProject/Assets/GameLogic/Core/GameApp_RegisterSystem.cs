@@ -32,6 +32,7 @@ public partial class GameApp : Singleton<GameApp>
         ConfigSystem.Instance.Active();   
         AddLogicSys(HPBarLogicSystem.Instance);
         AddLogicSys(SceneMgr.Instance);
+        AddLogicSys(LevelSystem.Instance); // 注册关卡系统
         
         
         GameModule.UI.ShowWindow<BattleMainUI>();

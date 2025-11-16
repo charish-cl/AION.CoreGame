@@ -23,15 +23,40 @@ namespace GameLogic
         };
 
         public override TowerState CurrentState { get; set; } = TowerState.Idle;
+        
+        /// <summary>
+        /// 攻击范围（从配置获取，如果没有配置则使用默认值）
+        /// </summary>
+        public float AttackRange { get; set; } = 15f;
+        
+        public override void OnInit()
+        {
+            base.OnInit();
+            
+            // 从 TowerComponent 读取攻击范围配置
+            var towerComponent = Actor.GetComponent<TowerComponent>();
+            if (towerComponent != null && towerComponent.IsConfigValid)
+            {
+                float configAttackRange = towerComponent.AttackRange;
+                if (configAttackRange > 0f)
+                {
+                    AttackRange = configAttackRange;
+                }
+            }
+        }
     }
 
     public class TowerIdleState : BaseState<TowerState>
     {
         bool hasTarget;
+        private float m_attackRange;
+        
         public override void OnEnter()
         {
             base.OnEnter();
             hasTarget = false;
+            var towerFSM = Actor.GetComponent<TowerFSMCmp>();
+            m_attackRange = towerFSM?.AttackRange ?? 15f;
             DisableComponent<OrientationViewCmp>();
         }
         public override TowerState CheckConditions()
@@ -44,7 +69,8 @@ namespace GameLogic
         {
             base.OnUpdate();
             
-            if (SceneMgr.Instance.TryGetMonster(Actor.Position, 15,out var monster))
+            // 塔攻击敌人（ENEMY）
+            if (SceneMgr.Instance.TryGetEnemy(Actor.Position, m_attackRange, out var enemy))
             {
                 hasTarget = true;
                 return;
@@ -60,12 +86,16 @@ namespace GameLogic
         
         bool hasShoot;
         bool enemyHasExit;
+        private float m_attackRange;
+        
         public override void OnEnter()
         {
             base.OnEnter();
             hasShoot = false;
             enemyHasExit = false;
             orientation = Actor.GetComponent<OrientationViewCmp>();
+            var towerFSM = Actor.GetComponent<TowerFSMCmp>();
+            m_attackRange = towerFSM?.AttackRange ?? 15f;
         }
         public override TowerState CheckConditions()
         {
@@ -83,7 +113,8 @@ namespace GameLogic
         public override void OnUpdate()
         {
        
-            if (!SceneMgr.Instance.TryGetMonster(Actor.Position, 15,out var monster))
+            // 塔攻击敌人（ENEMY）
+            if (!SceneMgr.Instance.TryGetEnemy(Actor.Position, m_attackRange, out var enemy))
             {
                 enemyHasExit = true;
                 return;
@@ -92,15 +123,15 @@ namespace GameLogic
             {
                 return;
             }
-            orientation.SetTarget(monster.Position);
+            orientation.SetTarget(enemy.Position);
             
-            bool hasRotateTarget = orientation.CheckHasRotatedToTarget(monster.Position);
+            bool hasRotateTarget = orientation.CheckHasRotatedToTarget(enemy.Position);
             
             if (hasRotateTarget )
             {
                 //TODO: 发射子弹
                 hasShoot = true;
-                SceneMgr.Instance.SpawnBullet(Actor.Position, monster.Position);
+                SceneMgr.Instance.SpawnBullet(Actor.Position, enemy.Position);
             }
         }
     }
@@ -122,7 +153,21 @@ namespace GameLogic
         {
             base.OnEnter();
             stateTime = 0;
-            coolingTime =1/ Actor.NumericComponent.GetAsFloat(NumericType.AttackSpeed);
+            
+            // 尝试从 TowerComponent 读取攻击间隔
+            var towerComponent = Actor.GetComponent<TowerComponent>();
+            if (towerComponent != null && towerComponent.IsConfigValid && 
+                towerComponent.AttackIntervals != null && towerComponent.AttackIntervals.Count > 0)
+            {
+                // 使用第一个攻击间隔（可以根据等级选择）
+                coolingTime = towerComponent.AttackIntervals[0];
+            }
+            else
+            {
+                // 从数值组件获取
+                coolingTime = 1f / Actor.GetProperty(NumericType.AttackSpeed);
+            }
+            
             DisableComponent<OrientationViewCmp>();
         }
 

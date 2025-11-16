@@ -16,6 +16,7 @@ namespace GameLogic
         Enemy,
         Tower,
         Bullet,
+        Base,  // 基地
     }
     public class GameActor
     {
@@ -35,6 +36,34 @@ namespace GameLogic
             {
                 return GetComponent<NumericComponent>();   
             }
+        }
+
+        /// <summary>
+        /// 获取单位数值属性（简化方式）
+        /// </summary>
+        /// <param name="numericType">数值类型</param>
+        /// <returns>浮点数值</returns>
+        public float GetProperty(NumericType numericType)
+        {
+            if (NumericComponent != null)
+            {
+                return NumericComponent.GetAsFloat(numericType);
+            }
+            return 0f;
+        }
+        
+        /// <summary>
+        /// 获取单位数值属性（整数版本）
+        /// </summary>
+        /// <param name="numericType">数值类型</param>
+        /// <returns>整数值</returns>
+        public int GetPropertyInt(NumericType numericType)
+        {
+            if (NumericComponent != null)
+            {
+                return NumericComponent.GetAsInt(numericType);
+            }
+            return 0;
         }
 
         public bool IsDestroyed { get;private set; }

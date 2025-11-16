@@ -19,10 +19,10 @@ public sealed partial class BulletConfig : Luban.BeanBase
         Id = _buf.ReadInt();
         Name = _buf.ReadString();
         BulletType = (EBulletType)_buf.ReadInt();
-        SpawnUnitId = _buf.ReadInt();
-        SpawnUnitId_Ref = null;
-        Damage = _buf.ReadInt();
-        DebuffValue = _buf.ReadFloat();
+        Buffs = _buf.ReadInt();
+        Buffs_Ref = null;
+        ModelId = _buf.ReadInt();
+        ModelId_Ref = null;
     }
 
     public static BulletConfig DeserializeBulletConfig(ByteBuf _buf)
@@ -43,25 +43,23 @@ public sealed partial class BulletConfig : Luban.BeanBase
     /// </summary>
     public readonly EBulletType BulletType;
     /// <summary>
-    /// 生成单位id
+    /// 施加buff
     /// </summary>
-    public readonly int SpawnUnitId;
-    public battle.UnitConfig SpawnUnitId_Ref;
+    public readonly int Buffs;
+    public battle.BuffConfig Buffs_Ref;
     /// <summary>
-    /// 伤害
+    /// 预制体路径
     /// </summary>
-    public readonly int Damage;
-    /// <summary>
-    /// 减益数值
-    /// </summary>
-    public readonly float DebuffValue;
+    public readonly int ModelId;
+    public res.ModelConfig ModelId_Ref;
    
     public const int __ID__ = -349657990;
     public override int GetTypeId() => __ID__;
 
     public  void ResolveRef(Tables tables)
     {
-        SpawnUnitId_Ref = tables.TbUnit.GetOrDefault(SpawnUnitId);
+        Buffs_Ref = tables.TbBuff.GetOrDefault(Buffs);
+        ModelId_Ref = tables.TbModel.GetOrDefault(ModelId);
     }
 
     public override string ToString()
@@ -70,9 +68,8 @@ public sealed partial class BulletConfig : Luban.BeanBase
         + "id:" + Id + ","
         + "name:" + Name + ","
         + "bulletType:" + BulletType + ","
-        + "spawnUnitId:" + SpawnUnitId + ","
-        + "damage:" + Damage + ","
-        + "debuffValue:" + DebuffValue + ","
+        + "buffs:" + Buffs + ","
+        + "modelId:" + ModelId + ","
         + "}";
     }
 }

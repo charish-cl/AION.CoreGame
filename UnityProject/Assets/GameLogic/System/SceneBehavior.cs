@@ -26,7 +26,12 @@ namespace GameLogic
 
         [LabelText("子弹预制体")]
         public GameObject BulletPrefab;
-
+        
+        [LabelText("基地预制体")]
+        public GameObject BasePrefab;
+        
+        [LabelText("基地生成点")]
+        public Transform BaseSpawnPoint;
 
         [LabelText("伤害预制体")] public DamageNumber numberPrefab;
 

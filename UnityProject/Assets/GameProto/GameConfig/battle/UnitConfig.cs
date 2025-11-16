@@ -19,7 +19,16 @@ public sealed partial class UnitConfig : Luban.BeanBase
         Id = _buf.ReadInt();
         Name = _buf.ReadString();
         UnitType = (EUnitType)_buf.ReadInt();
+        BulletId = _buf.ReadInt();
+        BulletId_Ref = null;
         MaxHp = _buf.ReadInt();
+        Attack = _buf.ReadInt();
+        AttackRange = _buf.ReadFloat();
+        AttackInterval = _buf.ReadFloat();
+        Defense = _buf.ReadInt();
+        MoveSpeed = _buf.ReadFloat();
+        ModelId = _buf.ReadInt();
+        ModelId_Ref = null;
     }
 
     public static UnitConfig DeserializeUnitConfig(ByteBuf _buf)
@@ -40,15 +49,47 @@ public sealed partial class UnitConfig : Luban.BeanBase
     /// </summary>
     public readonly EUnitType UnitType;
     /// <summary>
+    /// 子弹
+    /// </summary>
+    public readonly int BulletId;
+    public battle.BulletConfig BulletId_Ref;
+    /// <summary>
     /// 最大生命
     /// </summary>
     public readonly int MaxHp;
+    /// <summary>
+    /// 攻击力
+    /// </summary>
+    public readonly int Attack;
+    /// <summary>
+    /// 攻击距离
+    /// </summary>
+    public readonly float AttackRange;
+    /// <summary>
+    /// 攻击间隔
+    /// </summary>
+    public readonly float AttackInterval;
+    /// <summary>
+    /// 防御力
+    /// </summary>
+    public readonly int Defense;
+    /// <summary>
+    /// 移动速度
+    /// </summary>
+    public readonly float MoveSpeed;
+    /// <summary>
+    /// 模型
+    /// </summary>
+    public readonly int ModelId;
+    public res.ModelConfig ModelId_Ref;
    
     public const int __ID__ = -1328964356;
     public override int GetTypeId() => __ID__;
 
     public  void ResolveRef(Tables tables)
     {
+        BulletId_Ref = tables.TbBullet.GetOrDefault(BulletId);
+        ModelId_Ref = tables.TbModel.GetOrDefault(ModelId);
     }
 
     public override string ToString()
@@ -57,7 +98,14 @@ public sealed partial class UnitConfig : Luban.BeanBase
         + "id:" + Id + ","
         + "name:" + Name + ","
         + "unitType:" + UnitType + ","
+        + "bulletId:" + BulletId + ","
         + "maxHp:" + MaxHp + ","
+        + "attack:" + Attack + ","
+        + "attackRange:" + AttackRange + ","
+        + "attackInterval:" + AttackInterval + ","
+        + "defense:" + Defense + ","
+        + "moveSpeed:" + MoveSpeed + ","
+        + "modelId:" + ModelId + ","
         + "}";
     }
 }

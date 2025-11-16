@@ -24,6 +24,9 @@ public partial class Tables
     public battle.TbUnit TbUnit {get; }
     public battle.TbBuff TbBuff {get; }
     public battle.TbStatus TbStatus {get; }
+    public level.TbLevelBase TbLevelBase {get; }
+    public level.TbWave TbWave {get; }
+    public res.TbModel TbModel {get; }
 
     public Tables(System.Func<string, ByteBuf> loader)
     {
@@ -38,6 +41,9 @@ public partial class Tables
         TbUnit = new battle.TbUnit(loader("battle_tbunit"));
         TbBuff = new battle.TbBuff(loader("battle_tbbuff"));
         TbStatus = new battle.TbStatus(loader("battle_tbstatus"));
+        TbLevelBase = new level.TbLevelBase(loader("level_tblevelbase"));
+        TbWave = new level.TbWave(loader("level_tbwave"));
+        TbModel = new res.TbModel(loader("res_tbmodel"));
         ResolveRef();
     }
     
@@ -54,6 +60,9 @@ public partial class Tables
         TbUnit.ResolveRef(this);
         TbBuff.ResolveRef(this);
         TbStatus.ResolveRef(this);
+        TbLevelBase.ResolveRef(this);
+        TbWave.ResolveRef(this);
+        TbModel.ResolveRef(this);
     }
 }
 
