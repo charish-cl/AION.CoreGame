@@ -17,6 +17,7 @@ public sealed partial class CBuffEffect : Luban.BeanBase
     public CBuffEffect(ByteBuf _buf) 
     {
         Type = (EBuffType)_buf.ReadInt();
+        DamageType = (EDamageType)_buf.ReadInt();
         {int n0 = System.Math.Min(_buf.ReadSize(), _buf.Size);ValueParams = new System.Collections.Generic.List<float>(n0);for(var i0 = 0 ; i0 < n0 ; i0++) { float _e0;  _e0 = _buf.ReadFloat(); ValueParams.Add(_e0);}}
     }
 
@@ -26,6 +27,10 @@ public sealed partial class CBuffEffect : Luban.BeanBase
     }
 
     public readonly EBuffType Type;
+    /// <summary>
+    /// 伤害类型
+    /// </summary>
+    public readonly EDamageType DamageType;
     /// <summary>
     /// buff参数，根据buff类型不同而不同
     /// </summary>
@@ -42,6 +47,7 @@ public sealed partial class CBuffEffect : Luban.BeanBase
     {
         return "{ "
         + "type:" + Type + ","
+        + "damageType:" + DamageType + ","
         + "valueParams:" + Luban.StringUtil.CollectionToString(ValueParams) + ","
         + "}";
     }

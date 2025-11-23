@@ -30,8 +30,9 @@ namespace GameLogic
             GameActor targetActor,
             List<float> valueParams,
             NumericComponent attackerNumeric = null,
-            int statusId = 0
-        ) : base(targetActor, valueParams, attackerNumeric, null, statusId)
+            int statusId = 0,
+            EDamageType damageType = EDamageType.Physical
+        ) : base(targetActor, valueParams, attackerNumeric, null, statusId, damageType)
         {
         }
         
@@ -40,8 +41,9 @@ namespace GameLogic
             List<float> valueParams,
             NumericComponent attackerNumeric = null,
             GameActor attackerActor = null,
-            int statusId = 0
-        ) : base(targetActor, valueParams, attackerNumeric, attackerActor, statusId)
+            int statusId = 0,
+            EDamageType damageType = EDamageType.Physical
+        ) : base(targetActor, valueParams, attackerNumeric, attackerActor, statusId, damageType)
         {
         }
 
@@ -77,7 +79,7 @@ namespace GameLogic
             {
                 if (param.ExplosionChance > 0)
                 {
-                    // 爆炸概率可以通过NumericComponent存储，或者直接在BulletComponent中处理
+                    // 爆炸概率可以通过NumericComponent存储
                     // 这里先记录到NumericComponent，后续BulletCmp可以读取
                     numericCmp.Set(NumericType.Critical, (int)(param.ExplosionChance * 10000)); // 临时使用Critical存储
                     Log.Info($"BulletEffect: 设置爆炸概率 = {param.ExplosionChance}");

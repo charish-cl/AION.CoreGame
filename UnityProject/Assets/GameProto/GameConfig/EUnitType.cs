@@ -15,6 +15,8 @@ namespace GameConfig
     {
         ENEMY = 1,
         HERO = 2,
+        TOWER = 3,
+        Base = 4,
     }
 
 } 

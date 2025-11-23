@@ -16,8 +16,9 @@ namespace AION.Config.Buff
             GameActor targetActor,
             List<float> valueParams,
             NumericComponent attackerNumeric = null,
-            int statusId = 0
-        ) : base(targetActor, valueParams, attackerNumeric, null, statusId)
+            int statusId = 0,
+            GameConfig.EDamageType damageType = GameConfig.EDamageType.Physical
+        ) : base(targetActor, valueParams, attackerNumeric, null, statusId, damageType)
         {
         }
         
@@ -26,8 +27,9 @@ namespace AION.Config.Buff
             List<float> valueParams,
             NumericComponent attackerNumeric = null,
             GameActor attackerActor = null,
-            int statusId = 0
-        ) : base(targetActor, valueParams, attackerNumeric, attackerActor, statusId)
+            int statusId = 0,
+            GameConfig.EDamageType damageType = GameConfig.EDamageType.Physical
+        ) : base(targetActor, valueParams, attackerNumeric, attackerActor, statusId, damageType)
         {
         }
 

@@ -5175,7 +5175,7 @@ GameObject:
   - component: {fileID: 4434326146101965149}
   - component: {fileID: 4435018264972776241}
   m_Layer: 0
-  m_Name: ForwardParticles
+  m_Name: AttackParticle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10026,12 +10026,12 @@ GameObject:
   - component: {fileID: 4434037814952369119}
   - component: {fileID: 4434607139026223109}
   m_Layer: 0
-  m_Name: MuzzleFlare
+  m_Name: AttackParticle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4564504875020322335
 Transform:
   m_ObjectHideFlags: 0

@@ -61,27 +61,12 @@ namespace GameLogic
                 return m_actorRoot;
             }
             
-            // 查找 GameEntry/Root/Actor 路径
-            GameObject gameEntry = GameObject.Find("GameEntry");
-            if (gameEntry == null)
-            {
-                throw new Exception("ActorMgr: 未找到GameEntry，创建默认根节点");
           
-                
-            }
             
-            Transform root = gameEntry.transform.Find("Root");
-            if (root == null)
-            {
-                throw new Exception("ActorMgr: 未找到Root，创建默认根节点");
-            }
-            
-            Transform actor = root.Find("Actor");
+            Transform actor =  GameModule.Base.transform.Find("Actor");
             if (actor == null)
             {
-                Log.Info("ActorMgr: 未找到Actor，创建Actor节点");
-                actor = new GameObject("Actor").transform;
-                actor.SetParent(root);
+                throw new Exception("ActorMgr: 未找到Root，创建默认根节点");
             }
             
             m_actorRoot = actor;
@@ -145,27 +130,27 @@ namespace GameLogic
             string configName = "";
             int configId = 0;
             
-            var unitCmp = actor.GetComponent<UnitComponent>();
-            if (unitCmp != null && unitCmp.IsConfigValid)
+            var unitConfig = actor.GetConfig<UnitConfig>();
+            if (unitConfig != null)
             {
-                configName = unitCmp.Name;
-                configId = unitCmp.Id;
+                configName = unitConfig.Name;
+                configId = unitConfig.Id;
             }
             else
             {
-                var towerCmp = actor.GetComponent<TowerComponent>();
-                if (towerCmp != null && towerCmp.IsConfigValid)
+                var towerConfig = actor.GetConfig<TowerConfig>();
+                if (towerConfig != null)
                 {
-                    configName = towerCmp.Name;
-                    configId = towerCmp.Id;
+                    configName = towerConfig.Name;
+                    configId = towerConfig.Id;
                 }
                 else
                 {
-                    var bulletCmp = actor.GetComponent<BulletComponent>();
-                    if (bulletCmp != null && bulletCmp.IsConfigValid)
+                    var bulletConfig = actor.GetConfig<BulletConfig>();
+                    if (bulletConfig != null)
                     {
-                        configName = bulletCmp.Name;
-                        configId = bulletCmp.Id;
+                        configName = bulletConfig.Name;
+                        configId = bulletConfig.Id;
                     }
                 }
             }
@@ -198,22 +183,22 @@ namespace GameLogic
         /// </summary>
         private int GetConfigId(GameActor actor)
         {
-            var unitCmp = actor.GetComponent<UnitComponent>();
-            if (unitCmp != null && unitCmp.IsConfigValid)
+            var unitConfig = actor.GetConfig<UnitConfig>();
+            if (unitConfig != null)
             {
-                return unitCmp.Id;
+                return unitConfig.Id;
             }
             
-            var towerCmp = actor.GetComponent<TowerComponent>();
-            if (towerCmp != null && towerCmp.IsConfigValid)
+            var towerConfig = actor.GetConfig<TowerConfig>();
+            if (towerConfig != null)
             {
-                return towerCmp.Id;
+                return towerConfig.Id;
             }
             
-            var bulletCmp = actor.GetComponent<BulletComponent>();
-            if (bulletCmp != null && bulletCmp.IsConfigValid)
+            var bulletConfig = actor.GetConfig<BulletConfig>();
+            if (bulletConfig != null)
             {
-                return bulletCmp.Id;
+                return bulletConfig.Id;
             }
             
             return 0; // 默认配置ID为0
@@ -239,8 +224,16 @@ namespace GameLogic
             // 生成唯一ID
             int uniqueId = GenerateUniqueId(configId);
             
-            // 设置GameObject名称：配置ID_唯一ID
-            go.name = $"{configId}_{uniqueId}";
+            // 设置GameObject名称：优先使用 Prefab 名字，如果没有则使用配置ID_唯一ID
+            string prefabName = actor.PrefabName;
+            if (!string.IsNullOrEmpty(prefabName))
+            {
+                go.name = prefabName;
+            }
+            else
+            {
+                go.name = $"{configId}_{uniqueId}";
+            }
             
             // 设置父对象
             go.transform.SetParent(parent);
@@ -256,34 +249,15 @@ namespace GameLogic
         /// 创建玩家（通过UnitConfig ID）
         /// </summary>
         /// <param name="unitId">单位配置ID，如果为0则使用默认配置</param>
-        public void CreatePlayer(int unitId = 0)
+        /// <param name="position">生成位置，如果不指定则使用SceneBehavior的SpawnPoint</param>
+        public void CreatePlayer(int unitId = 0, Vector2? position = null)
         {
             var actor = new PlayerActor(unitId);
             
-            // 设置生成位置
-            Vector2 spawnPosition = Vector2.zero;
-            if (SceneBehavior != null && SceneBehavior.SpawnPoint != null)
-            {
-                spawnPosition = SceneBehavior.SpawnPoint.position;
-            }
+            // 如果没有指定位置，使用SceneBehavior的SpawnPoint
+            Vector2 spawnPosition = position ?? (SceneBehavior?.SpawnPoint?.position ?? Vector2.zero);
             
-            AddActor(actor, null, UnitTag.Player, (numeric) =>
-            {
-                // 优先从UnitConfig加载数值
-                InitializeNumericFromUnitConfig(actor, numeric);
-                
-                // 如果没有配置，使用默认值
-                if (actor.GetComponent<UnitComponent>() == null || !actor.GetComponent<UnitComponent>().IsConfigValid)
-                {
-                    numeric.Set(NumericType.SpeedBase, 5f);
-                }
-            });    
-            
-            // 设置位置（在ModelComponent创建GameObject之后）
-            if (actor.Transform != null)
-            {
-                actor.SetPosition(spawnPosition);
-            }
+            CreateActorInternal(actor, null, UnitTag.Player, spawnPosition);
         }
         public void CreateMonsterActor()
         {
@@ -294,34 +268,22 @@ namespace GameLogic
         /// 根据UnitConfig ID创建敌人
         /// </summary>
         /// <param name="unitId">单位配置ID</param>
-        public void CreateEnemyByUnitId(int unitId)
+        /// <param name="position">生成位置，如果不指定则使用SceneBehavior的SpawnPoint</param>
+        public void CreateEnemyByUnitId(int unitId, Vector2? position = null)
         {
             var actor = new EnemyActor(unitId);
             
-            // 设置生成位置
-            Vector2 spawnPosition = Vector2.zero;
-            if (SceneBehavior != null && SceneBehavior.SpawnPoint != null)
-            {
-                spawnPosition = SceneBehavior.SpawnPoint.position;
-            }
+            // 如果没有指定位置，使用SceneBehavior的SpawnPoint
+            Vector2 spawnPosition = position ?? (SceneBehavior?.SpawnPoint?.position ?? Vector2.zero);
             
-            AddActor(actor, null, UnitTag.Enemy, (numeric) =>
-            {
-                // 从UnitConfig初始化数值
-                InitializeNumericFromUnitConfig(actor, numeric);
-            });
-            
-            // 设置位置（在ModelComponent创建GameObject之后）
-            if (actor.Transform != null)
-            {
-                actor.SetPosition(spawnPosition);
-            }
+            CreateActorInternal(actor, null, UnitTag.Enemy, spawnPosition);
         }
         
         /// <summary>
         /// 创建基地
         /// </summary>
-        public void CreateBase()
+        /// <param name="position">基地位置，如果不指定则使用SceneBehavior的BaseSpawnPoint或路径最后一个点</param>
+        public void CreateBase(Vector2? position = null)
         {
             var actor = new BaseActor();
             
@@ -337,27 +299,27 @@ namespace GameLogic
                 go = new GameObject("Base");
             }
             
-            // 设置基地位置（可以在SceneBehavior中配置，或者使用默认位置）
-            if (SceneBehavior.BaseSpawnPoint != null)
+            // 确定基地位置
+            Vector2 basePosition = position ?? Vector2.zero;
+            if (!position.HasValue)
             {
-                go.transform.position = SceneBehavior.BaseSpawnPoint.position;
-            }
-            else
-            {
-                // 默认位置：路径的最后一个点（往下走的目标）
-                var pathNodes = GetCurentLevelPathNodes();
-                if (pathNodes != null && pathNodes.Count > 0)
+                if (SceneBehavior?.BaseSpawnPoint != null)
                 {
-                    go.transform.position = pathNodes[pathNodes.Count - 1];
+                    basePosition = SceneBehavior.BaseSpawnPoint.position;
+                }
+                else
+                {
+                    // 默认位置：路径的最后一个点（往下走的目标）
+                    var pathNodes = GetCurentLevelPathNodes();
+                    if (pathNodes != null && pathNodes.Count > 0)
+                    {
+                        basePosition = pathNodes[pathNodes.Count - 1];
+                    }
                 }
             }
             
-            AddActor(actor, go, UnitTag.Base, (numeric) =>
-            {
-                // 基地有更高的生命值
-                numeric.Set(NumericType.MaxHpBase, 1000);
-                numeric.Set(NumericType.HpBase, 1000);
-            });
+            // BaseActor 的 InitializeNumericFromConfig 已经设置了生命值
+            CreateActorInternal(actor, go, UnitTag.Base, basePosition);
             
             // 设置基地组件的游戏结束回调
             var baseCampComponent = actor.GetComponent<CampComponent>();
@@ -381,22 +343,12 @@ namespace GameLogic
         /// 创建塔（通过TowerConfig ID）
         /// </summary>
         /// <param name="towerId">塔配置ID，如果为0则使用默认配置</param>
-        /// <param name="position">塔的位置，如果不指定则使用默认位置</param>
+        /// <param name="position">塔的位置</param>
         public void CreateTower(int towerId = 0, Vector2? position = null)
         {
             var actor = new TowerActor(towerId);
-         
-            AddActor(actor, null, UnitTag.Tower);
             
-            // 设置位置（在ModelComponent创建GameObject之后）
-            if (actor.Transform != null)
-            {
-                if (position.HasValue)
-                {
-                    actor.SetPosition(position.Value);
-                }
-                // 如果没有指定位置，可以保持默认位置或从配置读取
-            }
+            CreateActorInternal(actor, null, UnitTag.Tower, position);
         }
         
         /// <summary>
@@ -405,55 +357,85 @@ namespace GameLogic
         /// <param name="actorPosition">发射位置</param>
         /// <param name="monsterPosition">目标位置</param>
         /// <param name="bulletId">子弹配置ID，如果为0则使用默认配置</param>
-        public void SpawnBullet(Vector2 actorPosition, Vector2 monsterPosition, int bulletId = 0)
+        /// <param name="attackerNumeric">攻击者的数值组件（用于传递攻击力等信息）</param>
+        /// <param name="attackerActor">攻击者Actor（用于日志）</param>
+        /// <param name="targetActor">目标Actor（用于日志）</param>
+        public void SpawnBullet(Vector2 actorPosition, Vector2 monsterPosition, int bulletId = 0, NumericComponent attackerNumeric = null, GameActor attackerActor = null, GameActor targetActor = null)
         {
             var actor = new BulletActor(bulletId, monsterPosition);
             
-            AddActor(actor, null, UnitTag.Bullet);
+            // 设置真正的攻击者（发射子弹的单位）
+            actor.RealAttacker = attackerActor;
             
-            // 设置位置（在ModelComponent创建GameObject之后）
-            if (actor.Transform != null)
+            CreateActorInternal(actor, null, UnitTag.Bullet, actorPosition);
+            
+            // 如果提供了攻击者的数值组件，复制攻击力等关键属性到子弹
+            if (attackerNumeric != null)
             {
-                actor.SetPosition(actorPosition);
+                var bulletNumeric = actor.GetComponent<NumericComponent>();
+                if (bulletNumeric != null)
+                {
+                    // 复制攻击力
+                    int attack = attackerNumeric.Get<int>(NumericType.Attack);
+                    bulletNumeric.Set(NumericType.AttackBase, attack);
+                    
+                    // 复制其他可能需要的关键属性（如元素伤害等）
+                    // 可以根据需要添加更多属性
+                }
             }
-        }
-
-        /// <summary>
-        /// 设置基础数值（默认值）
-        /// </summary>
-        public void SetBaseValue(NumericComponent NumericDic)
-        {
-            NumericDic.Set(NumericType.SpeedBase, 1.0f);
-            NumericDic.Set(NumericType.AttackSpeedBase, 0.3f);
-            NumericDic.Set(NumericType.HpBase, 100);
-            NumericDic.Set(NumericType.AttackBase, 20);
-            NumericDic.Set(NumericType.DefenseBase, 5);
+            
+            // 打印详细的生成日志
+            string attackerName = GetActorDisplayNameForLog(attackerActor);
+            string bulletName = GetActorDisplayNameForLog(actor);
+            string targetName = targetActor != null ? GetActorDisplayNameForLog(targetActor) : $"位置({monsterPosition.x:F1}, {monsterPosition.y:F1})";
+            
+            Log.Info($"[子弹生成] {attackerName} → 发射 {bulletName} → 目标: {targetName}");
         }
         
         /// <summary>
-        /// 从UnitConfig初始化数值组件
+        /// 获取Actor的显示名称（用于日志），包括GameObject名字和配置名字
         /// </summary>
-        private void InitializeNumericFromUnitConfig(GameActor actor, NumericComponent numeric)
+        private string GetActorDisplayNameForLog(GameActor actor)
         {
-            var unitCmp = actor.GetComponent<UnitComponent>();
-            if (unitCmp != null && unitCmp.IsConfigValid)
+            if (actor == null)
             {
-                var config = unitCmp.Config;
-                if (config != null)
-                {
-                    numeric.Set(NumericType.MaxHpBase, config.MaxHp);
-                    numeric.Set(NumericType.HpBase, config.MaxHp);
-                    numeric.Set(NumericType.AttackBase, config.Attack);
-                    numeric.Set(NumericType.DefenseBase, config.Defense);
-                    numeric.Set(NumericType.SpeedBase, config.MoveSpeed);
-                    numeric.Set(NumericType.AttackSpeedBase, config.AttackInterval);
-                }
+                return "未知";
+            }
+            
+            string goName = actor.m_Owner != null ? actor.m_Owner.name : "无GameObject";
+            string configName = GetTypeName(actor, actor.Tag);
+            
+            return $"{goName}({configName})";
+        }
+
+
+        /// <summary>
+        /// 基础创建Actor方法（统一入口）
+        /// </summary>
+        private void CreateActorInternal(GameActor actor, GameObject go, UnitTag tag, Vector2? position = null)
+        {
+            // 先设置位置（在 OnInit 之前，这样 BulletCmp.OnInit 可以正确读取初始位置）
+            if (position.HasValue)
+            {
+                actor.SetPosition(position.Value);
+            }
+            
+            AddActor(actor, go, tag);
+            
+            // 再次设置位置（确保 Transform 和 Position 同步，因为 CreateModel 可能创建了新的 GameObject）
+            if (position.HasValue && actor.Transform != null)
+            {
+                actor.SetPosition(position.Value);
+                
+                actor.Transform.position = position.Value;
+                // 确保初始角度为0（不旋转）
+                actor.Transform.rotation = Quaternion.identity;
             }
         }
 
-        public void AddActor(GameActor actor, GameObject go, UnitTag tag, Action<NumericComponent> onInit = null)
+        public void AddActor(GameActor actor, GameObject go, UnitTag tag)
         {
-            // 如果传入了GameObject，使用它；否则让ModelComponent创建
+            // 如果传入了GameObject，使用它；否则让CreateModel创建
             if (go != null)
             {
                 go.SetActive(true);
@@ -462,37 +444,20 @@ namespace GameLogic
                 SetupActorGameObject(actor, go, tag);
             }
             
-            // 初始化Actor（这会调用InitConfig、BindCmp，并添加所有组件）
+            // 初始化Actor（这会调用InitConfig、CreateModel、BindCmp，并添加所有组件）
             actor.OnInit();
             
-            // 在OnInit之后，组件已经被添加，可以安全地获取NumericComponent
-            var numericComponent = actor.GetComponent<NumericComponent>();
-            if (numericComponent != null)
+            // 如果CreateModel创建了GameObject，确保它已设置层级
+            if (go == null && actor.Transform != null)
             {
-                SetBaseValue(numericComponent);
-                
-                if (onInit != null)
-                {
-                    onInit(numericComponent);    
-                }
-            }
-            else
-            {
-                Log.Warning($"AddActor: Actor没有NumericComponent，无法设置基础数值");
-            }
-            
-            // 如果ModelComponent创建了GameObject，确保它已绑定并设置层级
-            var modelComponent = actor.GetComponent<ModelComponent>();
-            if (modelComponent != null && modelComponent.ModelInstance != null && go == null)
-            {
-                // ModelComponent已经创建并绑定了GameObject
-                modelComponent.ModelInstance.SetActive(true);
+                // CreateModel已经创建并绑定了GameObject
+                actor.m_Owner.SetActive(true);
                 // 设置层级和名称
-                SetupActorGameObject(actor, modelComponent.ModelInstance, tag);
+                SetupActorGameObject(actor, actor.m_Owner, tag);
             }
             else if (go == null && actor.Transform == null)
             {
-                // 如果没有GameObject也没有ModelComponent，创建一个默认的
+                // 如果没有GameObject也没有创建模型，创建一个默认的
                 Log.Warning($"AddActor: Actor没有GameObject，创建一个默认的");
                 var defaultGo = new GameObject($"Actor_{tag}");
                 actor.BindGo(defaultGo);
@@ -520,50 +485,46 @@ namespace GameLogic
             return true;
         }
 
-        public bool TryGetMonster(Vector2 position, float radius, out GameActor actor)
-        {
-            actor = null;
-            foreach (var gameActor in Actors)
-            {
-                if (gameActor.Tag == UnitTag.Enemy && Vector2.Distance(position, gameActor.Position) < radius)
-                {
-                    actor = gameActor;
-                    return true;
-                }
-            }
-            return false;
-        }
-        
         /// <summary>
-        /// 尝试获取基地
+        /// 尝试获取指定类型的单位（通用方法）
         /// </summary>
-        public bool TryGetBase(out GameActor actor)
+        /// <param name="unitType">单位类型</param>
+        /// <param name="position">查找位置</param>
+        /// <param name="radius">查找半径，如果为0或负数则不限制距离</param>
+        /// <param name="actor">找到的Actor</param>
+        /// <returns>是否找到</returns>
+        public bool TryGetUnit(EUnitType unitType, Vector2 position, float radius, out GameActor actor)
         {
             actor = null;
-            foreach (var gameActor in Actors)
+            UnitTag targetTag = UnitTag.Enemy; // 默认值
+            
+            // 将EUnitType转换为UnitTag
+            switch (unitType)
             {
-                if (gameActor.Tag == UnitTag.Base && !gameActor.IsDestroyed)
-                {
-                    actor = gameActor;
-                    return true;
-                }
+                case EUnitType.HERO:
+                    targetTag = UnitTag.Player;
+                    break;
+                case EUnitType.ENEMY:
+                    targetTag = UnitTag.Enemy;
+                    break;
+                case EUnitType.TOWER:
+                    targetTag = UnitTag.Tower;
+                    break;
+                case EUnitType.Base:
+                    targetTag = UnitTag.Base;
+                    break;
             }
-            return false;
-        }
-        
-        /// <summary>
-        /// 尝试获取敌人（在指定位置和范围内）
-        /// </summary>
-        public bool TryGetEnemy(Vector2 position, float radius, out GameActor actor)
-        {
-            actor = null;
+            
             foreach (var gameActor in Actors)
             {
-                if (gameActor.Tag == UnitTag.Enemy && !gameActor.IsDestroyed && 
-                    Vector2.Distance(position, gameActor.Position) < radius)
+                if (gameActor.Tag == targetTag && !gameActor.IsDestroyed)
                 {
-                    actor = gameActor;
-                    return true;
+                    // 如果radius <= 0，不限制距离，直接返回第一个匹配的
+                    if (radius <= 0 || Vector2.Distance(position, gameActor.Position) < radius)
+                    {
+                        actor = gameActor;
+                        return true;
+                    }
                 }
             }
             return false;
@@ -574,17 +535,82 @@ namespace GameLogic
         /// </summary>
         public bool TryGetPlayer(Vector2 position, float radius, out GameActor actor)
         {
-            actor = null;
-            foreach (var gameActor in Actors)
+            return TryGetUnit(EUnitType.HERO, position, radius, out actor);
+        }
+        
+        /// <summary>
+        /// 尝试获取敌人（在指定位置和范围内）
+        /// </summary>
+        public bool TryGetEnemy(Vector2 position, float radius, out GameActor actor)
+        {
+            return TryGetUnit(EUnitType.ENEMY, position, radius, out actor);
+        }
+        
+        /// <summary>
+        /// 尝试获取基地
+        /// </summary>
+        public bool TryGetBase(out GameActor actor)
+        {
+            return TryGetUnit(EUnitType.Base, Vector2.zero, 0, out actor);
+        }
+        
+        /// <summary>
+        /// 尝试获取怪物（兼容旧方法）
+        /// </summary>
+        [System.Obsolete("使用 TryGetEnemy 代替")]
+        public bool TryGetMonster(Vector2 position, float radius, out GameActor actor)
+        {
+            return TryGetEnemy(position, radius, out actor);
+        }
+        
+        /// <summary>
+        /// 获取扇形范围内的所有敌人
+        /// </summary>
+        /// <param name="center">扇形中心位置</param>
+        /// <param name="direction">扇形方向（归一化向量）</param>
+        /// <param name="radius">扇形半径</param>
+        /// <param name="angle">扇形角度（度）</param>
+        /// <returns>在扇形范围内的敌人列表</returns>
+        public List<GameActor> GetMonstersInSector(Vector2 center, Vector2 direction, float radius, float angle)
+        {
+            List<GameActor> result = new List<GameActor>();
+            
+            // 计算扇形的半角（度转弧度）
+            float halfAngle = angle * 0.5f * Mathf.Deg2Rad;
+            
+            // 归一化方向向量
+            Vector2 normalizedDir = direction.normalized;
+            
+            // 遍历所有敌人
+            foreach (var actor in Actors)
             {
-                if (gameActor.Tag == UnitTag.Player && !gameActor.IsDestroyed && 
-                    Vector2.Distance(position, gameActor.Position) < radius)
+                if (actor.Tag != UnitTag.Enemy || actor.IsDestroyed)
+                    continue;
+                
+                Vector2 toEnemy = actor.Position - center;
+                float distance = toEnemy.magnitude;
+                
+                // 检查距离
+                if (distance > radius || distance < 0.01f)
+                    continue;
+                
+                // 归一化到敌人的方向
+                Vector2 toEnemyNormalized = toEnemy.normalized;
+                
+                // 计算方向向量与到敌人向量的点积（用于计算角度）
+                float dot = Vector2.Dot(normalizedDir, toEnemyNormalized);
+                
+                // 使用点积计算角度（acos返回0到π之间的角度）
+                float angleToEnemy = Mathf.Acos(Mathf.Clamp(dot, -1f, 1f));
+                
+                // 检查是否在扇形角度范围内
+                if (angleToEnemy <= halfAngle)
                 {
-                    actor = gameActor;
-                    return true;
+                    result.Add(actor);
                 }
             }
-            return false;
+            
+            return result;
         }
         
         public override void OnUpdate()

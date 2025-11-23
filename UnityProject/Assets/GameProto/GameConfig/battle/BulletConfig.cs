@@ -19,8 +19,13 @@ public sealed partial class BulletConfig : Luban.BeanBase
         Id = _buf.ReadInt();
         Name = _buf.ReadString();
         BulletType = (EBulletType)_buf.ReadInt();
+        DebuffDuration = _buf.ReadFloat();
+        Speed = _buf.ReadFloat();
+        Damages = global::GameConfig.CDamageEffect.DeserializeCDamageEffect(_buf);
         Buffs = _buf.ReadInt();
         Buffs_Ref = null;
+        PreCastAnimTime = _buf.ReadFloat();
+        PostCastAnimTime = _buf.ReadFloat();
         ModelId = _buf.ReadInt();
         ModelId_Ref = null;
     }
@@ -43,10 +48,27 @@ public sealed partial class BulletConfig : Luban.BeanBase
     /// </summary>
     public readonly EBulletType BulletType;
     /// <summary>
+    /// 持续时间
+    /// </summary>
+    public readonly float DebuffDuration;
+    /// <summary>
+    /// 飞行速度
+    /// </summary>
+    public readonly float Speed;
+    public readonly CDamageEffect Damages;
+    /// <summary>
     /// 施加buff
     /// </summary>
     public readonly int Buffs;
     public battle.BuffConfig Buffs_Ref;
+    /// <summary>
+    /// 前摇动画间隔
+    /// </summary>
+    public readonly float PreCastAnimTime;
+    /// <summary>
+    /// 后摇动画间隔
+    /// </summary>
+    public readonly float PostCastAnimTime;
     /// <summary>
     /// 预制体路径
     /// </summary>
@@ -58,6 +80,7 @@ public sealed partial class BulletConfig : Luban.BeanBase
 
     public  void ResolveRef(Tables tables)
     {
+        Damages?.ResolveRef(tables);
         Buffs_Ref = tables.TbBuff.GetOrDefault(Buffs);
         ModelId_Ref = tables.TbModel.GetOrDefault(ModelId);
     }
@@ -68,7 +91,12 @@ public sealed partial class BulletConfig : Luban.BeanBase
         + "id:" + Id + ","
         + "name:" + Name + ","
         + "bulletType:" + BulletType + ","
+        + "debuffDuration:" + DebuffDuration + ","
+        + "speed:" + Speed + ","
+        + "damages:" + Damages + ","
         + "buffs:" + Buffs + ","
+        + "preCastAnimTime:" + PreCastAnimTime + ","
+        + "postCastAnimTime:" + PostCastAnimTime + ","
         + "modelId:" + ModelId + ","
         + "}";
     }

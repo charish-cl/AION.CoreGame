@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using GameLogic;
 using AION.CoreFramework;
+using GameConfig;
 
 namespace GameLogic
 {
@@ -21,6 +22,8 @@ namespace GameLogic
         /// </summary>
         protected List<float> ValueParams { get; private set; }
         
+        //伤害类型
+        protected EDamageType DamageType { get; private set; }
         /// <summary>
         /// 攻击者的数值组件（用于伤害计算等）
         /// </summary>
@@ -61,7 +64,8 @@ namespace GameLogic
             List<float> valueParams,
             NumericComponent attackerNumeric = null,
             GameActor attackerActor = null,
-            int statusId = 0
+            int statusId = 0,
+            EDamageType damageType = EDamageType.Physical
         )
         {
             TargetActor = targetActor;
@@ -69,6 +73,7 @@ namespace GameLogic
             AttackerNumeric = attackerNumeric;
             AttackerActor = attackerActor;
             StatusId = statusId;
+            DamageType = damageType;
         }
 
         /// <summary>
@@ -91,7 +96,6 @@ namespace GameLogic
 
             // 获取所有公共字段和属性，按声明顺序
             FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
-            PropertyInfo[] properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.SetProperty);
 
             // 先处理字段
             foreach (var field in fields)
@@ -104,18 +108,7 @@ namespace GameLogic
                     paramIndex++;
                 }
             }
-
-            // 再处理属性
-            foreach (var prop in properties)
-            {
-                if (paramIndex >= ValueParams.Count)
-                    break;
-
-                if (prop.CanWrite && TrySetValue(prop.PropertyType, ValueParams[paramIndex], prop, result))
-                {
-                    paramIndex++;
-                }
-            }
+            
 
             return result;
         }

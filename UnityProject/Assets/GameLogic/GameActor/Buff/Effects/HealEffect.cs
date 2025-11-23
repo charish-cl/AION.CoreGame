@@ -23,8 +23,9 @@ namespace GameLogic
             GameActor targetActor,
             List<float> valueParams,
             NumericComponent attackerNumeric = null,
-            int statusId = 0
-        ) : base(targetActor, valueParams, attackerNumeric, null, statusId)
+            int statusId = 0,
+            EDamageType damageType = EDamageType.Physical
+        ) : base(targetActor, valueParams, attackerNumeric, null, statusId, damageType)
         {
         }
         
@@ -33,8 +34,9 @@ namespace GameLogic
             List<float> valueParams,
             NumericComponent attackerNumeric = null,
             GameActor attackerActor = null,
-            int statusId = 0
-        ) : base(targetActor, valueParams, attackerNumeric, attackerActor, statusId)
+            int statusId = 0,
+            EDamageType damageType = EDamageType.Physical
+        ) : base(targetActor, valueParams, attackerNumeric, attackerActor, statusId, damageType)
         {
         }
 

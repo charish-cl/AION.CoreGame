@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using AION.CoreFramework;
 using GameConfig;
+using GameConfig.battle;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 namespace GameLogic
 {
@@ -64,49 +66,11 @@ namespace GameLogic
         {
             // 根据 UnitType 查找目标
             var unitComponent = Actor.GetComponent<UnitComponent>();
-            if (unitComponent != null && unitComponent.UnitType.HasValue)
+            // 使用 CombatHelper 查找目标
+            var target = CombatHelper.FindAttackTarget(Actor, m_attackRange);
+            if (target != null)
             {
-                var unitType = unitComponent.UnitType.Value;
-                
-                // ENEMY 优先找 BASE，如果不在范围内则找 HERO
-                if (unitType == GameConfig.EUnitType.ENEMY)
-                {
-                    if (ActorMgr.Instance.TryGetBase(out var baseActor))
-                    {
-                        float distanceToBase = Vector2.Distance(Actor.Position, baseActor.Position);
-                        if (distanceToBase <= m_attackRange)
-                        {
-                            m_targetBase = baseActor;
-                            return MonsterState.Attack;
-                        }
-                    }
-                    
-                    if (ActorMgr.Instance.TryGetPlayer(Actor.Position, m_attackRange, out var player))
-                    {
-                        return MonsterState.Attack;
-                    }
-                }
-                // HERO 找 ENEMY
-                else if (unitType == GameConfig.EUnitType.HERO)
-                {
-                    if (ActorMgr.Instance.TryGetEnemy(Actor.Position, m_attackRange, out var enemy))
-                    {
-                        return MonsterState.Attack;
-                    }
-                }
-            }
-            else
-            {
-                // 如果没有 UnitComponent，默认 ENEMY 行为：找基地
-                if (ActorMgr.Instance.TryGetBase(out var baseActor))
-                {
-                    float distanceToBase = Vector2.Distance(Actor.Position, baseActor.Position);
-                    if (distanceToBase <= m_attackRange)
-                    {
-                        m_targetBase = baseActor;
-                        return MonsterState.Attack;
-                    }
-                }
+                return MonsterState.Attack;
             }
             
             return MonsterState.Move;
@@ -148,55 +112,8 @@ namespace GameLogic
             // 禁用移动组件
             DisableComponent<SimplePathFindingLogicCmp>();
             
-            // 根据 UnitType 查找目标
-            var unitComponent = Actor.GetComponent<UnitComponent>();
-            if (unitComponent != null && unitComponent.UnitType.HasValue)
-            {
-                var unitType = unitComponent.UnitType.Value;
-                
-                // ENEMY 优先找 BASE，如果不在范围内则找 HERO
-                if (unitType == GameConfig.EUnitType.ENEMY)
-                {
-                    if (ActorMgr.Instance.TryGetBase(out var baseActor))
-                    {
-                        float distanceToBase = Vector2.Distance(Actor.Position, baseActor.Position);
-                        if (distanceToBase <= m_attackRange)
-                        {
-                            m_target = baseActor;
-                        }
-                    }
-                    
-                    if (m_target == null && ActorMgr.Instance.TryGetPlayer(Actor.Position, m_attackRange, out var player))
-                    {
-                        m_target = player;
-                    }
-                }
-                // HERO 找 ENEMY
-                else if (unitType == GameConfig.EUnitType.HERO)
-                {
-                    if (ActorMgr.Instance.TryGetEnemy(Actor.Position, m_attackRange, out var enemy))
-                    {
-                        m_target = enemy;
-                    }
-                }
-            }
-            else
-            {
-                // 如果没有 UnitComponent，默认 ENEMY 行为：优先攻击基地
-                if (ActorMgr.Instance.TryGetBase(out var baseActor))
-                {
-                    float distanceToBase = Vector2.Distance(Actor.Position, baseActor.Position);
-                    if (distanceToBase <= m_attackRange)
-                    {
-                        m_target = baseActor;
-                    }
-                }
-                
-                if (m_target == null && ActorMgr.Instance.TryGetPlayer(Actor.Position, m_attackRange, out var player))
-                {
-                    m_target = player;
-                }
-            }
+            // 使用 CombatHelper 查找目标
+            m_target = CombatHelper.FindAttackTarget(Actor, m_attackRange);
         }
         
         public override MonsterState CheckConditions()
@@ -233,6 +150,12 @@ namespace GameLogic
                 return;
             }
             
+            // 如果正在攻击（动画未播完），不能再次攻击
+            if (CombatHelper.IsAttacking(Actor))
+            {
+                return;
+            }
+            
             // 朝向目标
             if (m_orientation != null)
             {
@@ -241,11 +164,12 @@ namespace GameLogic
                 // 检查是否已经转向目标
                 if (m_orientation.CheckHasRotatedToTarget(m_target.Position))
                 {
-                    // 发射子弹攻击
+                    // 执行攻击（带前摇后摇）
                     if (!m_hasAttacked)
                     {
                         m_hasAttacked = true;
-                        ActorMgr.Instance.SpawnBullet(Actor.Position, m_target.Position);
+                        // 使用异步方法执行攻击，不等待完成（让状态机继续运行）
+                        CombatHelper.PerformAttackWithCastTime(Actor, m_target).Forget();
                     }
                 }
             }
@@ -261,7 +185,10 @@ namespace GameLogic
         {
             base.OnEnter();
             m_stateTime = 0f;
+            
+            // 计算冷却时间（攻击间隔）
             m_coolingTime = 1f / Actor.GetProperty(NumericType.AttackSpeed);
+            
             DisableComponent<OrientationViewCmp>();
         }
         

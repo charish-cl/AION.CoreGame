@@ -19,6 +19,7 @@ public sealed partial class ModelConfig : Luban.BeanBase
         Id = _buf.ReadInt();
         Desc = _buf.ReadString();
         Path = _buf.ReadString();
+        Offset = global::GameConfig.vector2.Deserializevector2(_buf);
     }
 
     public static ModelConfig DeserializeModelConfig(ByteBuf _buf)
@@ -38,6 +39,10 @@ public sealed partial class ModelConfig : Luban.BeanBase
     /// 模型路径
     /// </summary>
     public readonly string Path;
+    /// <summary>
+    /// 模型偏移
+    /// </summary>
+    public readonly vector2 Offset;
    
     public const int __ID__ = 200724317;
     public override int GetTypeId() => __ID__;
@@ -52,6 +57,7 @@ public sealed partial class ModelConfig : Luban.BeanBase
         + "id:" + Id + ","
         + "desc:" + Desc + ","
         + "path:" + Path + ","
+        + "offset:" + Offset + ","
         + "}";
     }
 }

@@ -21,17 +21,47 @@ namespace GameLogic
         
         /// <summary>
         /// 添加Buff，支持叠加层数
+        /// MaxStacks == 0 表示无限叠加，直接添加新buff
+        /// MaxStacks > 0 表示有限叠加，检查层数限制
+        /// MaxStacks < 0 表示不能叠加，刷新持续时间
         /// </summary>
         public void AddBuff(BaseBuff buff)
         {
             if (buff == null) return;
+            
+            // 获取配置检查是否可以叠加
+            var config = ConfigSystem.Instance.Tables.TbBuff.GetOrDefault(buff.BuffId);
+            
+            // 如果MaxStacks == 0，表示无限叠加，直接添加新buff
+            if (config != null && config.MaxStacks == 0)
+            {
+                // 无限叠加，直接添加新buff
+                buffs.Add(buff);
+                if (buff.TargetActor == null)
+                {
+                    buff.OnStart(Actor);
+                }
+                
+                // 添加所有Modifier
+                var infiniteStackModifiers = buff.GetModifiers();
+                foreach (var modifier in infiniteStackModifiers)
+                {
+                    if (modifier != null)
+                    {
+                        _buffAttribute.AddModifier(modifier);
+                    }
+                }
+                
+                _buffTimers.Add(buff, Time.realtimeSinceStartup);
+                Log.Info($"Buff {buff.BuffId} added (infinite stack)");
+                return;
+            }
             
             // 检查是否已存在相同ID的Buff
             var existingBuff = GetBuffById(buff.BuffId);
             if (existingBuff != null)
             {
                 // 获取配置检查是否可以叠加
-                var config = ConfigSystem.Instance.Tables.TbBuff.GetOrDefault(buff.BuffId);
                 if (config != null && config.MaxStacks > 0)
                 {
                     // 可以叠加，增加层数
@@ -57,7 +87,7 @@ namespace GameLogic
                 }
                 else
                 {
-                    // 不能叠加或已达到最大层数，刷新持续时间
+                    // 不能叠加（MaxStacks < 0 或配置不存在），刷新持续时间
                     _buffTimers[existingBuff] = Time.realtimeSinceStartup;
                     Log.Info($"Buff {buff.BuffId} refreshed duration");
                     return;
@@ -84,8 +114,11 @@ namespace GameLogic
             
             _buffTimers.Add(buff, Time.realtimeSinceStartup);
             
-            // 记录叠加层数
-            _buffStacks[buff.BuffId] = (1, buff);
+            // 记录叠加层数（仅当MaxStacks > 0时记录）
+            if (config != null && config.MaxStacks > 0)
+            {
+                _buffStacks[buff.BuffId] = (1, buff);
+            }
             
             Log.Info("Buff added: " + buff.Id);
         }

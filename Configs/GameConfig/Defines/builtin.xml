@@ -27,8 +27,20 @@
         <!-- EBuffType -->
         <!-- //buff类型 -->
         <var name="type" type="EBuffType"/>
+
+        <var name="damage_type" type="EDamageType" comment="伤害类型"/>
+
         <!-- value_params -->
         <!-- //buff参数 -->
         <var name="value_params" type="(list#sep=,),float"  comment="buff参数，根据buff类型不同而不同"/>
+    </bean>
+
+    <bean name="CDamageEffect">
+        <!-- EDamageType -->
+        <!-- //伤害类型 -->
+        <var name="type" type="EDamageType"/>
+        <!-- value_params -->
+        <!-- //伤害参数 -->
+        <var name="value" type="float"  comment="伤害值"/>
     </bean>
 </module>

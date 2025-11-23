@@ -17,12 +17,29 @@
 <enum name="EUnitType">
     <var name="ENEMY" value="1"/>
     <var name="HERO" value="2"/>
+    <var name="TOWER" value="3"/>
+    <var name="Base" value="4"/>
 </enum>
 
 <!-- 减益类型 -->
 <enum name="EDebuffType">
     <var name="ATTACK_BOOST" value="1"/>
     <var name="SLOW" value="2"/>
+</enum>
+
+<enum name="EDamageType">
+    <var name="None" value="0" comment="无"/>
+    <var name="Physical" value="1" comment="物理伤害"/>
+    <var name="Magical" value="2" comment="魔法伤害"/>
+    <var name="True" value="3" comment="真实伤害，无视护甲和魔抗"/>
+    
+    <!-- 元素伤害（魔法系） -->
+    <var name="Fire" value="4" comment="火焰伤害（燃烧箭矢、火球、陨石）"/>
+    <var name="Ice" value="5" comment="冰霜伤害（冰箭矢、冰冻效果）"/>
+    <var name="Lightning" value="6" comment="雷电伤害（闪电链、落雷、麻痹）"/>
+    <var name="Holy" value="7" comment="神圣伤害（光塔的圣光）"/>
+    <var name="Poison" value="8" comment="毒素伤害（中毒持续伤害）"/>
+    <var name="Bleed" value="9" comment="流血伤害（物理系持续伤害）"/>
 </enum>
 
 

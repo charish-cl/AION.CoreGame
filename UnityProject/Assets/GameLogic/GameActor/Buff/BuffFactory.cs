@@ -202,7 +202,8 @@ namespace GameLogic
                     targetActor,
                     buffEffect.ValueParams != null ? new List<float>(buffEffect.ValueParams) : new List<float>(),
                     null, // attackerNumeric在OnStart时设置
-                    config.StatusId
+                    config.StatusId,
+                    buffEffect.DamageType
                 );
                 
                 if (effect != null)
@@ -281,13 +282,15 @@ namespace GameLogic
         /// <param name="valueParams">数值参数列表</param>
         /// <param name="attackerNumeric">攻击者的数值组件（可为null）</param>
         /// <param name="statusId">状态ID</param>
+        /// <param name="damageType">伤害类型</param>
         /// <returns>创建的Effect实例，如果找不到对应的类型则返回null</returns>
         internal static BaseEffect CreateEffect(
             EBuffType buffType,
             GameActor targetActor = null,
             List<float> valueParams = null,
             NumericComponent attackerNumeric = null,
-            int statusId = 0)
+            int statusId = 0,
+            GameConfig.EDamageType damageType = GameConfig.EDamageType.Physical)
         {
             // 确保缓存已初始化
             InitializeEffectTypeCache();
@@ -309,14 +312,15 @@ namespace GameLogic
                     attackerActor = attackerNumeric.Actor;
                 }
                 
-                // 优先尝试新的构造函数（包含attackerActor）
+                // 优先尝试新的构造函数（包含attackerActor和damageType）
                 ConstructorInfo constructor = effectType.GetConstructor(new Type[]
                 {
                     typeof(GameActor),
                     typeof(List<float>),
                     typeof(NumericComponent),
                     typeof(GameActor),
-                    typeof(int)
+                    typeof(int),
+                    typeof(GameConfig.EDamageType)
                 });
                 
                 if (constructor != null)
@@ -328,12 +332,43 @@ namespace GameLogic
                         valueParams ?? new List<float>(),
                         attackerNumeric,
                         attackerActor,
-                        statusId
+                        statusId,
+                        damageType
                     });
                     return effect;
                 }
                 
-                // 回退到旧构造函数（不包含attackerActor）
+                // 回退到包含attackerActor但不包含damageType的构造函数
+                constructor = effectType.GetConstructor(new Type[]
+                {
+                    typeof(GameActor),
+                    typeof(List<float>),
+                    typeof(NumericComponent),
+                    typeof(GameActor),
+                    typeof(int)
+                });
+                
+                if (constructor != null)
+                {
+                    // 使用旧构造函数（不包含damageType）
+                    BaseEffect effect = (BaseEffect)constructor.Invoke(new object[]
+                    {
+                        targetActor,
+                        valueParams ?? new List<float>(),
+                        attackerNumeric,
+                        attackerActor,
+                        statusId
+                    });
+                    // 手动设置DamageType
+                    var damageTypeField = effectType.GetField("DamageType", BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (damageTypeField != null)
+                    {
+                        damageTypeField.SetValue(effect, damageType);
+                    }
+                    return effect;
+                }
+                
+                // 回退到旧构造函数（不包含attackerActor和damageType）
                 constructor = effectType.GetConstructor(new Type[]
                 {
                     typeof(GameActor),
@@ -342,22 +377,27 @@ namespace GameLogic
                     typeof(int)
                 });
                 
-                if (constructor == null)
+                if (constructor != null)
                 {
-                    Log.Error($"BuffFactory: Effect类型 {effectType.Name} 没有找到匹配的构造函数");
-                    return null;
+                    // 使用旧构造函数创建实例
+                    BaseEffect effectOld = (BaseEffect)constructor.Invoke(new object[]
+                    {
+                        targetActor,
+                        valueParams ?? new List<float>(),
+                        attackerNumeric,
+                        statusId
+                    });
+                    // 手动设置DamageType
+                    var damageTypeField = effectType.GetField("DamageType", BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (damageTypeField != null)
+                    {
+                        damageTypeField.SetValue(effectOld, damageType);
+                    }
+                    return effectOld;
                 }
                 
-                // 使用旧构造函数创建实例
-                BaseEffect effectOld = (BaseEffect)constructor.Invoke(new object[]
-                {
-                    targetActor,
-                    valueParams ?? new List<float>(),
-                    attackerNumeric,
-                    statusId
-                });
-                
-                return effectOld;
+                Log.Error($"BuffFactory: Effect类型 {effectType.Name} 没有找到匹配的构造函数");
+                return null;
             }
             catch (Exception ex)
             {
@@ -379,6 +419,52 @@ namespace GameLogic
             }
             
             return CreateBuff(config, targetActor);
+        }
+        
+        /// <summary>
+        /// 创建Buff并添加到目标的BuffCmp（处理完整的生命周期）
+        /// </summary>
+        /// <param name="buffConfig">Buff配置</param>
+        /// <param name="targetActor">目标Actor</param>
+        /// <param name="attackerNumeric">攻击者的数值组件</param>
+        /// <param name="attackerActor">攻击者的Actor</param>
+        /// <returns>是否成功添加</returns>
+        public static bool CreateAndAddBuff(BuffConfig buffConfig, GameActor targetActor, NumericComponent attackerNumeric = null, GameActor attackerActor = null)
+        {
+            if (buffConfig == null || targetActor == null || targetActor.IsDestroyed)
+            {
+                Log.Warning("BuffFactory.CreateAndAddBuff: 参数无效");
+                return false;
+            }
+            
+            // 获取目标的Buff组件
+            var buffCmp = targetActor.GetComponent<BuffCmp>();
+            if (buffCmp == null)
+            {
+                Log.Warning($"BuffFactory.CreateAndAddBuff: 目标 {targetActor.Tag} 没有BuffCmp组件");
+                return false;
+            }
+            
+            // 创建Buff
+            var buff = CreateBuff(buffConfig, targetActor);
+            if (buff == null)
+            {
+                return false;
+            }
+            
+            // 设置攻击者信息
+            if (attackerNumeric != null)
+            {
+                buff.SetAttackerNumeric(attackerNumeric);
+            }
+            
+            // 设置目标并启动Buff（OnStart会在AddBuff中调用，但这里先设置好参数）
+            buff.OnStart(targetActor, attackerNumeric, attackerActor);
+            
+            // 添加到BuffCmp（AddBuff会处理生命周期）
+            buffCmp.AddBuff(buff);
+            
+            return true;
         }
         
         /// <summary>

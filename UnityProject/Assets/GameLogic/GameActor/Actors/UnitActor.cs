@@ -47,10 +47,21 @@ namespace GameLogic
             }
         }
         
+        protected override void CreateModel()
+        {
+            base.CreateModel();
+            
+            // 从配置获取模型配置并实例化
+            var unitConfig = GetConfig<UnitConfig>();
+            if (unitConfig != null && unitConfig.ModelId_Ref != null)
+            {
+                InstantiateModel(unitConfig.ModelId_Ref);
+            }
+        }
+        
         protected override void BindCmp()
         {
             base.BindCmp();
-            
             // 基础组件
             AddComponent<NumericComponent>();
             AddComponent<BuffCmp>();
@@ -58,16 +69,37 @@ namespace GameLogic
             AddComponent<MoveViewCmp>();
             AddComponent<DirectionViewCmp>();
             AddComponent<OrientationViewCmp>();
-            
+            AddComponent<ActorAnimViewCmp>();
+
             // 如果指定了unitId，添加UnitComponent
             if (UnitId > 0)
             {
                 var unitComponent = AddComponent<UnitComponent>();
                 unitComponent.Init(UnitId);
             }
+        }
+        
+        protected override void InitializeNumericFromConfig()
+        {
+            base.InitializeNumericFromConfig();
             
-            // 添加ModelComponent，它会从Actor获取配置
-            AddComponent<ModelComponent>();
+            var numericCmp = NumericComponent;
+            if (numericCmp == null)
+            {
+                return;
+            }
+            
+            // 从UnitConfig初始化数值
+            var unitConfig = GetConfig<UnitConfig>();
+            if (unitConfig != null)
+            {
+                numericCmp.Set(NumericType.MaxHpBase, unitConfig.MaxHp);
+                numericCmp.Set(NumericType.HpBase, unitConfig.MaxHp);
+                numericCmp.Set(NumericType.AttackBase, unitConfig.Attack);
+                numericCmp.Set(NumericType.DefenseBase, unitConfig.Defense);
+                numericCmp.Set(NumericType.SpeedBase, unitConfig.MoveSpeed);
+                numericCmp.Set(NumericType.AttackSpeedBase, unitConfig.AttackInterval);
+            }
         }
     }
 }

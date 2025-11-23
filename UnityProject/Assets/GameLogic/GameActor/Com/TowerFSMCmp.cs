@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using AION.CoreFramework;
 using Cysharp.Threading.Tasks;
+using GameConfig;
+using GameConfig.battle;
 using UnityEngine;
 
 namespace GameLogic
@@ -33,11 +35,11 @@ namespace GameLogic
         {
             base.OnInit();
             
-            // 从 TowerComponent 读取攻击范围配置
-            var towerComponent = Actor.GetComponent<TowerComponent>();
-            if (towerComponent != null && towerComponent.IsConfigValid)
+            // 从 TowerConfig 读取攻击范围配置
+            var towerConfig = Actor.GetConfig<TowerConfig>();
+            if (towerConfig != null)
             {
-                float configAttackRange = towerComponent.AttackRange;
+                float configAttackRange = towerConfig.AttackRange;
                 if (configAttackRange > 0f)
                 {
                     AttackRange = configAttackRange;
@@ -81,9 +83,7 @@ namespace GameLogic
    
     public class TowerAttackState : BaseState<TowerState>
     {
-      
         OrientationViewCmp orientation;
-        
         bool hasShoot;
         bool enemyHasExit;
         private float m_attackRange;
@@ -97,6 +97,7 @@ namespace GameLogic
             var towerFSM = Actor.GetComponent<TowerFSMCmp>();
             m_attackRange = towerFSM?.AttackRange ?? 15f;
         }
+        
         public override TowerState CheckConditions()
         {
             if (hasShoot)
@@ -112,13 +113,20 @@ namespace GameLogic
         
         public override void OnUpdate()
         {
-       
-            // 塔攻击敌人（ENEMY）
-            if (!ActorMgr.Instance.TryGetEnemy(Actor.Position, m_attackRange, out var enemy))
+            // 如果正在攻击（动画未播完），不能再次攻击
+            if (CombatHelper.IsAttacking(Actor))
+            {
+                return;
+            }
+            
+            // 查找攻击目标
+            var enemy = CombatHelper.FindAttackTarget(Actor, m_attackRange);
+            if (enemy == null)
             {
                 enemyHasExit = true;
                 return;
             }
+            
             if (orientation == null)
             {
                 return;
@@ -127,11 +135,15 @@ namespace GameLogic
             
             bool hasRotateTarget = orientation.CheckHasRotatedToTarget(enemy.Position);
             
-            if (hasRotateTarget )
+            if (hasRotateTarget)
             {
-                //TODO: 发射子弹
-                hasShoot = true;
-                ActorMgr.Instance.SpawnBullet(Actor.Position, enemy.Position);
+                // 执行攻击（带前摇后摇）
+                if (!hasShoot)
+                {
+                    hasShoot = true;
+                    // 使用异步方法执行攻击，不等待完成（让状态机继续运行）
+                    CombatHelper.PerformAttackWithCastTime(Actor, enemy).Forget();
+                }
             }
         }
     }
@@ -149,22 +161,21 @@ namespace GameLogic
 
         float stateTime;
         float coolingTime;
+        
         public override async void OnEnter()
         {
             base.OnEnter();
             stateTime = 0;
             
-            // 尝试从 TowerComponent 读取攻击间隔
-            var towerComponent = Actor.GetComponent<TowerComponent>();
-            if (towerComponent != null && towerComponent.IsConfigValid && 
-                towerComponent.AttackIntervals != null && towerComponent.AttackIntervals.Count > 0)
+            // 尝试从 TowerConfig 读取攻击间隔
+            var towerConfig = Actor.GetConfig<TowerConfig>();
+            if (towerConfig != null && 
+                towerConfig.AttackInterals != null && towerConfig.AttackInterals.Count > 0)
             {
-                // 使用第一个攻击间隔（可以根据等级选择）
-                coolingTime = towerComponent.AttackIntervals[0];
+                coolingTime = towerConfig.AttackInterals[0];
             }
             else
             {
-                // 从数值组件获取
                 coolingTime = 1f / Actor.GetProperty(NumericType.AttackSpeed);
             }
             

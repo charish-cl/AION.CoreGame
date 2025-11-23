@@ -20,8 +20,9 @@ namespace GameLogic
             GameActor targetActor,
             List<float> valueParams,
             NumericComponent attackerNumeric = null,
-            int statusId = 0
-        ) : base(targetActor, valueParams, attackerNumeric, null, statusId)
+            int statusId = 0,
+            EDamageType damageType = EDamageType.Physical
+        ) : base(targetActor, valueParams, attackerNumeric, null, statusId, damageType)
         {
         }
         
@@ -30,8 +31,9 @@ namespace GameLogic
             List<float> valueParams,
             NumericComponent attackerNumeric = null,
             GameActor attackerActor = null,
-            int statusId = 0
-        ) : base(targetActor, valueParams, attackerNumeric, attackerActor, statusId)
+            int statusId = 0,
+            EDamageType damageType = EDamageType.Physical
+        ) : base(targetActor, valueParams, attackerNumeric, attackerActor, statusId, damageType)
         {
         }
 
@@ -69,6 +71,9 @@ namespace GameLogic
                 DisableComponent<MoveLogicCmp>();
                 DisableComponent<SimplePathFindingLogicCmp>();
                 DisableComponent<InputLogicCmp>();
+                DisableComponent<MoveViewCmp>();
+                DisableComponent<DirectionViewCmp>();
+                DisableComponent<OrientationViewCmp>();
             }
 
             // 禁用攻击相关组件（通过禁用状态机来禁用攻击）
@@ -77,6 +82,7 @@ namespace GameLogic
                 DisableComponent<UnitFSMCmp>();
                 DisableComponent<MonsterFSMCmp>();
                 DisableComponent<TowerFSMCmp>();
+                DisableComponent<OrientationViewCmp>();
             }
         }
         

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using AION.CoreFramework;
+using UnityEngine.UIElements;
 
 namespace GameLogic
 {
@@ -128,9 +129,12 @@ namespace GameLogic
 
         protected virtual void Move(Vector2 direction)
         {
-            MoveDirection = direction.normalized;
+            // 归一化方向，确保匀速移动
+            Vector2 normalizedDirection = direction.normalized;
+            MoveDirection = normalizedDirection;
             
-            Position += direction * (Velocity * Time.deltaTime);
+            // 使用归一化的方向乘以速度，确保匀速
+            Position += normalizedDirection * (Velocity * Time.deltaTime);
             
             Actor.SetPosition(Position);
         }
@@ -190,6 +194,7 @@ namespace GameLogic
         public override void OnInit()
         {
             move = GetComponent<MoveLogicCmp>();
+            Debug.Log($"MoveViewCmp OnInit  Actor:{Actor.m_Owner.name} position:{Actor.Position}");
         }
 
         public override void OnUpdate()

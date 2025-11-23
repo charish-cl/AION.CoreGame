@@ -47,6 +47,18 @@ namespace GameLogic
             
         }
         
+        protected override void CreateModel()
+        {
+            base.CreateModel();
+            
+            // 从配置获取模型配置并实例化
+            var towerConfig = GetConfig<TowerConfig>();
+            if (towerConfig != null && towerConfig.ModelId_Ref != null)
+            {
+                InstantiateModel(towerConfig.ModelId_Ref);
+            }
+        }
+        
         protected override void BindCmp()
         {
             base.BindCmp();
@@ -55,16 +67,32 @@ namespace GameLogic
             AddComponent<NumericComponent>();
             AddComponent<TowerFSMCmp>();
             AddComponent<OrientationViewCmp>();
+            AddComponent<ActorAnimViewCmp>();
+
+        }
+        
+        protected override void InitializeNumericFromConfig()
+        {
+            base.InitializeNumericFromConfig();
             
-            // 如果指定了towerId，添加TowerComponent
-            if (TowerId > 0)
+            var numericCmp = NumericComponent;
+            if (numericCmp == null)
             {
-                var towerComponent = AddComponent<TowerComponent>();
-                towerComponent.Init(TowerId);
+                return;
             }
             
-            // 添加ModelComponent，它会从Actor获取配置
-            AddComponent<ModelComponent>();
+            // 从TowerConfig初始化数值
+            var towerConfig = GetConfig<TowerConfig>();
+            if (towerConfig != null)
+            {
+                // TowerConfig 没有生命值、攻击力等，只设置攻击范围
+                // 如果有攻击间隔列表，使用第一个值作为基础攻击速度
+                if (towerConfig.AttackInterals != null && towerConfig.AttackInterals.Count > 0)
+                {
+                    numericCmp.Set(NumericType.AttackSpeedBase, towerConfig.AttackInterals[0]);
+                }
+                // 攻击范围可能需要通过其他方式设置，这里暂时不设置
+            }
         }
     }
 }

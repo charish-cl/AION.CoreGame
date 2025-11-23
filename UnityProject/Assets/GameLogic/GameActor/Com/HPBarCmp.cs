@@ -18,11 +18,11 @@
             hpBarLogic.Init(numericComponent.GetAsInt(NumericType.Hp));
         }
 
-        private void OnNumbericChange(NumericType arg1, float arg2, float arg3)
+        private void OnNumbericChange(NumericType arg1, float oldValue, float newValue)
         {
             if (arg1 == NumericType.Hp)
             {
-                hpBarLogic.SetHp(arg2);
+                hpBarLogic.SetHp(newValue);
             }
         }
 

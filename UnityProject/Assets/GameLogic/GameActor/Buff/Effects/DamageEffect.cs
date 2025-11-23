@@ -12,7 +12,7 @@ namespace GameLogic
     public class DamageEffectParams
     {
         public float DamageAmount = 0f;        // 固定伤害值（如果UseAttackerDamage为false时使用）
-        public bool UseAttackerDamage = true;  // 是否使用攻击者的伤害（默认true）
+        public bool UseAttackerDamage = false;  // 是否使用攻击者的伤害（默认true）
         public float AttackPercent = 1f;      // 攻击力百分比（0-1之间，例如0.2表示20%）
     }
 
@@ -26,8 +26,9 @@ namespace GameLogic
             GameActor targetActor,
             List<float> valueParams,
             NumericComponent attackerNumeric = null,
-            int statusId = 0
-        ) : base(targetActor, valueParams, attackerNumeric, null, statusId)
+            int statusId = 0,
+            EDamageType damageType = EDamageType.Physical
+        ) : base(targetActor, valueParams, attackerNumeric, null, statusId, damageType)
         {
         }
         
@@ -36,8 +37,9 @@ namespace GameLogic
             List<float> valueParams,
             NumericComponent attackerNumeric = null,
             GameActor attackerActor = null,
-            int statusId = 0
-        ) : base(targetActor, valueParams, attackerNumeric, attackerActor, statusId)
+            int statusId = 0,
+            EDamageType damageType = EDamageType.Physical
+        ) : base(targetActor, valueParams, attackerNumeric, attackerActor, statusId, damageType)
         {
         }
 
@@ -76,25 +78,20 @@ namespace GameLogic
                 }
                 else
                 {
+                    Log.Info($"DamageEffect: 使用攻击者的伤害");
+                    
                     // 使用HealthCmp的TakeDamage方法，传递攻击者Actor以支持反伤（会计算防御等）
                     GameActor attacker = AttackerActor;
                     if (attacker == null && AttackerNumeric != null)
                     {
                         attacker = AttackerNumeric.Actor;
                     }
-                    healthCmp.TakeDamage(AttackerNumeric, attacker);
+                    healthCmp.TakeDamage(AttackerNumeric, DamageType, attacker);
                 }
             }
             else if (param.DamageAmount > 0)
             {
-                // 如果没有攻击者信息或指定使用固定伤害，直接使用参数中的伤害值
-                healthCmp.HP -= (int)param.DamageAmount;
-
-                // 显示伤害数字
-                if (healthCmp.numberPrefab != null)
-                {
-                    healthCmp.numberPrefab.Spawn(TargetActor.Position + new Vector2(0, 0.5f), (int)param.DamageAmount);
-                }
+                healthCmp.TakeDamage(param.DamageAmount, DamageType, AttackerActor);
             }
         }
     }

@@ -14,6 +14,9 @@ namespace GameLogic
 	public partial class IActorEvent_Event
 	{
 		public static readonly int NumbericChange = RuntimeId.ToRuntimeId("IActorEvent_Event.NumbericChange");
+		public static readonly int OnAttack = RuntimeId.ToRuntimeId("IActorEvent_Event.OnAttack");
+		public static readonly int OnCriticalHit = RuntimeId.ToRuntimeId("IActorEvent_Event.OnCriticalHit");
+		public static readonly int OnDeath = RuntimeId.ToRuntimeId("IActorEvent_Event.OnDeath");
 	}
 
 	public partial class IActorEvent_Gen : IActorEvent
@@ -28,6 +31,21 @@ namespace GameLogic
         public void NumbericChange(GameLogic.NumericType type,System.Single previousValue,System.Single newValue)
         {
             _dispatcher.Send(IActorEvent_Event.NumbericChange,type,previousValue,newValue);
+        }
+
+        public void OnAttack()
+        {
+            _dispatcher.Send(IActorEvent_Event.OnAttack);
+        }
+
+        public void OnCriticalHit()
+        {
+            _dispatcher.Send(IActorEvent_Event.OnCriticalHit);
+        }
+
+        public void OnDeath()
+        {
+            _dispatcher.Send(IActorEvent_Event.OnDeath);
         }
 
 	}
