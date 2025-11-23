@@ -45,6 +45,11 @@ namespace GameLogic
         public int BuffId => Config?.Buffs ?? 0;
         
         /// <summary>
+        /// 模型配置（从配置获取）
+        /// </summary>
+        public GameConfig.res.ModelConfig ModelConfig => Config?.ModelId_Ref;
+        
+        /// <summary>
         /// 初始化子弹组件
         /// </summary>
         /// <param name="bulletId">子弹配置ID</param>

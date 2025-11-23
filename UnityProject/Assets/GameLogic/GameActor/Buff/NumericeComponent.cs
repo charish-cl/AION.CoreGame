@@ -44,12 +44,120 @@ namespace GameLogic
         Defense = 1005,
         DefenseBase = Defense * 10 + 1,
         DefenseAdd = Defense * 10 + 2,
+        DefensePct = Defense * 10 + 3,
+        DefenseFinalAdd = Defense * 10 + 4,
+        DefenseFinalPct = Defense * 10 + 5,
+        
+        //法术攻击
+        MagicAttack = 1019,
+        MagicAttackBase = MagicAttack * 10 + 1,
+        MagicAttackAdd = MagicAttack * 10 + 2,
+        MagicAttackPct = MagicAttack * 10 + 3,
+        MagicAttackFinalAdd = MagicAttack * 10 + 4,
+        MagicAttackFinalPct = MagicAttack * 10 + 5,
+        
+        //法术防御
+        MagicDefense = 1020,
+        MagicDefenseBase = MagicDefense * 10 + 1,
+        MagicDefenseAdd = MagicDefense * 10 + 2,
+        MagicDefensePct = MagicDefense * 10 + 3,
+        MagicDefenseFinalAdd = MagicDefense * 10 + 4,
+        MagicDefenseFinalPct = MagicDefense * 10 + 5,
         
         //护甲
         Armor = 1006,
         
         //暴击
         Critical = 1007,
+        CriticalBase = Critical * 10 + 1,
+        CriticalAdd = Critical * 10 + 2,
+        CriticalPct = Critical * 10 + 3,
+        CriticalFinalAdd = Critical * 10 + 4,
+        CriticalFinalPct = Critical * 10 + 5,
+        
+        //暴击率（0-1之间，表示暴击概率）
+        CritRate = 1021,
+        CritRateBase = CritRate * 10 + 1,
+        CritRateAdd = CritRate * 10 + 2,
+        CritRatePct = CritRate * 10 + 3,
+        CritRateFinalAdd = CritRate * 10 + 4,
+        CritRateFinalPct = CritRate * 10 + 5,
+        
+        //暴击伤害（暴击时的伤害倍率，如1.5表示150%伤害）
+        CritDmg = 1022,
+        CritDmgBase = CritDmg * 10 + 1,
+        CritDmgAdd = CritDmg * 10 + 2,
+        CritDmgPct = CritDmg * 10 + 3,
+        CritDmgFinalAdd = CritDmg * 10 + 4,
+        CritDmgFinalPct = CritDmg * 10 + 5,
+        
+        //反伤比例（0-1之间，表示反弹所受伤害的比例）
+        ReflectDamage = 1008,
+        ReflectDamageBase = ReflectDamage * 10 + 1,
+        ReflectDamageAdd = ReflectDamage * 10 + 2,
+        ReflectDamagePct = ReflectDamage * 10 + 3,
+        
+        // ========== 五大元素伤害 ==========
+        // 火元素伤害
+        FireDamage = 1009,
+        FireDamageBase = FireDamage * 10 + 1,
+        FireDamageAdd = FireDamage * 10 + 2,
+        FireDamagePct = FireDamage * 10 + 3,
+        
+        // 水元素伤害
+        WaterDamage = 1010,
+        WaterDamageBase = WaterDamage * 10 + 1,
+        WaterDamageAdd = WaterDamage * 10 + 2,
+        WaterDamagePct = WaterDamage * 10 + 3,
+        
+        // 土元素伤害
+        EarthDamage = 1011,
+        EarthDamageBase = EarthDamage * 10 + 1,
+        EarthDamageAdd = EarthDamage * 10 + 2,
+        EarthDamagePct = EarthDamage * 10 + 3,
+        
+        // 风元素伤害
+        WindDamage = 1012,
+        WindDamageBase = WindDamage * 10 + 1,
+        WindDamageAdd = WindDamage * 10 + 2,
+        WindDamagePct = WindDamage * 10 + 3,
+        
+        // 雷元素伤害
+        LightningDamage = 1013,
+        LightningDamageBase = LightningDamage * 10 + 1,
+        LightningDamageAdd = LightningDamage * 10 + 2,
+        LightningDamagePct = LightningDamage * 10 + 3,
+        
+        // ========== 五大元素抗性（0-1之间，表示减免比例） ==========
+        // 火元素抗性
+        FireResistance = 1014,
+        FireResistanceBase = FireResistance * 10 + 1,
+        FireResistanceAdd = FireResistance * 10 + 2,
+        FireResistancePct = FireResistance * 10 + 3,
+        
+        // 水元素抗性
+        WaterResistance = 1015,
+        WaterResistanceBase = WaterResistance * 10 + 1,
+        WaterResistanceAdd = WaterResistance * 10 + 2,
+        WaterResistancePct = WaterResistance * 10 + 3,
+        
+        // 土元素抗性
+        EarthResistance = 1016,
+        EarthResistanceBase = EarthResistance * 10 + 1,
+        EarthResistanceAdd = EarthResistance * 10 + 2,
+        EarthResistancePct = EarthResistance * 10 + 3,
+        
+        // 风元素抗性
+        WindResistance = 1017,
+        WindResistanceBase = WindResistance * 10 + 1,
+        WindResistanceAdd = WindResistance * 10 + 2,
+        WindResistancePct = WindResistance * 10 + 3,
+        
+        // 雷元素抗性
+        LightningResistance = 1018,
+        LightningResistanceBase = LightningResistance * 10 + 1,
+        LightningResistanceAdd = LightningResistance * 10 + 2,
+        LightningResistancePct = LightningResistance * 10 + 3,
     }
 
     public class NumericComponent : GameActorCmp

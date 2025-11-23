@@ -46,7 +46,14 @@ namespace GameLogic
             {
                 States[CurrentState].OnEnter();
             }
-            Log.Info($"{Actor.m_transform.name} FSMComponent: {PreviousState} changed state to {CurrentState}");
+            if (Actor.Transform != null)
+            {
+                Log.Info($"{Actor.Transform.name} FSMComponent: {PreviousState} changed state to {CurrentState}");
+            }
+            else
+            {
+                Log.Info($"FSMComponent: {PreviousState} changed state to {CurrentState}");
+            }
             
             PreviousState = CurrentState;
         }        

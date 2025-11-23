@@ -31,18 +31,42 @@
     <var name="Heal" value="2" comment="治疗：恢复目标生命值"/>
     <var name="Damage" value="3" comment="伤害：对目标造成伤害"/>
     <var name="Status" value="4" comment="状态：施加特殊状态（如眩晕、击退）"/>
+    <!-- 子弹类属性 -->
+    <var name="BulletPropertyMod" value="5" comment="子弹属性修改"/>
+    <var name="TowerPropertyMod" value="6" comment="塔属性修改"/>
 </enum>
 
 <enum name="ETargetType">
     <var name="Friendly" value="1" comment="对友方单位生效"/>
     <var name="Enemy" value="2" comment="对敌方单位生效"/>
-    <!-- 未来可扩展 Self (仅自己), All (全场) 等 -->
+    <var name="All" value="3" comment="对所有单位生效"/>
+    <var name="Self" value="4" comment="对自己生效"/>
+    <!-- 未来可扩展 特定单位（如特定英雄）等 -->
+    <var name="specific" value="5" comment="特定单位"/>
+    <var name="RandomEnemy" value="6" comment="随机敌人"/>
+    <var name="RandomAlly" value="7" comment="随机友方"/>
 </enum>
-
+ 
 <enum name="ETriggerType">
     <var name="Immediate" value="1" comment="立即触发：Buff生效时立即触发一次效果"/>
     <var name="Interval" value="2" comment="间隔触发：按固定时间间隔周期性触发效果"/>
     <var name="Probability" value="3" comment="概率触发：满足条件时按一定概率触发效果"/>
+    <var name="Random" value="4" comment="随机触发：按一定概率触发效果，效果数量随机"/>
+    <var name="OnDeath" value="5" comment="死亡触发：目标死亡时触发效果"/>
+    <var name="OnAttack" value="6" comment="攻击触发：目标攻击时触发效果"/>
+    <var name="OnHit" value="7" comment="命中触发：目标被攻击时触发效果"/>
+    <var name="OnHeal" value="8" comment="治疗触发：目标被治疗时触发效果"/>
+    <var name="OnDamage" value="9" comment="伤害触发：目标被伤害时触发效果"/>
+    <var name="OnStatus" value="10" comment="状态触发：目标被状态效果时触发效果"/>
+    <var name="OnBuff" value="11" comment="Buff触发：目标获得Buff时触发效果"/>
+    <var name="OnDebuff" value="12" comment="Debuff触发：目标获得Debuff时触发效果"/>
+    <var name="OnUpgrade" value="13" comment="升级触发：目标升级时触发效果"/>
+    <var name="OnSkill" value="14" comment="技能触发：目标使用技能时触发效果"/>
+    <var name="OnUseItem" value="15" comment="使用物品触发：目标使用物品时触发效果"/>
+    <var name="OnEnter" value="16" comment="进入触发：目标进入范围时触发效果"/>
+    <var name="OnLeave" value="17" comment="离开触发：目标离开范围时触发效果"/>
+    <var name="OnTouch" value="18" comment="接触触发：目标接触到物品时触发效果"/>
+    <var name="OnUseSkill" value="19" comment="使用技能触发：目标使用技能时触发效果"/>
 </enum>
 
 </module>

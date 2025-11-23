@@ -37,8 +37,9 @@ public partial class GameApp:Singleton<GameApp>
     /// </summary>
     private void StartGameLogic()
     {
+     
+        
         // GameModule.UI.ShowWindow<GameMainUI>();
-
     }
 
     /// <summary>

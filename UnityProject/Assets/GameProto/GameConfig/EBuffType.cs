@@ -29,6 +29,14 @@ namespace GameConfig
         /// 状态：施加特殊状态（如眩晕、击退）
         /// </summary>
         Status = 4,
+        /// <summary>
+        /// 子弹属性修改
+        /// </summary>
+        BulletPropertyMod = 5,
+        /// <summary>
+        /// 塔属性修改
+        /// </summary>
+        TowerPropertyMod = 6,
     }
 
 } 

@@ -70,7 +70,7 @@ namespace GameLogic
             base.OnUpdate();
             
             // 塔攻击敌人（ENEMY）
-            if (SceneMgr.Instance.TryGetEnemy(Actor.Position, m_attackRange, out var enemy))
+            if (ActorMgr.Instance.TryGetEnemy(Actor.Position, m_attackRange, out var enemy))
             {
                 hasTarget = true;
                 return;
@@ -114,7 +114,7 @@ namespace GameLogic
         {
        
             // 塔攻击敌人（ENEMY）
-            if (!SceneMgr.Instance.TryGetEnemy(Actor.Position, m_attackRange, out var enemy))
+            if (!ActorMgr.Instance.TryGetEnemy(Actor.Position, m_attackRange, out var enemy))
             {
                 enemyHasExit = true;
                 return;
@@ -131,7 +131,7 @@ namespace GameLogic
             {
                 //TODO: 发射子弹
                 hasShoot = true;
-                SceneMgr.Instance.SpawnBullet(Actor.Position, enemy.Position);
+                ActorMgr.Instance.SpawnBullet(Actor.Position, enemy.Position);
             }
         }
     }

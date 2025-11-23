@@ -19,12 +19,13 @@ public sealed partial class BuffConfig : Luban.BeanBase
         Id = _buf.ReadInt();
         Name = _buf.ReadString();
         Desc = _buf.ReadString();
-        BuffType = (EBuffType)_buf.ReadInt();
+        {int n0 = System.Math.Min(_buf.ReadSize(), _buf.Size);BuffEffects = new System.Collections.Generic.List<CBuffEffect>(n0);for(var i0 = 0 ; i0 < n0 ; i0++) { CBuffEffect _e0;  _e0 = global::GameConfig.CBuffEffect.DeserializeCBuffEffect(_buf); BuffEffects.Add(_e0);}}
         TargetType = (ETargetType)_buf.ReadInt();
         TriggerType = (ETriggerType)_buf.ReadInt();
         StatusId = _buf.ReadInt();
         StatusId_Ref = null;
-        {int n0 = System.Math.Min(_buf.ReadSize(), _buf.Size);ValueParams = new System.Collections.Generic.List<float>(n0);for(var i0 = 0 ; i0 < n0 ; i0++) { float _e0;  _e0 = _buf.ReadFloat(); ValueParams.Add(_e0);}}
+        {int n0 = System.Math.Min(_buf.ReadSize(), _buf.Size);TargetParams = new System.Collections.Generic.List<float>(n0);for(var i0 = 0 ; i0 < n0 ; i0++) { float _e0;  _e0 = _buf.ReadFloat(); TargetParams.Add(_e0);}}
+        {int n0 = System.Math.Min(_buf.ReadSize(), _buf.Size);ConditionParams = new System.Collections.Generic.List<float>(n0);for(var i0 = 0 ; i0 < n0 ; i0++) { float _e0;  _e0 = _buf.ReadFloat(); ConditionParams.Add(_e0);}}
         Duration = _buf.ReadFloat();
         TickInterval = _buf.ReadFloat();
         MaxStacks = _buf.ReadInt();
@@ -48,9 +49,9 @@ public sealed partial class BuffConfig : Luban.BeanBase
     /// </summary>
     public readonly string Desc;
     /// <summary>
-    /// Buff类型
+    /// Buff效果
     /// </summary>
-    public readonly EBuffType BuffType;
+    public readonly System.Collections.Generic.List<CBuffEffect> BuffEffects;
     /// <summary>
     /// 作用目标
     /// </summary>
@@ -65,9 +66,13 @@ public sealed partial class BuffConfig : Luban.BeanBase
     public readonly int StatusId;
     public battle.StatuConfig StatusId_Ref;
     /// <summary>
-    /// 数值参数
+    /// 目标参数
     /// </summary>
-    public readonly System.Collections.Generic.List<float> ValueParams;
+    public readonly System.Collections.Generic.List<float> TargetParams;
+    /// <summary>
+    /// 触发参数
+    /// </summary>
+    public readonly System.Collections.Generic.List<float> ConditionParams;
     /// <summary>
     /// 持续时间
     /// </summary>
@@ -86,6 +91,7 @@ public sealed partial class BuffConfig : Luban.BeanBase
 
     public  void ResolveRef(Tables tables)
     {
+        foreach (var _e in BuffEffects) { _e?.ResolveRef(tables); }
         StatusId_Ref = tables.TbStatus.GetOrDefault(StatusId);
     }
 
@@ -95,11 +101,12 @@ public sealed partial class BuffConfig : Luban.BeanBase
         + "id:" + Id + ","
         + "name:" + Name + ","
         + "desc:" + Desc + ","
-        + "buffType:" + BuffType + ","
+        + "buffEffects:" + Luban.StringUtil.CollectionToString(BuffEffects) + ","
         + "targetType:" + TargetType + ","
         + "triggerType:" + TriggerType + ","
         + "statusId:" + StatusId + ","
-        + "valueParams:" + Luban.StringUtil.CollectionToString(ValueParams) + ","
+        + "targetParams:" + Luban.StringUtil.CollectionToString(TargetParams) + ","
+        + "conditionParams:" + Luban.StringUtil.CollectionToString(ConditionParams) + ","
         + "duration:" + Duration + ","
         + "tickInterval:" + TickInterval + ","
         + "maxStacks:" + MaxStacks + ","

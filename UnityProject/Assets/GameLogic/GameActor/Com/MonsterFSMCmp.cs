@@ -71,7 +71,7 @@ namespace GameLogic
                 // ENEMY 优先找 BASE，如果不在范围内则找 HERO
                 if (unitType == GameConfig.EUnitType.ENEMY)
                 {
-                    if (SceneMgr.Instance.TryGetBase(out var baseActor))
+                    if (ActorMgr.Instance.TryGetBase(out var baseActor))
                     {
                         float distanceToBase = Vector2.Distance(Actor.Position, baseActor.Position);
                         if (distanceToBase <= m_attackRange)
@@ -81,7 +81,7 @@ namespace GameLogic
                         }
                     }
                     
-                    if (SceneMgr.Instance.TryGetPlayer(Actor.Position, m_attackRange, out var player))
+                    if (ActorMgr.Instance.TryGetPlayer(Actor.Position, m_attackRange, out var player))
                     {
                         return MonsterState.Attack;
                     }
@@ -89,7 +89,7 @@ namespace GameLogic
                 // HERO 找 ENEMY
                 else if (unitType == GameConfig.EUnitType.HERO)
                 {
-                    if (SceneMgr.Instance.TryGetEnemy(Actor.Position, m_attackRange, out var enemy))
+                    if (ActorMgr.Instance.TryGetEnemy(Actor.Position, m_attackRange, out var enemy))
                     {
                         return MonsterState.Attack;
                     }
@@ -98,7 +98,7 @@ namespace GameLogic
             else
             {
                 // 如果没有 UnitComponent，默认 ENEMY 行为：找基地
-                if (SceneMgr.Instance.TryGetBase(out var baseActor))
+                if (ActorMgr.Instance.TryGetBase(out var baseActor))
                 {
                     float distanceToBase = Vector2.Distance(Actor.Position, baseActor.Position);
                     if (distanceToBase <= m_attackRange)
@@ -157,7 +157,7 @@ namespace GameLogic
                 // ENEMY 优先找 BASE，如果不在范围内则找 HERO
                 if (unitType == GameConfig.EUnitType.ENEMY)
                 {
-                    if (SceneMgr.Instance.TryGetBase(out var baseActor))
+                    if (ActorMgr.Instance.TryGetBase(out var baseActor))
                     {
                         float distanceToBase = Vector2.Distance(Actor.Position, baseActor.Position);
                         if (distanceToBase <= m_attackRange)
@@ -166,7 +166,7 @@ namespace GameLogic
                         }
                     }
                     
-                    if (m_target == null && SceneMgr.Instance.TryGetPlayer(Actor.Position, m_attackRange, out var player))
+                    if (m_target == null && ActorMgr.Instance.TryGetPlayer(Actor.Position, m_attackRange, out var player))
                     {
                         m_target = player;
                     }
@@ -174,7 +174,7 @@ namespace GameLogic
                 // HERO 找 ENEMY
                 else if (unitType == GameConfig.EUnitType.HERO)
                 {
-                    if (SceneMgr.Instance.TryGetEnemy(Actor.Position, m_attackRange, out var enemy))
+                    if (ActorMgr.Instance.TryGetEnemy(Actor.Position, m_attackRange, out var enemy))
                     {
                         m_target = enemy;
                     }
@@ -183,7 +183,7 @@ namespace GameLogic
             else
             {
                 // 如果没有 UnitComponent，默认 ENEMY 行为：优先攻击基地
-                if (SceneMgr.Instance.TryGetBase(out var baseActor))
+                if (ActorMgr.Instance.TryGetBase(out var baseActor))
                 {
                     float distanceToBase = Vector2.Distance(Actor.Position, baseActor.Position);
                     if (distanceToBase <= m_attackRange)
@@ -192,7 +192,7 @@ namespace GameLogic
                     }
                 }
                 
-                if (m_target == null && SceneMgr.Instance.TryGetPlayer(Actor.Position, m_attackRange, out var player))
+                if (m_target == null && ActorMgr.Instance.TryGetPlayer(Actor.Position, m_attackRange, out var player))
                 {
                     m_target = player;
                 }
@@ -245,7 +245,7 @@ namespace GameLogic
                     if (!m_hasAttacked)
                     {
                         m_hasAttacked = true;
-                        SceneMgr.Instance.SpawnBullet(Actor.Position, m_target.Position);
+                        ActorMgr.Instance.SpawnBullet(Actor.Position, m_target.Position);
                     }
                 }
             }

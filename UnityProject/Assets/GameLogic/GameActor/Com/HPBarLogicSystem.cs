@@ -78,7 +78,7 @@ namespace GameLogic
         
         public override bool OnInit()
         {
-            HPBarParent =SceneMgr.Instance.SceneBehavior.HPBarCanvas.transform;
+            HPBarParent =ActorMgr.Instance.SceneBehavior.HPBarCanvas.transform;
             HPBarPool = GameModule.ObjectPool.CreateObjectPool<HPBarLogic>();
             return base.OnInit();
         }

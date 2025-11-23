@@ -52,11 +52,11 @@ namespace GameLogic
         public override void OnInit()
         {
             base.OnInit();
-            
-            // 如果还没有加载模型，尝试从 UnitComponent 或 TowerComponent 获取
+         
+            // 如果还没有加载模型，从Actor获取配置
             if (ModelConfig == null)
             {
-                LoadModelFromConfig();
+                LoadModelFromActor();
             }
             
             // 实例化模型
@@ -64,26 +64,40 @@ namespace GameLogic
             {
                 InstantiateModel();
             }
+            else
+            {
+                Log.Warning($"ModelComponent: 模型配置为空，无法实例化模型");
+            }
+            
+            Log.Info($"ModelComponent: 初始化模型组件，ModelId = {ModelConfig?.Id}");
         }
         
         /// <summary>
-        /// 从 UnitComponent 或 TowerComponent 加载模型配置
+        /// 从Actor获取模型配置
         /// </summary>
-        private void LoadModelFromConfig()
+        private void LoadModelFromActor()
         {
-            // 尝试从 UnitComponent 获取
-            var unitComponent = Actor.GetComponent<UnitComponent>();
-            if (unitComponent != null && unitComponent.IsConfigValid && unitComponent.Config != null)
+            // 尝试从UnitConfig获取
+            var unitConfig = Actor.GetConfig<GameConfig.battle.UnitConfig>();
+            if (unitConfig != null && unitConfig.ModelId_Ref != null)
             {
-                ModelConfig = unitComponent.Config.ModelId_Ref;
+                ModelConfig = unitConfig.ModelId_Ref;
                 return;
             }
             
-            // 尝试从 TowerComponent 获取
-            var towerComponent = Actor.GetComponent<TowerComponent>();
-            if (towerComponent != null && towerComponent.IsConfigValid && towerComponent.Config != null)
+            // 尝试从TowerConfig获取
+            var towerConfig = Actor.GetConfig<GameConfig.battle.TowerConfig>();
+            if (towerConfig != null && towerConfig.ModelId_Ref != null)
             {
-                ModelConfig = towerComponent.Config.ModelId_Ref;
+                ModelConfig = towerConfig.ModelId_Ref;
+                return;
+            }
+            
+            // 尝试从BulletConfig获取
+            var bulletConfig = Actor.GetConfig<GameConfig.battle.BulletConfig>();
+            if (bulletConfig != null && bulletConfig.ModelId_Ref != null)
+            {
+                ModelConfig = bulletConfig.ModelId_Ref;
                 return;
             }
         }
@@ -93,7 +107,7 @@ namespace GameLogic
         /// </summary>
         private void InstantiateModel()
         {
-            if (ModelConfig == null || string.IsNullOrEmpty(ModelConfig.Path))
+            if ( string.IsNullOrEmpty(ModelConfig.Path))
             {
                 Log.Warning($"ModelComponent: 模型配置无效或路径为空");
                 return;
@@ -107,16 +121,8 @@ namespace GameLogic
                 return;
             }
             
-            // 实例化模型
-            // 获取父节点（如果有 SceneBehavior，使用它的 transform，否则创建一个根节点）
-            Transform parent = null;
-            var sceneBehavior = Object.FindObjectOfType<SceneBehavior>();
-            if (sceneBehavior != null)
-            {
-                parent = sceneBehavior.transform;
-            }
-            
-            ModelInstance = Object.Instantiate(prefab, parent);
+            // 实例化模型（暂时不设置父对象，由ActorMgr.SetupActorGameObject统一处理）
+            ModelInstance = Object.Instantiate(prefab);
             if (ModelInstance == null)
             {
                 Log.Error($"ModelComponent: 实例化模型失败，路径 = {ModelConfig.Path}");

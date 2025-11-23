@@ -77,11 +77,12 @@ namespace GameLogic
             m_lifetime = 0f;
             m_meleeDetected = false;
             
-            // 获取或添加碰撞检测组件
+            // 获取碰撞检测组件（应该在创建 Actor 时就已经添加）
             m_collisionDetectCmp = Actor.GetComponent<CollisionDetectCmp>();
             if (m_collisionDetectCmp == null)
             {
-                m_collisionDetectCmp = Actor.AddComponent<CollisionDetectCmp>();
+                Log.Warning("BulletCmp: CollisionDetectCmp 组件不存在，请在创建 Actor 时添加");
+                return;
             }
             
             // 设置碰撞检测回调
@@ -294,7 +295,7 @@ namespace GameLogic
             Vector2 normalizedDir = direction.normalized;
             
             // 遍历所有敌人
-            foreach (var actor in SceneMgr.Instance.Actors)
+            foreach (var actor in ActorMgr.Instance.Actors)
             {
                 if (actor.Tag != UnitTag.Enemy || actor.IsDestroyed)
                     continue;

@@ -10,7 +10,7 @@
             
             Actor.EventDispatcher.AddEventListener<NumericType,float,float>(IActorEvent_Event.NumbericChange, OnNumbericChange,this);
 
-            hpBarLogic = HPBarLogicSystem.Instance.CreateHPBar(Actor.m_transform);
+            hpBarLogic = HPBarLogicSystem.Instance.CreateHPBar(Actor.Transform);
 
 
             var numericComponent = Actor.GetComponent<NumericComponent>();

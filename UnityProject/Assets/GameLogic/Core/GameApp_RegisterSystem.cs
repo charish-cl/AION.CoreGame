@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using GameBase;
 using GameLogic;
 using AION.CoreFramework;
+using UnityEngine;
 
 public partial class GameApp : Singleton<GameApp>
 {
@@ -31,13 +32,11 @@ public partial class GameApp : Singleton<GameApp>
         AddLogicSys(BehaviourSingleSystem.Instance);
         ConfigSystem.Instance.Active();   
         AddLogicSys(HPBarLogicSystem.Instance);
-        AddLogicSys(SceneMgr.Instance);
+        AddLogicSys(ActorMgr.Instance);
         AddLogicSys(LevelSystem.Instance); // 注册关卡系统
         
-        
-        GameModule.UI.ShowWindow<BattleMainUI>();
     }
-
+  
     /// <summary>
     /// 注册逻辑系统。
     /// </summary>

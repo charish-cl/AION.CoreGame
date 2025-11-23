@@ -17,6 +17,9 @@ public sealed partial class StatuConfig : Luban.BeanBase
     public StatuConfig(ByteBuf _buf) 
     {
         Id = _buf.ReadInt();
+        Name = _buf.ReadString();
+        CanMove = _buf.ReadBool();
+        CanAttack = _buf.ReadBool();
     }
 
     public static StatuConfig DeserializeStatuConfig(ByteBuf _buf)
@@ -28,6 +31,18 @@ public sealed partial class StatuConfig : Luban.BeanBase
     /// 状态ID
     /// </summary>
     public readonly int Id;
+    /// <summary>
+    /// 状态名
+    /// </summary>
+    public readonly string Name;
+    /// <summary>
+    /// 能否移动
+    /// </summary>
+    public readonly bool CanMove;
+    /// <summary>
+    /// 能否攻击
+    /// </summary>
+    public readonly bool CanAttack;
    
     public const int __ID__ = 1613353709;
     public override int GetTypeId() => __ID__;
@@ -40,6 +55,9 @@ public sealed partial class StatuConfig : Luban.BeanBase
     {
         return "{ "
         + "id:" + Id + ","
+        + "name:" + Name + ","
+        + "canMove:" + CanMove + ","
+        + "canAttack:" + CanAttack + ","
         + "}";
     }
 }

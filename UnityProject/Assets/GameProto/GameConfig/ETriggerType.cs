@@ -25,6 +25,70 @@ namespace GameConfig
         /// 概率触发：满足条件时按一定概率触发效果
         /// </summary>
         Probability = 3,
+        /// <summary>
+        /// 随机触发：按一定概率触发效果，效果数量随机
+        /// </summary>
+        Random = 4,
+        /// <summary>
+        /// 死亡触发：目标死亡时触发效果
+        /// </summary>
+        OnDeath = 5,
+        /// <summary>
+        /// 攻击触发：目标攻击时触发效果
+        /// </summary>
+        OnAttack = 6,
+        /// <summary>
+        /// 命中触发：目标被攻击时触发效果
+        /// </summary>
+        OnHit = 7,
+        /// <summary>
+        /// 治疗触发：目标被治疗时触发效果
+        /// </summary>
+        OnHeal = 8,
+        /// <summary>
+        /// 伤害触发：目标被伤害时触发效果
+        /// </summary>
+        OnDamage = 9,
+        /// <summary>
+        /// 状态触发：目标被状态效果时触发效果
+        /// </summary>
+        OnStatus = 10,
+        /// <summary>
+        /// Buff触发：目标获得Buff时触发效果
+        /// </summary>
+        OnBuff = 11,
+        /// <summary>
+        /// Debuff触发：目标获得Debuff时触发效果
+        /// </summary>
+        OnDebuff = 12,
+        /// <summary>
+        /// 升级触发：目标升级时触发效果
+        /// </summary>
+        OnUpgrade = 13,
+        /// <summary>
+        /// 技能触发：目标使用技能时触发效果
+        /// </summary>
+        OnSkill = 14,
+        /// <summary>
+        /// 使用物品触发：目标使用物品时触发效果
+        /// </summary>
+        OnUseItem = 15,
+        /// <summary>
+        /// 进入触发：目标进入范围时触发效果
+        /// </summary>
+        OnEnter = 16,
+        /// <summary>
+        /// 离开触发：目标离开范围时触发效果
+        /// </summary>
+        OnLeave = 17,
+        /// <summary>
+        /// 接触触发：目标接触到物品时触发效果
+        /// </summary>
+        OnTouch = 18,
+        /// <summary>
+        /// 使用技能触发：目标使用技能时触发效果
+        /// </summary>
+        OnUseSkill = 19,
     }
 
 } 

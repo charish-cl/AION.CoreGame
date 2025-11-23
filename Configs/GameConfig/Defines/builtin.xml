@@ -22,4 +22,13 @@
         <var name="spawnInterval" type="float" comment="生成间隔（秒）"/>
         <var name="spawnDelay" type="float" comment="延迟开始生成时间（秒）"/>
     </bean>
+
+    <bean name="CBuffEffect">
+        <!-- EBuffType -->
+        <!-- //buff类型 -->
+        <var name="type" type="EBuffType"/>
+        <!-- value_params -->
+        <!-- //buff参数 -->
+        <var name="value_params" type="(list#sep=,),float"  comment="buff参数，根据buff类型不同而不同"/>
+    </bean>
 </module>

@@ -1,9 +1,10 @@
 using System;
+using AION.CoreFramework;
 using GameLogic;
 using GameConfig;
 using UnityEngine;
 
-namespace AION.Config.Buff
+namespace GameLogic
 {
     public class BaseBuff
     {
@@ -11,15 +12,12 @@ namespace AION.Config.Buff
         public string Id;
         public int BuffId; // BuffConfig的ID
         public float Duration;
-        public AttributeModifier Modifier;
         public Action OnBuffExpired;
         
         // Buff配置信息
-        public EBuffType BuffType { get; set; }
         public ETriggerType TriggerType { get; set; }
         public float TickInterval { get; set; }
         public float Probability { get;  set; } // 概率触发时的概率值
-        public System.Collections.Generic.List<float> ValueParams { get; set; }
         public int StatusId { get; set; }
         
         // 触发相关
@@ -27,26 +25,164 @@ namespace AION.Config.Buff
         protected bool m_hasTriggeredImmediate = false;
         protected GameActor m_targetActor; // 目标Actor
         protected NumericComponent m_attackerNumeric; // 攻击者的数值组件（用于伤害计算）
+        protected System.Collections.Generic.List<BaseEffect> m_effects; // Buff效果实例列表（支持多个效果）
+        protected System.Collections.Generic.List<AttributeModifier> m_modifiers; // 属性修改器列表（用于PropertyMod类型的Effect）
+        protected BaseCondition m_condition; // Buff触发条件实例
+        protected ETriggerType m_conditionType = ETriggerType.Immediate; // 条件类型
+        protected System.Collections.Generic.List<float> m_conditionParams; // 条件参数
+        protected BaseTargetSelector m_targetSelector; // Buff目标选择器实例
         
         /// <summary>
         /// 获取目标Actor（用于检查是否已设置）
         /// </summary>
         public GameActor TargetActor => m_targetActor;
         
-        public BaseBuff(string id, float duration, AttributeModifier modifier)
+        public BaseBuff(string id, float duration)
         {
             Id = id;
             Duration = duration;
-            Modifier = modifier;
-            ValueParams = new System.Collections.Generic.List<float>();
+            m_effects = new System.Collections.Generic.List<BaseEffect>();
+            m_modifiers = new System.Collections.Generic.List<AttributeModifier>();
+        }
+        
+        /// <summary>
+        /// 添加效果实例
+        /// </summary>
+        public void AddEffect(BaseEffect effect)
+        {
+            if (effect != null)
+            {
+                m_effects.Add(effect);
+            }
+        }
+        
+        /// <summary>
+        /// 添加属性修改器
+        /// </summary>
+        public void AddModifier(AttributeModifier modifier)
+        {
+            if (modifier != null)
+            {
+                m_modifiers.Add(modifier);
+            }
+        }
+        
+        /// <summary>
+        /// 获取所有效果
+        /// </summary>
+        public System.Collections.Generic.List<BaseEffect> GetEffects()
+        {
+            return m_effects ?? new System.Collections.Generic.List<BaseEffect>();
+        }
+        
+        /// <summary>
+        /// 获取所有属性修改器
+        /// </summary>
+        public System.Collections.Generic.List<AttributeModifier> GetModifiers()
+        {
+            return m_modifiers ?? new System.Collections.Generic.List<AttributeModifier>();
+        }
+        
+        /// <summary>
+        /// 设置触发条件
+        /// </summary>
+        /// <param name="conditionType">条件类型</param>
+        /// <param name="conditionParams">条件参数</param>
+        public void SetCondition(ETriggerType conditionType, System.Collections.Generic.List<float> conditionParams = null)
+        {
+            m_conditionType = conditionType;
+            m_conditionParams = conditionParams ?? new System.Collections.Generic.List<float>();
+        }
+        
+        /// <summary>
+        /// 设置条件实例
+        /// </summary>
+        public void SetCondition(BaseCondition condition)
+        {
+            m_condition = condition;
+        }
+        
+        /// <summary>
+        /// 设置目标选择器实例
+        /// </summary>
+        public void SetTargetSelector(BaseTargetSelector targetSelector)
+        {
+            m_targetSelector = targetSelector;
+        }
+        
+        /// <summary>
+        /// 获取目标列表（使用TargetSelector）
+        /// </summary>
+        /// <returns>目标Actor列表</returns>
+        public System.Collections.Generic.List<GameActor> GetTargets()
+        {
+            if (m_targetSelector != null)
+            {
+                return m_targetSelector.SelectTargets();
+            }
+            
+            // 如果没有TargetSelector，返回当前目标Actor（如果存在）
+            if (m_targetActor != null)
+            {
+                return new System.Collections.Generic.List<GameActor> { m_targetActor };
+            }
+            
+            return new System.Collections.Generic.List<GameActor>();
+        }
+        
+        /// <summary>
+        /// 检查条件是否满足
+        /// </summary>
+        /// <returns>true表示条件满足，可以触发buff</returns>
+        protected virtual bool CheckCondition()
+        {
+            // 如果没有条件或条件类型为Always，总是满足
+            if (m_conditionType == ETriggerType.Immediate || m_condition == null)
+                return true;
+            
+            // 如果条件实例不存在，尝试创建
+            if (m_condition == null && m_targetActor != null)
+            {
+                m_condition = GameLogic.BuffFactory.CreateCondition(
+                    m_conditionType,
+                    m_targetActor,
+                    m_conditionParams,
+                    m_attackerNumeric,
+                    m_attackerNumeric?.Actor,
+                    StatusId
+                );
+            }
+            
+            // 如果条件实例仍然不存在，返回false
+            if (m_condition == null)
+                return false;
+            
+            // 检查条件
+            return m_condition.Check();
         }
 
-        public virtual void OnStart(GameActor targetActor = null, NumericComponent attackerNumeric = null)
+        public virtual void OnStart(GameActor targetActor = null, NumericComponent attackerNumeric = null, GameActor attackerActor = null)
         {
             m_targetActor = targetActor;
             m_attackerNumeric = attackerNumeric;
             m_lastTickTime = 0f;
             m_hasTriggeredImmediate = false;
+            
+            // 更新所有Effect的targetActor和attackerNumeric
+            if (m_effects != null)
+            {
+                foreach (var effect in m_effects)
+                {
+                    if (effect != null)
+                    {
+                        if (targetActor != null)
+                        {
+                            effect.SetTargetActor(targetActor);
+                        }
+                        effect.SetAttacker(attackerNumeric, attackerActor);
+                    }
+                }
+            }
             
             // 立即触发类型，在开始时执行一次
             if (TriggerType == ETriggerType.Immediate)
@@ -92,6 +228,17 @@ namespace AION.Config.Buff
 
         public virtual void OnEnd()
         {
+            // 恢复所有Status类型的Effect被禁用的组件
+            if (m_effects != null)
+            {
+                foreach (var effect in m_effects)
+                {
+                    if (effect is StatusEffect statusEffect)
+                    {
+                        statusEffect.RestoreComponents();
+                    }
+                }
+            }
         }
 
         public bool CheckExpired()
@@ -99,78 +246,34 @@ namespace AION.Config.Buff
             return IsExpired;
         }
         
-        // 触发效果（根据BuffType执行不同效果）
+        // 触发效果（使用Effect策略模式）
         protected virtual void TriggerEffect()
         {
-            if (m_targetActor == null) return;
+            if (m_targetActor == null || m_effects == null || m_effects.Count == 0) return;
             
-            switch (BuffType)
+            // 检查条件是否满足
+            if (!CheckCondition())
             {
-                case EBuffType.PropertyMod:
-                    // 属性修改已经在Modifier中处理，这里不需要额外操作
-                    break;
-                    
-                case EBuffType.Heal:
-                    ApplyHeal();
-                    break;
-                    
-                case EBuffType.Damage:
-                    ApplyDamage();
-                    break;
-                    
-                case EBuffType.Status:
-                    ApplyStatus();
-                    break;
+                Log.Info($"Buff {Id} 条件不满足，跳过触发");
+                return;
             }
-        }
-        
-        // 应用治疗
-        protected virtual void ApplyHeal()
-        {
-            if (ValueParams == null || ValueParams.Count == 0) return;
             
-            var healthCmp = m_targetActor.GetComponent<HealthCmp>();
-            if (healthCmp != null)
+            // 遍历所有Effect并应用
+            foreach (var effect in m_effects)
             {
-                float healAmount = ValueParams[0];
-                int currentHp = healthCmp.HP;
-                int maxHp = m_targetActor.NumericComponent.GetAsInt(NumericType.MaxHp);
-                healthCmp.HP = Mathf.Min(currentHp + (int)healAmount, maxHp);
-            }
-        }
-        
-        // 应用伤害
-        protected virtual void ApplyDamage()
-        {
-            var healthCmp = m_targetActor.GetComponent<HealthCmp>();
-            if (healthCmp == null) return;
-            
-            // 如果有攻击者的数值组件，使用HealthCmp的TakeDamage方法（会计算防御等）
-            if (m_attackerNumeric != null)
-            {
-                // 使用HealthCmp的TakeDamage方法，它会自动计算伤害（考虑攻击力和防御力）
-                healthCmp.TakeDamage(m_attackerNumeric);
-            }
-            else if (ValueParams != null && ValueParams.Count > 0)
-            {
-                // 如果没有攻击者信息，直接使用ValueParams中的伤害值
-                float damageAmount = ValueParams[0];
-                healthCmp.HP -= (int)damageAmount;
-                
-                // 显示伤害数字
-                if (healthCmp.numberPrefab != null)
+                if (effect != null)
                 {
-                    healthCmp.numberPrefab.Spawn(m_targetActor.Position + new Vector2(0, 0.5f), (int)damageAmount);
+                    effect.Apply();
                 }
             }
         }
         
-        // 应用状态效果（眩晕、击退等）
-        protected virtual void ApplyStatus()
+        /// <summary>
+        /// 公开的触发效果方法（用于外部调用，如死亡触发）
+        /// </summary>
+        public void TriggerEffectPublic()
         {
-            // 状态效果的具体实现需要根据StatusId来判断
-            // 这里先留空，后续可以根据需要扩展
-            // 例如：眩晕可以禁用移动，击退可以施加位移等
+            TriggerEffect();
         }
         
         // 尝试概率触发

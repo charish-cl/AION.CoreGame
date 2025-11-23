@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using AION.Config.Buff;
 using AION.CoreFramework;
+using GameConfig;
 using UnityEngine;
 using GameConfig.battle;
 
@@ -70,10 +71,17 @@ namespace GameLogic
             {
                 buff.OnStart(Actor);
             }
-            if (buff.Modifier != null)
+            
+            // 添加所有Modifier
+            var modifiers = buff.GetModifiers();
+            foreach (var modifier in modifiers)
             {
-                _buffAttribute.AddModifier(buff.Modifier);
+                if (modifier != null)
+                {
+                    _buffAttribute.AddModifier(modifier);
+                }
             }
+            
             _buffTimers.Add(buff, Time.realtimeSinceStartup);
             
             // 记录叠加层数
@@ -101,10 +109,16 @@ namespace GameLogic
             buffs.Remove(buff);
             buff.OnEnd();
             
-            if (buff.Modifier != null)
+            // 移除所有Modifier
+            var modifiers = buff.GetModifiers();
+            foreach (var modifier in modifiers)
             {
-                _buffAttribute.RemoveModifier(buff.Modifier);
+                if (modifier != null)
+                {
+                    _buffAttribute.RemoveModifier(modifier);
+                }
             }
+            
             _buffTimers.Remove(buff);
             
             // 移除叠加记录
@@ -177,6 +191,9 @@ namespace GameLogic
 
         public override void OnDestroy()
         {
+            // 处理死亡触发的Buff（在清理之前）
+            ProcessOnDeathBuffs();
+            
             // 清理所有Buff
             for (int i = buffs.Count - 1; i >= 0; i--)
             {
@@ -185,6 +202,42 @@ namespace GameLogic
             buffs.Clear();
             _buffTimers.Clear();
             _buffStacks.Clear();
+        }
+        
+        /// <summary>
+        /// 处理死亡触发的Buff
+        /// </summary>
+        private void ProcessOnDeathBuffs()
+        {
+            // 创建buff快照，避免在迭代时修改集合
+            var buffsSnapshot = new List<BaseBuff>(buffs);
+            
+            foreach (var buff in buffsSnapshot)
+            {
+                if (buff.TriggerType == ETriggerType.OnDeath)
+                {
+                    // 如果是概率触发，先检查概率
+                    if (buff.Probability > 0)
+                    {
+                        float random = Random.Range(0f, 1f);
+                        if (random > buff.Probability)
+                        {
+                            Log.Info($"Buff {buff.BuffId} 死亡触发概率未命中 ({random:F2} > {buff.Probability})");
+                            continue;
+                        }
+                    }
+                    
+                    // 确保Buff有目标Actor和Effect
+                    if (buff.TargetActor == null)
+                    {
+                        buff.OnStart(Actor, _numericComponent);
+                    }
+                    
+                    // 触发效果
+                    Log.Info($"Buff {buff.BuffId} 死亡触发");
+                    buff.TriggerEffectPublic();
+                }
+            }
         }
     }
 }

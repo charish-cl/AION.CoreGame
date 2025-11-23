@@ -5,7 +5,7 @@ namespace GameLogic
 {
     public class ActorAnimViewCmp : GameActorCmp
     {
-        AnimatorComponent animator;
+        WrapAnimator _wrapAnimator;
         
         MoveLogicCmp moveLogic ;
     
@@ -20,7 +20,10 @@ namespace GameLogic
         {
             base.OnInit();
             moveLogic = GetComponent<MoveLogicCmp>();
-            animator = new AnimatorComponent(Actor.m_transform.GetComponentInChildren<Animator>());
+            if (Actor.Transform != null)
+            {
+                _wrapAnimator = new WrapAnimator(Actor.Transform.GetComponentInChildren<Animator>());
+            }
             
         }
 
@@ -30,13 +33,17 @@ namespace GameLogic
             
             if (CheckIsEnable(moveLogic))
             {
+                if (_wrapAnimator == null)
+                {
+                    return;
+                }
                 if (moveLogic.IsMoving)
                 {
-                    animator.PlayAnimation(WalkAnimName);
+                    _wrapAnimator.PlayAnimation(WalkAnimName);
                 }
                 else
                 {
-                    animator.PlayAnimation(IdleAnimName);
+                    _wrapAnimator.PlayAnimation(IdleAnimName);
                 }
             }
         }

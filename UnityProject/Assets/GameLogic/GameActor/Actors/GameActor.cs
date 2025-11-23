@@ -22,7 +22,35 @@ namespace GameLogic
     {
         public LinkedList<GameActorCmp> cmps = new LinkedList<GameActorCmp>();
 
-        public Transform m_transform;
+        private Transform m_transform;
+        
+        /// <summary>
+        /// 配置字典，存储不同类型的配置
+        /// </summary>
+        private Dictionary<System.Type, object> m_configs = new Dictionary<System.Type, object>();
+        
+        /// <summary>
+        /// Transform 属性，获取时进行判空
+        /// </summary>
+        public Transform Transform
+        {
+            get
+            {
+                if (m_transform == null)
+                {
+                    if (m_Owner != null)
+                    {
+                        m_transform = m_Owner.transform;
+                    }
+                    else
+                    {
+                        Log.Warning("GameActor.Transform: m_Owner 为空，无法获取 Transform");
+                        return null;
+                    }
+                }
+                return m_transform;
+            }
+        }
         
         public GameObject m_Owner;
         //事件
@@ -103,16 +131,53 @@ namespace GameLogic
         public void BindGo(GameObject owner)
         {
             m_Owner = owner;
-            m_transform = owner.transform;
+            m_transform = owner != null ? owner.transform : null;
             
-            SetPosition(m_transform.position);
+            if (Transform != null)
+            {
+                SetPosition(Transform.position);
+            }
         }
+        /// <summary>
+        /// 初始化配置（虚方法，子类重写）
+        /// </summary>
+        protected virtual void InitConfig()
+        {
+        }
+        
+        /// <summary>
+        /// 设置配置
+        /// </summary>
+        /// <typeparam name="T">配置类型</typeparam>
+        /// <param name="config">配置对象</param>
+        protected void SetConfig<T>(T config)
+        {
+            m_configs[typeof(T)] = config;
+        }
+        
+        /// <summary>
+        /// 获取配置
+        /// </summary>
+        /// <typeparam name="T">配置类型</typeparam>
+        /// <returns>配置对象，如果不存在则返回null</returns>
+        public T GetConfig<T>()
+        {
+            if (m_configs.TryGetValue(typeof(T), out object config))
+            {
+                return (T)config;
+            }
+            return default(T);
+        }
+        
         protected virtual void BindCmp()
         {
         }
         public  void OnInit()
         {
-            //这里添加组件
+            // 先初始化配置
+            InitConfig();
+            
+            // 然后添加组件
             BindCmp();
             
             

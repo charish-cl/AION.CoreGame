@@ -51,7 +51,7 @@ namespace GameLogic
             base.OnUpdate();
             
             // 检测碰撞
-            if (SceneMgr.Instance.TryGetMonster(Actor.Position, CollisionRadius, out var monster))
+            if (ActorMgr.Instance.TryGetMonster(Actor.Position, CollisionRadius, out var monster))
             {
                 // 检查是否已经碰撞过（用于穿透检测）
                 if (m_hitActors.Contains(monster))

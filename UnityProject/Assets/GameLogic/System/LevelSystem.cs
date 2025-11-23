@@ -118,7 +118,7 @@ namespace GameLogic
             ClearAllTimers();
             
             // 设置基地生命值
-            if (SceneMgr.Instance.TryGetBase(out var baseActor))
+            if (ActorMgr.Instance.TryGetBase(out var baseActor))
             {
                 var baseCampComponent = baseActor.GetComponent<CampComponent>();
                 
@@ -307,7 +307,7 @@ namespace GameLogic
             }
             
             // 生成敌人
-            SceneMgr.Instance.CreateEnemyByUnitId(spawnGroup.UnitId);
+            ActorMgr.Instance.CreateEnemyByUnitId(spawnGroup.UnitId);
             m_spawnedCounts[spawnGroup]++;
             
             Log.Info($"LevelSystem: 生成敌人 UnitId={spawnGroup.UnitId}, 已生成 {m_spawnedCounts[spawnGroup]}/{spawnGroup.SpawnCount}");
@@ -346,7 +346,7 @@ namespace GameLogic
             
             // 检查场景中是否还有敌人
             bool hasEnemies = false;
-            foreach (var actor in SceneMgr.Instance.Actors)
+            foreach (var actor in ActorMgr.Instance.Actors)
             {
                 if (actor.Tag == UnitTag.Enemy && !actor.IsDestroyed)
                 {

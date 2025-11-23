@@ -21,6 +21,26 @@ namespace GameConfig
         /// 对敌方单位生效
         /// </summary>
         Enemy = 2,
+        /// <summary>
+        /// 对所有单位生效
+        /// </summary>
+        All = 3,
+        /// <summary>
+        /// 对自己生效
+        /// </summary>
+        Self = 4,
+        /// <summary>
+        /// 特定单位
+        /// </summary>
+        specific = 5,
+        /// <summary>
+        /// 随机敌人
+        /// </summary>
+        RandomEnemy = 6,
+        /// <summary>
+        /// 随机友方
+        /// </summary>
+        RandomAlly = 7,
     }
 
 } 

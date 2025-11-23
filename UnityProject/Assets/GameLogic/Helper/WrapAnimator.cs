@@ -2,11 +2,11 @@ using UnityEngine;
 
 namespace GameLogic
 {
-    public class AnimatorComponent: IAnim
+    public class WrapAnimator: IAnim
     {
         public Animator animator;
         
-        public AnimatorComponent(Animator animator)
+        public WrapAnimator(Animator animator)
         {   
             this.animator = animator;
         }

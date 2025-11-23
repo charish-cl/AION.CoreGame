@@ -45,7 +45,8 @@ namespace GameLogic
 
         public Vector2 GetMousWorldDirection()
         {
-            return (GetMouseWorldPosition() - (Vector2)Actor.m_transform.position).normalized;
+            if (Actor.Transform == null) return Vector2.zero;
+            return (GetMouseWorldPosition() - (Vector2)Actor.Transform.position).normalized;
         }
     }
 
@@ -67,7 +68,7 @@ namespace GameLogic
         {
             base.OnInit();
             input = GetComponent<InputLogicCmp>();
-            Position = Actor.m_transform.position;
+            Position = Actor.Transform != null ? Actor.Transform.position : Vector2.zero;
             RunTimeSpeed = 0;
         }
 
@@ -148,7 +149,7 @@ namespace GameLogic
 
         public SimplePathFindingLogicCmp()
         {
-            Path = SceneMgr.Instance.GetCurentLevelPathNodes();
+            Path = ActorMgr.Instance.GetCurentLevelPathNodes();
         }
 
         public override void OnUpdate()
@@ -195,7 +196,10 @@ namespace GameLogic
         {
             if (move == null)
                 return;
-            Actor.m_transform.position = move.Position;
+            if (Actor.Transform != null)
+            {
+                Actor.Transform.position = move.Position;
+            }
         }
     }   
 
@@ -212,7 +216,10 @@ namespace GameLogic
         {
             base.OnInit();
             move = GetComponent<MoveLogicCmp>();
-            spriteRenderer = Actor.m_transform.GetComponentInChildren<SpriteRenderer>();
+            if (Actor.Transform != null)
+            {
+                spriteRenderer = Actor.Transform.GetComponentInChildren<SpriteRenderer>();
+            }
         }
 
         public float lastX;
@@ -220,6 +227,7 @@ namespace GameLogic
         {
             if(!CheckIsEnable(move)) return;
             
+            if (spriteRenderer == null) return;
             
             Vector2 direction = move.MoveDirection;
             if(!Mathf.Approximately(direction.x, lastX))
@@ -248,7 +256,10 @@ namespace GameLogic
         public override void OnInit()
         {
             base.OnInit();
-            m_transform = Actor.m_transform.GetComponentInChildren<SpriteRenderer>().transform;
+            if (Actor.Transform != null)
+            {
+                m_transform = Actor.Transform.GetComponentInChildren<SpriteRenderer>().transform;
+            }
         }
 
         public override void OnUpdate()
@@ -258,13 +269,14 @@ namespace GameLogic
                 return;
             }
             //向右为正方向
-            Actor.m_transform.right = Vector2.Lerp(Actor.m_transform.right, (m_target - (Vector2)Actor.m_transform.position).normalized, m_rotateSpeed * Time.deltaTime); 
+            Actor.Transform.right = Vector2.Lerp(Actor.Transform.right, (m_target - (Vector2)Actor.Transform.position).normalized, m_rotateSpeed * Time.deltaTime); 
         }
         
         public bool CheckHasRotatedToTarget(Vector2 target)
         {
             //右方向与目标方向的夹角 小于1度
-            return Vector2.Angle(Actor.m_transform.right, (target - (Vector2)Actor.m_transform.position)) < 1;
+            if (Actor.Transform == null) return false;
+            return Vector2.Angle(Actor.Transform.right, (target - (Vector2)Actor.Transform.position)) < 1;
         }
         
        
