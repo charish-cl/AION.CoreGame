@@ -34,6 +34,7 @@ public partial class GameApp : Singleton<GameApp>
         AddLogicSys(HPBarLogicSystem.Instance);
         AddLogicSys(ActorMgr.Instance);
         AddLogicSys(LevelSystem.Instance); // 注册关卡系统
+        AddLogicSys(BattleSystem.Instance); // 注册战斗系统
         
     }
   

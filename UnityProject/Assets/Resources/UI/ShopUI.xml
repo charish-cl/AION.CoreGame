@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UI>
+    <!-- 商店主面板 -->
+    <Panel Name="ShopMainPanel" X="0" Y="0" Width="750" Height="1334" Anchor="Center" color="#FFE8E8E8">
+
+        <!-- 顶部栏 -->
+        <Panel Name="TopBar" X="0" Y="-550" Width="750" Height="100" Anchor="TopCenter" color="#FF2C2C2C">
+            <!-- 金币显示 - 左侧 -->
+            <Panel Name="GoldPanel" X="-300" Y="0" Width="150" Height="60" Anchor="MiddleLeft">
+                <Image Name="GoldIcon" X="0" Y="0" Width="40" Height="40" Anchor="MiddleLeft" sprite=""/>
+                <Text Name="GoldAmount" X="45" Y="0" Width="100" Height="60"
+                      text="21.1K"
+                      fontSize="20"
+                      color="#FFFFD700"
+                      alignment="MiddleLeft"/>
+            </Panel>
+
+            <!-- 标题 - 中间 -->
+            <Text Name="ShopTitle" X="0" Y="0" Width="200" Height="60"
+                  text="商店"
+                  fontSize="28"
+                  color="#FFFFFFFF"
+                  alignment="MiddleCenter"/>
+
+            <!-- 钻石显示 - 右侧 -->
+            <Panel Name="DiamondPanel" X="300" Y="0" Width="150" Height="60" Anchor="MiddleRight">
+                <Image Name="DiamondIcon" X="0" Y="0" Width="40" Height="40" Anchor="MiddleLeft" sprite=""/>
+                <Text Name="DiamondAmount" X="45" Y="0" Width="100" Height="60"
+                      text="1"
+                      fontSize="20"
+                      color="#FF87CEEB"
+                      alignment="MiddleLeft"/>
+            </Panel>
+        </Panel>
+
+        <!-- 商品滚动区域 -->
+        <ScrollRect Name="ProductsScrollArea" X="0" Y="-50" Width="700" Height="800" Anchor="Center">
+            <!-- 滚动视口 -->
+            <Panel Name="ScrollViewport" X="0" Y="0" Width="700" Height="800" Anchor="Center" color="#FFFFFFFF">
+                <!-- 商品内容区域 - 使用Grid布局 -->
+                <Grid Name="ProductsContent" Width="700" Height="1600" Anchor="TopCenter"
+                      cellSizeX="330" cellSizeY="450"
+                      spacingX="20" spacingY="20"
+                      constraint="FixedColumnCount" constraintCount="2">
+
+                    <!-- 第一个商品 -->
+                    <Panel Name="Product1">
+                        <!-- 商品图片 -->
+                        <Image Name="Product1Image" X="0" Y="-100" Width="300" Height="280" Anchor="TopCenter" sprite=""/>
+
+                        <!-- 商品信息背景 -->
+                        <Panel Name="Product1Info" X="0" Y="100" Width="300" Height="150" Anchor="BottomCenter" color="#FFFFFFFF">
+                            <!-- 商品名称 -->
+                            <Text Name="Product1Name" X="0" Y="-50" Width="280" Height="40"
+                                  text="霓裳起舞"
+                                  fontSize="22"
+                                  color="#FF333333"
+                                  alignment="MiddleCenter"/>
+
+                            <!-- 商品描述 -->
+                            <Text Name="Product1Desc" X="0" Y="-10" Width="280" Height="30"
+                                  text="限定皮肤"
+                                  fontSize="16"
+                                  color="#FF666666"
+                                  alignment="MiddleCenter"/>
+
+                            <!-- 价格 -->
+                            <Panel Name="Product1PricePanel" X="0" Y="40" Width="280" Height="50" Anchor="BottomCenter">
+                                <Image Name="Price1Icon" X="0" Y="0" Width="30" Height="30" Anchor="MiddleLeft" sprite=""/>
+                                <Text Name="Product1Price" X="40" Y="0" Width="240" Height="50"
+                                      text="2200"
+                                      fontSize="24"
+                                      color="#FFD700"
+                                      alignment="MiddleLeft"/>
+                            </Panel>
+                        </Panel>
+                    </Panel>
+
+                    <!-- 第二个商品 -->
+                    <Panel Name="Product2">
+                        <!-- 商品图片 -->
+                        <Image Name="Product2Image" X="0" Y="-100" Width="300" Height="280" Anchor="TopCenter" sprite=""/>
+
+                        <!-- 商品信息背景 -->
+                        <Panel Name="Product2Info" X="0" Y="100" Width="300" Height="150" Anchor="BottomCenter" color="#FFFFFFFF">
+                            <!-- 商品名称 -->
+                            <Text Name="Product2Name" X="0" Y="-50" Width="280" Height="40"
+                                  text="传说装备"
+                                  fontSize="22"
+                                  color="#FF333333"
+                                  alignment="MiddleCenter"/>
+
+                            <!-- 商品描述 -->
+                            <Text Name="Product2Desc" X="0" Y="-10" Width="280" Height="30"
+                                  text="稀有武器"
+                                  fontSize="16"
+                                  color="#FF666666"
+                                  alignment="MiddleCenter"/>
+
+                            <!-- 价格 -->
+                            <Panel Name="Product2PricePanel" X="0" Y="40" Width="280" Height="50" Anchor="BottomCenter">
+                                <Image Name="Price2Icon" X="0" Y="0" Width="30" Height="30" Anchor="MiddleLeft" sprite=""/>
+                                <Text Name="Product2Price" X="40" Y="0" Width="240" Height="50"
+                                      text="1200"
+                                      fontSize="24"
+                                      color="#FFD700"
+                                      alignment="MiddleLeft"/>
+                            </Panel>
+                        </Panel>
+                    </Panel>
+
+                    <!-- 第三个商品 -->
+                    <Panel Name="Product3">
+                        <!-- 商品图片 -->
+                        <Image Name="Product3Image" X="0" Y="-100" Width="300" Height="280" Anchor="TopCenter" sprite=""/>
+
+                        <!-- 商品信息背景 -->
+                        <Panel Name="Product3Info" X="0" Y="100" Width="300" Height="150" Anchor="BottomCenter" color="#FFFFFFFF">
+                            <!-- 商品名称 -->
+                            <Text Name="Product3Name" X="0" Y="-50" Width="280" Height="40"
+                                  text="神秘道具"
+                                  fontSize="22"
+                                  color="#FF333333"
+                                  alignment="MiddleCenter"/>
+
+                            <!-- 商品描述 -->
+                            <Text Name="Product3Desc" X="0" Y="-10" Width="280" Height="30"
+                                  text="特殊物品"
+                                  fontSize="16"
+                                  color="#FF666666"
+                                  alignment="MiddleCenter"/>
+
+                            <!-- 价格 -->
+                            <Panel Name="Product3PricePanel" X="0" Y="40" Width="280" Height="50" Anchor="BottomCenter">
+                                <Image Name="Price3Icon" X="0" Y="0" Width="30" Height="30" Anchor="MiddleLeft" sprite=""/>
+                                <Text Name="Product3Price" X="40" Y="0" Width="240" Height="50"
+                                      text="800"
+                                      fontSize="24"
+                                      color="#FFD700"
+                                      alignment="MiddleLeft"/>
+                            </Panel>
+                        </Panel>
+                    </Panel>
+
+                    <!-- 第四个商品 -->
+                    <Panel Name="Product4">
+                        <!-- 商品图片 -->
+                        <Image Name="Product4Image" X="0" Y="-100" Width="300" Height="280" Anchor="TopCenter" sprite=""/>
+
+                        <!-- 商品信息背景 -->
+                        <Panel Name="Product4Info" X="0" Y="100" Width="300" Height="150" Anchor="BottomCenter" color="#FFFFFFFF">
+                            <!-- 商品名称 -->
+                            <Text Name="Product4Name" X="0" Y="-50" Width="280" Height="40"
+                                  text="能量药水"
+                                  fontSize="22"
+                                  color="#FF333333"
+                                  alignment="MiddleCenter"/>
+
+                            <!-- 商品描述 -->
+                            <Text Name="Product4Desc" X="0" Y="-10" Width="280" Height="30"
+                                  text="恢复道具"
+                                  fontSize="16"
+                                  color="#FF666666"
+                                  alignment="MiddleCenter"/>
+
+                            <!-- 价格 -->
+                            <Panel Name="Product4PricePanel" X="0" Y="40" Width="280" Height="50" Anchor="BottomCenter">
+                                <Image Name="Price4Icon" X="0" Y="0" Width="30" Height="30" Anchor="MiddleLeft" sprite=""/>
+                                <Text Name="Product4Price" X="40" Y="0" Width="240" Height="50"
+                                      text="500"
+                                      fontSize="24"
+                                      color="#FFD700"
+                                      alignment="MiddleLeft"/>
+                            </Panel>
+                        </Panel>
+                    </Panel>
+
+                    <!-- 第五个商品 -->
+                    <Panel Name="Product5">
+                        <!-- 商品图片 -->
+                        <Image Name="Product5Image" X="0" Y="-100" Width="300" Height="280" Anchor="TopCenter" sprite=""/>
+
+                        <!-- 商品信息背景 -->
+                        <Panel Name="Product5Info" X="0" Y="100" Width="300" Height="150" Anchor="BottomCenter" color="#FFFFFFFF">
+                            <!-- 商品名称 -->
+                            <Text Name="Product5Name" X="0" Y="-50" Width="280" Height="40"
+                                  text="强化石"
+                                  fontSize="22"
+                                  color="#FF333333"
+                                  alignment="MiddleCenter"/>
+
+                            <!-- 商品描述 -->
+                            <Text Name="Product5Desc" X="0" Y="-10" Width="280" Height="30"
+                                  text="升级材料"
+                                  fontSize="16"
+                                  color="#FF666666"
+                                  alignment="MiddleCenter"/>
+
+                            <!-- 价格 -->
+                            <Panel Name="Product5PricePanel" X="0" Y="40" Width="280" Height="50" Anchor="BottomCenter">
+                                <Image Name="Price5Icon" X="0" Y="0" Width="30" Height="30" Anchor="MiddleLeft" sprite=""/>
+                                <Text Name="Product5Price" X="40" Y="0" Width="240" Height="50"
+                                      text="300"
+                                      fontSize="24"
+                                      color="#FFD700"
+                                      alignment="MiddleLeft"/>
+                            </Panel>
+                        </Panel>
+                    </Panel>
+
+                    <!-- 第六个商品 -->
+                    <Panel Name="Product6">
+                        <!-- 商品图片 -->
+                        <Image Name="Product6Image" X="0" Y="-100" Width="300" Height="280" Anchor="TopCenter" sprite=""/>
+
+                        <!-- 商品信息背景 -->
+                        <Panel Name="Product6Info" X="0" Y="100" Width="300" Height="150" Anchor="BottomCenter" color="#FFFFFFFF">
+                            <!-- 商品名称 -->
+                            <Text Name="Product6Name" X="0" Y="-50" Width="280" Height="40"
+                                  text="经验卷轴"
+                                  fontSize="22"
+                                  color="#FF333333"
+                                  alignment="MiddleCenter"/>
+
+                            <!-- 商品描述 -->
+                            <Text Name="Product6Desc" X="0" Y="-10" Width="280" Height="30"
+                                  text="经验加成"
+                                  fontSize="16"
+                                  color="#FF666666"
+                                  alignment="MiddleCenter"/>
+
+                            <!-- 价格 -->
+                            <Panel Name="Product6PricePanel" X="0" Y="40" Width="280" Height="50" Anchor="BottomCenter">
+                                <Image Name="Price6Icon" X="0" Y="0" Width="30" Height="30" Anchor="MiddleLeft" sprite=""/>
+                                <Text Name="Product6Price" X="40" Y="0" Width="240" Height="50"
+                                      text="150"
+                                      fontSize="24"
+                                      color="#FFD700"
+                                      alignment="MiddleLeft"/>
+                            </Panel>
+                        </Panel>
+                    </Panel>
+                </Grid>
+            </Panel>
+        </ScrollRect>
+
+        <!-- 底部导航栏 -->
+        <Panel Name="BottomNav" X="0" Y="520" Width="750" Height="120" Anchor="BottomCenter" color="#FF2C2C2C">
+            <!-- 商店按钮 - 选中状态 -->
+            <Button Name="ShopButton" X="-300" Y="0" Width="120" Height="100" Anchor="MiddleLeft">
+                <Image Name="ShopIcon" X="0" Y="20" Width="60" Height="60" Anchor="TopCenter" sprite=""/>
+                <Text Name="ShopText" X="0" Y="-30" Width="120" Height="30"
+                      text="商店"
+                      fontSize="18"
+                      color="#FFD700"
+                      alignment="MiddleCenter"/>
+            </Button>
+
+            <!-- 皮肤按钮 -->
+            <Button Name="SkinButton" X="-150" Y="0" Width="120" Height="100" Anchor="MiddleLeft">
+                <Image Name="SkinIcon" X="0" Y="20" Width="60" Height="60" Anchor="TopCenter" sprite=""/>
+                <Text Name="SkinText" X="0" Y="-30" Width="120" Height="30"
+                      text="皮肤"
+                      fontSize="18"
+                      color="#FFFFFFFF"
+                      alignment="MiddleCenter"/>
+            </Button>
+
+            <!-- 设施按钮 -->
+            <Button Name="FacilityButton" X="0" Y="0" Width="120" Height="100" Anchor="MiddleCenter">
+                <Image Name="FacilityIcon" X="0" Y="20" Width="60" Height="60" Anchor="TopCenter" sprite=""/>
+                <Text Name="FacilityText" X="0" Y="-30" Width="120" Height="30"
+                      text="设施"
+                      fontSize="18"
+                      color="#FFFFFFFF"
+                      alignment="MiddleCenter"/>
+            </Button>
+
+            <!-- 战斗按钮 -->
+            <Button Name="BattleButton" X="150" Y="0" Width="120" Height="100" Anchor="MiddleRight">
+                <Image Name="BattleIcon" X="0" Y="20" Width="60" Height="60" Anchor="TopCenter" sprite=""/>
+                <Text Name="BattleText" X="0" Y="-30" Width="120" Height="30"
+                      text="战斗"
+                      fontSize="18"
+                      color="#FFFFFFFF"
+                      alignment="MiddleCenter"/>
+            </Button>
+
+            <!-- 国王按钮 -->
+            <Button Name="KingButton" X="300" Y="0" Width="120" Height="100" Anchor="MiddleRight">
+                <Image Name="KingIcon" X="0" Y="20" Width="60" Height="60" Anchor="TopCenter" sprite=""/>
+                <Text Name="KingText" X="0" Y="-30" Width="120" Height="30"
+                      text="国王"
+                      fontSize="18"
+                      color="#FFFFFFFF"
+                      alignment="MiddleCenter"/>
+            </Button>
+        </Panel>
+
+    </Panel>
+</UI>

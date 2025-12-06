@@ -1,0 +1,32 @@
+{
+  "prefabSearchPaths": [
+    "Assets/Game/UIForm/Common",
+    "Assets/Game/UIComponent",
+    "Assets/Game/Prefab"
+  ],
+  "prefabAliases": {
+    "CommonGoodsItem": "Assets/Game/UIForm/Common/CommonGoodsItem.prefab",
+    "CurrencyItem": "Assets/Game/UIForm/Common/CurrencyItem.prefab",
+    "CurrencyWidget": "Assets/Game/UIForm/Common/CurrencyWidget.prefab"
+  },
+  "prefabMatchRules": [
+    {
+      "description": "金币、钻石等货币显示使用 CurrencyItem 预制体",
+      "matchPatterns": [
+        {
+          "nameContains": ["Coin", "Diamond", "Currency", "金币", "钻石", "货币"],
+          "prefabName": "CurrencyItem"
+        }
+      ]
+    },
+    {
+      "description": "物品、装备等使用 CommonGoodsItem 预制体",
+      "matchPatterns": [
+        {
+          "nameContains": ["Item", "Goods", "Good", "物品", "装备", "道具"],
+          "prefabName": "CommonGoodsItem"
+        }
+      ]
+    }
+  ]
+}

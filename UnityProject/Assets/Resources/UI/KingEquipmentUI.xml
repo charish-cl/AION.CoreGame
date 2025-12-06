@@ -1,0 +1,205 @@
+<UI>
+    <!-- 顶部栏 - 固定在顶部，贴边 -->
+    <Panel Name="TopBar" X="0" Y="0" Width="750" Height="100" Anchor="TopCenter">
+        <!-- 左侧玩家信息 - 贴左边 -->
+        <Panel Name="PlayerInfo" X="0" Y="0" Width="200" Height="80" Anchor="MiddleLeft">
+            <!-- 头像 -->
+            <Image Name="Avatar" X="30" Y="0" Width="60" Height="60" Anchor="MiddleLeft" sprite=""/>
+            <!-- 玩家名 -->
+            <Text Name="PlayerName" X="100" Y="0" Width="100" Height="40"
+                  text="PlayereXz3Vj"
+                  fontSize="20"
+                  color="#FFFFFFFF"
+                  alignment="MiddleLeft"/>
+        </Panel>
+        
+        <!-- 右侧资源显示 - 贴右边 -->
+        <Panel Name="ResourcePanel" X="0" Y="0" Width="350" Height="80" Anchor="MiddleRight">
+            <!-- 钻石显示 - 使用 CurrencyItem 预制体 -->
+            <Panel Name="DiamondPanel" ref="CurrencyItem" X="-100" Y="0" Width="150" Height="40" Anchor="MiddleRight"/>
+            <!-- 金币显示 - 使用 CurrencyItem 预制体 -->
+            <Panel Name="CoinPanel" ref="CurrencyItem" X="50" Y="0" Width="150" Height="40" Anchor="MiddleRight"/>
+        </Panel>
+    </Panel>
+
+    <!-- 角色和装备区域 - 在中间 -->
+    <Panel Name="CharacterArea" X="0" Y="100" Width="750" Height="500" Anchor="Center">
+        <!-- 角色背景 -->
+        <Image Name="CharacterBackground" X="0" Y="0" Width="750" Height="500" Anchor="Center" sprite=""/>
+        
+        <!-- 角色模型位置（用Image占位） -->
+        <Image Name="CharacterModel" X="0" Y="50" Width="200" Height="300" Anchor="Center" sprite=""/>
+        
+        <!-- 左侧装备槽位 -->
+        <Panel Name="LeftEquipmentSlots" X="-250" Y="0" Width="100" Height="400" Anchor="Center">
+            <!-- 武器槽位（已装备） -->
+            <Button Name="WeaponSlot" X="0" Y="100" Width="80" Height="80" Anchor="MiddleCenter">
+                <Image Name="WeaponIcon" X="0" Y="0" Width="60" Height="60" Anchor="Center" sprite=""/>
+                <Text Name="WeaponLevel" X="0" Y="-30" Width="80" Height="20"
+                      text="等級1"
+                      fontSize="14"
+                      color="#FFFFFFFF"
+                      alignment="MiddleCenter"/>
+            </Button>
+            <!-- 戒指槽位（空） -->
+            <Button Name="RingSlot1" X="0" Y="0" Width="80" Height="80" Anchor="MiddleCenter">
+                <Image Name="RingSlotIcon" X="0" Y="0" Width="60" Height="60" Anchor="Center" sprite=""/>
+            </Button>
+            <!-- 底部左侧装备槽位（已装备戒指，等级6） -->
+            <Button Name="RingSlot2" X="0" Y="-100" Width="80" Height="80" Anchor="MiddleCenter">
+                <Image Name="RingIcon2" X="0" Y="0" Width="60" Height="60" Anchor="Center" sprite=""/>
+                <Text Name="RingLevel2" X="0" Y="-30" Width="80" Height="20"
+                      text="等級6"
+                      fontSize="14"
+                      color="#FFFFFFFF"
+                      alignment="MiddleCenter"/>
+            </Button>
+        </Panel>
+        
+        <!-- 右侧装备槽位 -->
+        <Panel Name="RightEquipmentSlots" X="250" Y="0" Width="100" Height="400" Anchor="Center">
+            <!-- 胸甲槽位（空） -->
+            <Button Name="ChestSlot" X="0" Y="150" Width="80" Height="80" Anchor="MiddleCenter">
+                <Image Name="ChestSlotIcon" X="0" Y="0" Width="60" Height="60" Anchor="Center" sprite=""/>
+            </Button>
+            <!-- 头盔槽位（空） -->
+            <Button Name="HelmetSlot" X="0" Y="50" Width="80" Height="80" Anchor="MiddleCenter">
+                <Image Name="HelmetSlotIcon" X="0" Y="0" Width="60" Height="60" Anchor="Center" sprite=""/>
+            </Button>
+            <!-- 靴子槽位（空） -->
+            <Button Name="BootsSlot" X="0" Y="-50" Width="80" Height="80" Anchor="MiddleCenter">
+                <Image Name="BootsSlotIcon" X="0" Y="0" Width="60" Height="60" Anchor="Center" sprite=""/>
+            </Button>
+        </Panel>
+        
+        <!-- 角色属性显示 - 在角色下方，道具网格上方 -->
+        <!-- CharacterStats应该在CharacterArea内，在角色和装备槽位下方 -->
+        <Panel Name="CharacterStats" X="0" Y="-200" Width="300" Height="60" Anchor="BottomCenter">
+            <!-- 生命值 -->
+            <Panel Name="HealthPanel" X="-100" Y="0" Width="120" Height="40" Anchor="MiddleLeft">
+                <Image Name="HealthIcon" X="0" Y="0" Width="30" Height="30" Anchor="MiddleLeft" sprite=""/>
+                <Text Name="HealthText" X="35" Y="0" Width="85" Height="40"
+                      text="3.00K"
+                      fontSize="18"
+                      color="#FFFFFFFF"
+                      alignment="MiddleLeft"/>
+            </Panel>
+            <!-- 攻击力 -->
+            <Panel Name="AttackPanel" X="100" Y="0" Width="120" Height="40" Anchor="MiddleRight">
+                <Image Name="AttackIcon" X="0" Y="0" Width="30" Height="30" Anchor="MiddleLeft" sprite=""/>
+                <Text Name="AttackText" X="35" Y="0" Width="85" Height="40"
+                      text="179"
+                      fontSize="18"
+                      color="#FFFFFFFF"
+                      alignment="MiddleLeft"/>
+            </Panel>
+        </Panel>
+    </Panel>
+
+    <!-- 装备管理区域 - 在底部，贴边 -->
+    <!-- 这个区域包含标签页、道具网格和操作按钮，在CharacterStats下方 -->
+    <Panel Name="EquipmentManagementArea" X="0" Y="0" Width="750" Height="500" Anchor="BottomCenter">
+        <!-- 标签页 - 使用HorizontalLayout，两个按钮平均分配 -->
+        <!-- 标签页在CharacterStats下方，从TopCenter向下约20像素 -->
+        <HorizontalLayout Name="TabPanel" X="0" Y="-20" Width="750" Height="60" Anchor="TopCenter"
+                          spacing="0" childAlignment="MiddleCenter">
+            <Button Name="EquipmentTab" Width="375" Height="50" Text="裝備" FontSize="20"/>
+            <Button Name="SkinTab" Width="375" Height="50" Text="皮膚" FontSize="20"/>
+        </HorizontalLayout>
+        
+        <!-- 物品网格 - 使用Grid布局 -->
+        <!-- 父容器宽度750，Grid宽度700，居中，Y=-80（从TopCenter向下80像素） -->
+        <Grid Name="ItemGrid" X="0" Y="-80" Width="700" Height="300" Anchor="Center"
+              cellSizeX="100" cellSizeY="100"
+              spacingX="40" spacingY="40"
+              constraint="FixedColumnCount" constraintCount="5">
+            <!-- 第一行 - 所有物品使用 CommonGoodsItem 预制体 -->
+            <!-- 绿色护符 - 使用 CommonGoodsItem 预制体 -->
+            <Button Name="Item1" ref="CommonGoodsItem" Width="100" Height="100"/>
+            <!-- 红色护符 - 使用 CommonGoodsItem 预制体 -->
+            <Button Name="Item2" ref="CommonGoodsItem" Width="100" Height="100"/>
+            <!-- 蓝色戒指 - 使用 CommonGoodsItem 预制体 -->
+            <Button Name="Item3" ref="CommonGoodsItem" Width="100" Height="100"/>
+            <!-- 银色戒指 - 使用 CommonGoodsItem 预制体 -->
+            <Button Name="Item4" ref="CommonGoodsItem" Width="100" Height="100"/>
+            <!-- 浅蓝色胸甲 - 使用 CommonGoodsItem 预制体 -->
+            <Button Name="Item5" ref="CommonGoodsItem" Width="100" Height="100"/>
+            
+            <!-- 第二行 - 所有物品使用 CommonGoodsItem 预制体 -->
+            <!-- 浅蓝色胸甲 - 使用 CommonGoodsItem 预制体 -->
+            <Button Name="Item6" ref="CommonGoodsItem" Width="100" Height="100"/>
+            <!-- 浅蓝色胸甲 - 使用 CommonGoodsItem 预制体 -->
+            <Button Name="Item7" ref="CommonGoodsItem" Width="100" Height="100"/>
+            <!-- 银色头盔 - 使用 CommonGoodsItem 预制体 -->
+            <Button Name="Item8" ref="CommonGoodsItem" Width="100" Height="100"/>
+            <!-- 金色护符 - 使用 CommonGoodsItem 预制体 -->
+            <Button Name="Item9" ref="CommonGoodsItem" Width="100" Height="100"/>
+            <!-- 蓝色戒指 - 使用 CommonGoodsItem 预制体 -->
+            <Button Name="Item10" ref="CommonGoodsItem" Width="100" Height="100"/>
+        </Grid>
+        
+        <!-- 操作按钮 - 使用HorizontalLayout -->
+        <!-- 父容器EquipmentManagementArea是BottomCenter，ActionButtons应该在底部导航栏上方 -->
+        <!-- 底部导航栏高度120，ActionButtons应该在它上方，设置Y="130"（从底部向上130像素） -->
+        <!-- 父容器宽度750，HorizontalLayout宽度700，居中 -->
+        <!-- 考虑spacing=100，两个按钮各200宽，总宽度=200+100+200=500，居中在700内 -->
+        <!-- 按钮应该贴左右边缘，所以使用padding或者调整宽度 -->
+        <HorizontalLayout Name="ActionButtons" X="0" Y="130" Width="700" Height="60" Anchor="BottomCenter"
+                          spacing="100" paddingLeft="25" paddingRight="25" childAlignment="MiddleCenter">
+            <Button Name="SortButton" Width="200" Height="50" Text="按品質排序" FontSize="18"/>
+            <Button Name="SynthesizeButton" Width="200" Height="50" Text="合成" FontSize="18"/>
+        </HorizontalLayout>
+    </Panel>
+
+    <!-- 底部导航栏 - 固定在底部，贴边，使用HorizontalLayout -->
+    <!-- 父容器宽度750，paddingLeft=60, paddingRight=60，可用宽度=750-60-60=630 -->
+    <!-- 5个按钮各120宽，spacing=30，总宽度=120*5+30*4=600+120=720，但考虑padding后实际可用630 -->
+    <!-- 需要调整：按钮宽度或spacing，确保不超框 -->
+    <!-- 计算：630-120*5=630-600=30，剩余30分配给4个间距，每个间距约7.5，但设置30会超框 -->
+    <!-- 调整方案：减少按钮宽度或spacing，或者减少padding -->
+    <!-- 使用spacing=15，总宽度=120*5+15*4=600+60=660，但可用630，仍超框 -->
+    <!-- 最终方案：按钮宽度110，spacing=20，总宽度=110*5+20*4=550+80=630，正好 -->
+    <HorizontalLayout Name="BottomNavigationBar" X="0" Y="0" Width="750" Height="120" Anchor="BottomCenter"
+                      spacing="20" paddingLeft="60" paddingRight="60" childAlignment="MiddleCenter">
+        <Button Name="ShopButton" Width="110" Height="100">
+            <Image Name="ShopIcon" X="0" Y="20" Width="60" Height="60" Anchor="TopCenter" sprite=""/>
+            <Text Name="ShopText" X="0" Y="-30" Width="110" Height="30"
+                  text="商店"
+                  fontSize="18"
+                  color="#FFFFFFFF"
+                  alignment="MiddleCenter"/>
+        </Button>
+        <Button Name="FacilitiesButton" Width="110" Height="100">
+            <Image Name="FacilitiesIcon" X="0" Y="20" Width="60" Height="60" Anchor="TopCenter" sprite=""/>
+            <Text Name="FacilitiesText" X="0" Y="-30" Width="110" Height="30"
+                  text="設施"
+                  fontSize="18"
+                  color="#FFFFFFFF"
+                  alignment="MiddleCenter"/>
+        </Button>
+        <Button Name="BattleButton" Width="110" Height="100">
+            <Image Name="BattleIcon" X="0" Y="20" Width="60" Height="60" Anchor="TopCenter" sprite=""/>
+            <Text Name="BattleText" X="0" Y="-30" Width="110" Height="30"
+                  text="戰鬥"
+                  fontSize="18"
+                  color="#FFFFFFFF"
+                  alignment="MiddleCenter"/>
+        </Button>
+        <Button Name="KingButton" Width="110" Height="100">
+            <Image Name="KingIcon" X="0" Y="20" Width="60" Height="60" Anchor="TopCenter" sprite=""/>
+            <Text Name="KingText" X="0" Y="-30" Width="110" Height="30"
+                  text="國王"
+                  fontSize="18"
+                  color="#FFFFFFFF"
+                  alignment="MiddleCenter"/>
+        </Button>
+        <Button Name="ManorButton" Width="110" Height="100">
+            <Image Name="ManorIcon" X="0" Y="20" Width="60" Height="60" Anchor="TopCenter" sprite=""/>
+            <Text Name="ManorText" X="0" Y="-30" Width="110" Height="30"
+                  text="莊園"
+                  fontSize="18"
+                  color="#FFFFFFFF"
+                  alignment="MiddleCenter"/>
+        </Button>
+    </HorizontalLayout>
+</UI>

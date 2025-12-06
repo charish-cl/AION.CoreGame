@@ -1,6 +1,7 @@
 ﻿using AION.CoreFramework;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Pool;
 using UnityEngine.UI;
 
 namespace GameLogic
@@ -12,6 +13,7 @@ namespace GameLogic
         public Transform HeroTransform;
         
         Slider m_Slider;
+        
         public HPBarLogic(GameObject go = null, Transform heroTransform = null)
         {
             HPBarPrefab = go;
@@ -28,12 +30,18 @@ namespace GameLogic
         }
         public override void OnSpawn()
         {
-            HPBarPrefab.gameObject.SetActive(true);
+            if (HPBarPrefab != null)
+            {
+                HPBarPrefab.gameObject.SetActive(true);
+            }
         }
 
         public override void OnUnspawn()
         {
-            HPBarPrefab.gameObject.SetActive(false);
+            if (HPBarPrefab != null)
+            {
+                HPBarPrefab.gameObject.SetActive(false);
+            }
         }
         
         public void SynPos()
@@ -74,12 +82,14 @@ namespace GameLogic
     {
         public Transform HPBarParent;
         
-        private ObjectPool<HPBarLogic>  HPBarPool;
+        private AION.CoreFramework.ObjectPool<HPBarLogic>  HPBarPool;
         
         public override bool OnInit()
         {
             HPBarParent =ActorMgr.Instance.SceneBehavior.HPBarCanvas.transform;
             HPBarPool = GameModule.ObjectPool.CreateObjectPool<HPBarLogic>();
+           
+            
             return base.OnInit();
         }
 

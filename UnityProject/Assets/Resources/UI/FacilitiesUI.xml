@@ -1,0 +1,256 @@
+<UI>
+    <!-- 顶部资源栏 - 固定在顶部，贴边 -->
+    <Panel Name="TopBar" X="0" Y="0" Width="750" Height="100" Anchor="TopCenter">
+        <!-- 右侧资源显示 - 贴右边 -->
+        <Panel Name="ResourcePanel" X="0" Y="0" Width="400" Height="80" Anchor="MiddleRight">
+            <!-- 钻石显示 - 使用 CurrencyItem 预制体 -->
+            <Panel Name="DiamondPanel" ref="CurrencyItem" X="-150" Y="0" Width="150" Height="40" Anchor="MiddleRight"/>
+            <!-- 金币显示 - 使用 CurrencyItem 预制体 -->
+            <Panel Name="CoinPanel" ref="CurrencyItem" X="0" Y="0" Width="150" Height="40" Anchor="MiddleRight"/>
+            <!-- 星星显示 - 使用 CurrencyItem 预制体 -->
+            <Panel Name="StarPanel" ref="CurrencyItem" X="150" Y="0" Width="150" Height="40" Anchor="MiddleRight"/>
+        </Panel>
+    </Panel>
+
+    <!-- 角色展示区域 - 在中间偏上 -->
+    <Panel Name="CharacterArea" X="0" Y="150" Width="750" Height="300" Anchor="Center">
+        <!-- 角色背景 -->
+        <Image Name="CharacterBackground" X="0" Y="0" Width="750" Height="300" Anchor="Center" sprite=""/>
+        
+        <!-- 角色模型位置（用Image占位） -->
+        <Image Name="CharacterModel" X="0" Y="0" Width="200" Height="300" Anchor="Center" sprite=""/>
+        
+        <!-- 左侧物品堆（奖励物品） -->
+        <Panel Name="RewardItems" X="-200" Y="0" Width="150" Height="200" Anchor="Center">
+            <!-- 奖励物品使用 CommonGoodsItem 预制体 -->
+            <Image Name="RewardTrophy" X="0" Y="50" Width="60" Height="60" Anchor="Center" sprite=""/>
+            <Image Name="RewardCoins" X="0" Y="-50" Width="60" Height="60" Anchor="Center" sprite=""/>
+        </Panel>
+    </Panel>
+
+    <!-- 设施管理区域 - 在角色下方 -->
+    <!-- 从上到下：主要设施标题 -> 主要设施网格 -> 其他设施标题 -> 其他设施网格 -->
+    <Panel Name="FacilitiesArea" X="0" Y="-200" Width="750" Height="900" Anchor="Center">
+        <!-- 主要设施标题 - 在FacilitiesArea顶部 -->
+        <Panel Name="MainFacilitiesTitle" X="0" Y="0" Width="750" Height="60" Anchor="TopCenter">
+            <Image Name="TitleBackground" X="0" Y="0" Width="750" Height="60" Anchor="Center" sprite=""/>
+            <Text Name="TitleText" X="0" Y="0" Width="750" Height="60"
+                  text="主要設施"
+                  fontSize="24"
+                  color="#FFFFFFFF"
+                  alignment="MiddleCenter"/>
+        </Panel>
+        
+        <!-- 主要设施网格 - 在主要设施标题下方，紧挨着 -->
+        <!-- 标题高度60，Grid应该在Y="-60"（从TopCenter向下60） -->
+        <!-- Grid高度：2行*180 + 1个间距*30 = 360 + 30 = 390，设置400 -->
+        <Grid Name="MainFacilitiesGrid" X="0" Y="-60" Width="700" Height="400" Anchor="TopCenter"
+              cellSizeX="200" cellSizeY="180"
+              spacingX="30" spacingY="30"
+              constraint="FixedColumnCount" constraintCount="3">
+            <!-- 第一行 -->
+            <!-- 设施1 - 头盔结构，等级5，15/25 -->
+            <Button Name="Facility1" Width="200" Height="180">
+                <Image Name="Facility1Icon" X="0" Y="30" Width="100" Height="100" Anchor="TopCenter" sprite=""/>
+                <Text Name="Facility1Level" X="0" Y="-30" Width="200" Height="30"
+                      text="等級5"
+                      fontSize="18"
+                      color="#FFFFFFFF"
+                      alignment="MiddleCenter"/>
+                <Text Name="Facility1Progress" X="0" Y="-60" Width="200" Height="20"
+                      text="15/25"
+                      fontSize="14"
+                      color="#FFFFFFFF"
+                      alignment="MiddleCenter"/>
+            </Button>
+            <!-- 设施2 - 木制结构，等级5，17/25 -->
+            <Button Name="Facility2" Width="200" Height="180">
+                <Image Name="Facility2Icon" X="0" Y="30" Width="100" Height="100" Anchor="TopCenter" sprite=""/>
+                <Text Name="Facility2Level" X="0" Y="-30" Width="200" Height="30"
+                      text="等級5"
+                      fontSize="18"
+                      color="#FFFFFFFF"
+                      alignment="MiddleCenter"/>
+                <Text Name="Facility2Progress" X="0" Y="-60" Width="200" Height="20"
+                      text="17/25"
+                      fontSize="14"
+                      color="#FFFFFFFF"
+                      alignment="MiddleCenter"/>
+            </Button>
+            <!-- 设施3 - 帐篷结构，等级5，15/25 -->
+            <Button Name="Facility3" Width="200" Height="180">
+                <Image Name="Facility3Icon" X="0" Y="30" Width="100" Height="100" Anchor="TopCenter" sprite=""/>
+                <Text Name="Facility3Level" X="0" Y="-30" Width="200" Height="30"
+                      text="等級5"
+                      fontSize="18"
+                      color="#FFFFFFFF"
+                      alignment="MiddleCenter"/>
+                <Text Name="Facility3Progress" X="0" Y="-60" Width="200" Height="20"
+                      text="15/25"
+                      fontSize="14"
+                      color="#FFFFFFFF"
+                      alignment="MiddleCenter"/>
+            </Button>
+            
+            <!-- 第二行 -->
+            <!-- 设施4 - 巫师帽，等级5，22/25 -->
+            <Button Name="Facility4" Width="200" Height="180">
+                <Image Name="Facility4Icon" X="0" Y="30" Width="100" Height="100" Anchor="TopCenter" sprite=""/>
+                <Text Name="Facility4Level" X="0" Y="-30" Width="200" Height="30"
+                      text="等級5"
+                      fontSize="18"
+                      color="#FFFFFFFF"
+                      alignment="MiddleCenter"/>
+                <Text Name="Facility4Progress" X="0" Y="-60" Width="200" Height="20"
+                      text="22/25"
+                      fontSize="14"
+                      color="#FFFFFFFF"
+                      alignment="MiddleCenter"/>
+            </Button>
+            <!-- 设施5 - 十字弓，等级5，24/25 -->
+            <Button Name="Facility5" Width="200" Height="180">
+                <Image Name="Facility5Icon" X="0" Y="30" Width="100" Height="100" Anchor="TopCenter" sprite=""/>
+                <Text Name="Facility5Level" X="0" Y="-30" Width="200" Height="30"
+                      text="等級5"
+                      fontSize="18"
+                      color="#FFFFFFFF"
+                      alignment="MiddleCenter"/>
+                <Text Name="Facility5Progress" X="0" Y="-60" Width="200" Height="20"
+                      text="24/25"
+                      fontSize="14"
+                      color="#FFFFFFFF"
+                      alignment="MiddleCenter"/>
+            </Button>
+            <!-- 设施6 - 攻城武器，等级5，17/25 -->
+            <Button Name="Facility6" Width="200" Height="180">
+                <Image Name="Facility6Icon" X="0" Y="30" Width="100" Height="100" Anchor="TopCenter" sprite=""/>
+                <Text Name="Facility6Level" X="0" Y="-30" Width="200" Height="30"
+                      text="等級5"
+                      fontSize="18"
+                      color="#FFFFFFFF"
+                      alignment="MiddleCenter"/>
+                <Text Name="Facility6Progress" X="0" Y="-60" Width="200" Height="20"
+                      text="17/25"
+                      fontSize="14"
+                      color="#FFFFFFFF"
+                      alignment="MiddleCenter"/>
+            </Button>
+        </Grid>
+        
+        <!-- 其他设施标题 - 在主要设施网格下方，紧挨着 -->
+        <!-- MainFacilitiesGrid从TopCenter向下60，高度400，底部在Y="-460" -->
+        <!-- OtherFacilitiesTitle应该在Y="-470"（从TopCenter向下470，留10间距） -->
+        <Panel Name="OtherFacilitiesTitle" X="0" Y="-470" Width="750" Height="60" Anchor="TopCenter">
+            <Image Name="OtherTitleBackground" X="0" Y="0" Width="750" Height="60" Anchor="Center" sprite=""/>
+            <Text Name="OtherTitleText" X="0" Y="0" Width="750" Height="60"
+                  text="其他設施"
+                  fontSize="24"
+                  color="#FFFFFFFF"
+                  alignment="MiddleCenter"/>
+        </Panel>
+        
+        <!-- 其他设施网格 - 在其他设施标题下方，紧挨着 -->
+        <!-- OtherFacilitiesTitle在Y="-470"，高度60，底部在Y="-530" -->
+        <!-- OtherFacilitiesGrid应该在Y="-530"（从TopCenter向下530，紧挨着） -->
+        <Grid Name="OtherFacilitiesGrid" X="0" Y="-530" Width="700" Height="200" Anchor="TopCenter"
+              cellSizeX="150" cellSizeY="180"
+              spacingX="30" spacingY="0"
+              constraint="FixedColumnCount" constraintCount="4">
+            <!-- 设施7 - 大锅，等级6，0/35 -->
+            <Button Name="Facility7" Width="150" Height="180">
+                <Image Name="Facility7Icon" X="0" Y="30" Width="80" Height="80" Anchor="TopCenter" sprite=""/>
+                <Text Name="Facility7Level" X="0" Y="-30" Width="150" Height="30"
+                      text="等級6"
+                      fontSize="18"
+                      color="#FFFFFFFF"
+                      alignment="MiddleCenter"/>
+                <Text Name="Facility7Progress" X="0" Y="-60" Width="150" Height="20"
+                      text="0/35"
+                      fontSize="14"
+                      color="#FFFFFFFF"
+                      alignment="MiddleCenter"/>
+            </Button>
+            <!-- 设施8 - 锁定设施（问号） -->
+            <Button Name="Facility8" Width="150" Height="180">
+                <Image Name="Facility8Icon" X="0" Y="0" Width="150" Height="180" Anchor="Center" sprite=""/>
+                <Text Name="Facility8Question" X="0" Y="0" Width="150" Height="180"
+                      text="?"
+                      fontSize="60"
+                      color="#FFFFFFFF"
+                      alignment="MiddleCenter"/>
+            </Button>
+            <!-- 设施9 - 火把，等级5，18/25 -->
+            <Button Name="Facility9" Width="150" Height="180">
+                <Image Name="Facility9Icon" X="0" Y="30" Width="80" Height="80" Anchor="TopCenter" sprite=""/>
+                <Text Name="Facility9Level" X="0" Y="-30" Width="150" Height="30"
+                      text="等級5"
+                      fontSize="18"
+                      color="#FFFFFFFF"
+                      alignment="MiddleCenter"/>
+                <Text Name="Facility9Progress" X="0" Y="-60" Width="150" Height="20"
+                      text="18/25"
+                      fontSize="14"
+                      color="#FFFFFFFF"
+                      alignment="MiddleCenter"/>
+            </Button>
+            <!-- 设施10 - 锁定设施（问号） -->
+            <Button Name="Facility10" Width="150" Height="180">
+                <Image Name="Facility10Icon" X="0" Y="0" Width="150" Height="180" Anchor="Center" sprite=""/>
+                <Text Name="Facility10Question" X="0" Y="0" Width="150" Height="180"
+                      text="?"
+                      fontSize="60"
+                      color="#FFFFFFFF"
+                      alignment="MiddleCenter"/>
+            </Button>
+        </Grid>
+    </Panel>
+
+    <!-- 底部导航栏 - 固定在底部，贴边，使用HorizontalLayout -->
+    <!-- 父容器宽度750，paddingLeft=60, paddingRight=60，可用宽度=750-60-60=630 -->
+    <!-- 5个按钮，如果每个120宽，spacing=20，总宽度=120*5+20*4=600+80=680，会超框 -->
+    <!-- 调整方案：按钮宽度110，spacing=20，总宽度=110*5+20*4=550+80=630，正好 -->
+    <HorizontalLayout Name="BottomNavigationBar" X="0" Y="0" Width="750" Height="120" Anchor="BottomCenter"
+                      spacing="20" paddingLeft="60" paddingRight="60" childAlignment="MiddleCenter">
+        <Button Name="ShopButton" Width="110" Height="100">
+            <Image Name="ShopIcon" X="0" Y="20" Width="60" Height="60" Anchor="TopCenter" sprite=""/>
+            <Text Name="ShopText" X="0" Y="-30" Width="110" Height="30"
+                  text="商店"
+                  fontSize="18"
+                  color="#FFFFFFFF"
+                  alignment="MiddleCenter"/>
+        </Button>
+        <Button Name="FacilitiesButton" Width="110" Height="100">
+            <Image Name="FacilitiesIcon" X="0" Y="20" Width="60" Height="60" Anchor="TopCenter" sprite=""/>
+            <Text Name="FacilitiesText" X="0" Y="-30" Width="110" Height="30"
+                  text="設施"
+                  fontSize="18"
+                  color="#FFFFFFFF"
+                  alignment="MiddleCenter"/>
+        </Button>
+        <Button Name="BattleButton" Width="110" Height="100">
+            <Image Name="BattleIcon" X="0" Y="20" Width="60" Height="60" Anchor="TopCenter" sprite=""/>
+            <Text Name="BattleText" X="0" Y="-30" Width="110" Height="30"
+                  text="戰鬥"
+                  fontSize="18"
+                  color="#FFFFFFFF"
+                  alignment="MiddleCenter"/>
+        </Button>
+        <Button Name="KingButton" Width="110" Height="100">
+            <Image Name="KingIcon" X="0" Y="20" Width="60" Height="60" Anchor="TopCenter" sprite=""/>
+            <Text Name="KingText" X="0" Y="-30" Width="110" Height="30"
+                  text="國王"
+                  fontSize="18"
+                  color="#FFFFFFFF"
+                  alignment="MiddleCenter"/>
+        </Button>
+        <Button Name="ManorButton" Width="110" Height="100">
+            <Image Name="ManorIcon" X="0" Y="20" Width="60" Height="60" Anchor="TopCenter" sprite=""/>
+            <Text Name="ManorText" X="0" Y="-30" Width="110" Height="30"
+                  text="莊園"
+                  fontSize="18"
+                  color="#FFFFFFFF"
+                  alignment="MiddleCenter"/>
+        </Button>
+    </HorizontalLayout>
+</UI>
+

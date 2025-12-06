@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UI>
+    <!-- 装备详情主面板 - 深色背景 -->
+    <Panel Name="EquipmentDetailPanel" X="0" Y="0" Width="750" Height="1334" Anchor="Center" color="#FF1A1A1A">
+
+        <!-- 装备图标区域 - 左上角 -->
+        <Panel Name="IconPanel" X="-280" Y="-480" Width="160" Height="160" Anchor="TopCenter">
+            <!-- 装备图标背景框 -->
+            <Image Name="IconBackground" X="0" Y="0" Width="140" Height="140" Anchor="Center" color="#FF333333"/>
+            <!-- 装备图标 -->
+            <Image Name="EquipmentIcon" X="0" Y="0" Width="120" Height="120" Anchor="Center" sprite=""/>
+            <!-- 装备边框 -->
+            <Image Name="EquipmentBorder" X="0" Y="0" Width="140" Height="140" Anchor="Center" sprite=""/>
+            <!-- 装备等级徽章 -->
+            <Text Name="LevelBadge" X="50" Y="-50" Width="40" Height="25"
+                  text="Lv.6"
+                  fontSize="14"
+                  color="#FFFFAA00"
+                  alignment="MiddleCenter"/>
+        </Panel>
+
+        <!-- 装备信息区域 - 右侧 -->
+        <Panel Name="InfoPanel" X="-60" Y="-420" Width="480" Height="160" Anchor="TopCenter">
+            <!-- 装备名称 -->
+            <Text Name="EquipmentName" X="0" Y="-50" Width="480" Height="40"
+                  text="熔火巨劍"
+                  fontSize="24"
+                  color="#FFFF9900"
+                  alignment="MiddleLeft"/>
+
+            <!-- 装备类型 -->
+            <Text Name="EquipmentType" X="0" Y="-10" Width="480" Height="30"
+                  text="武器 · 傳說裝備"
+                  fontSize="18"
+                  color="#FFCCCCCC"
+                  alignment="MiddleLeft"/>
+
+            <!-- 装备描述 -->
+            <Text Name="EquipmentDescription" X="0" Y="30" Width="480" Height="60"
+                  text="由地心深處的熔岩鍛造而成，劍身永遠燃燒着不滅的火焰。"
+                  fontSize="16"
+                  color="#FF999999"
+                  alignment="TopLeft"/>
+        </Panel>
+
+        <!-- 关闭按钮 - 右上角 -->
+        <Button Name="CloseButton" X="320" Y="-480" Width="50" Height="50" Anchor="TopCenter">
+            <Image Name="CloseIcon" X="0" Y="0" Width="30" Height="30" Anchor="Center" sprite=""/>
+        </Button>
+
+        <!-- 当前属性区域 -->
+        <Panel Name="CurrentStatsPanel" X="0" Y="-180" Width="650" Height="120" Anchor="Center">
+            <!-- 当前属性标题 -->
+            <Text Name="CurrentStatsTitle" X="0" Y="-40" Width="650" Height="25"
+                  text="當 前 屬 性"
+                  fontSize="20"
+                  color="#FFFFFFFF"
+                  alignment="MiddleCenter"/>
+
+            <!-- 当前属性列表 -->
+            <Panel Name="CurrentStatsList" X="0" Y="0" Width="600" Height="60" Anchor="Center">
+                <!-- 攻击力 -->
+                <Panel Name="AttackStat" X="-180" Y="0" Width="180" Height="30" Anchor="MiddleLeft">
+                    <Image Name="AttackIcon" X="0" Y="0" Width="25" Height="25" Anchor="MiddleLeft" sprite=""/>
+                    <Text Name="AttackText" X="30" Y="0" Width="150" Height="30"
+                          text="攻擊力 +895"
+                          fontSize="16"
+                          color="#FF66CC66"
+                          alignment="MiddleLeft"/>
+                </Panel>
+
+                <!-- 暴击率 -->
+                <Panel Name="CritStat" X="0" Y="0" Width="180" Height="30" Anchor="MiddleLeft">
+                    <Image Name="CritIcon" X="0" Y="0" Width="25" Height="25" Anchor="MiddleLeft" sprite=""/>
+                    <Text Name="CritText" X="30" Y="0" Width="150" Height="30"
+                          text="暴擊率 +15%"
+                          fontSize="16"
+                          color="#FF66CC66"
+                          alignment="MiddleLeft"/>
+                </Panel>
+
+                <!-- 火焰伤害 -->
+                <Panel Name="FireStat" X="180" Y="0" Width="180" Height="30" Anchor="MiddleLeft">
+                    <Image Name="FireIcon" X="0" Y="0" Width="25" Height="25" Anchor="MiddleLeft" sprite=""/>
+                    <Text Name="FireText" X="30" Y="0" Width="150" Height="30"
+                          text="火焰傷害 +120"
+                          fontSize="16"
+                          color="#FF66CC66"
+                          alignment="MiddleLeft"/>
+                </Panel>
+            </Panel>
+        </Panel>
+
+        <!-- 下一级属性区域 -->
+        <Panel Name="NextLevelStatsPanel" X="0" Y="20" Width="650" Height="120" Anchor="Center">
+            <!-- 下一级属性标题 -->
+            <Text Name="NextLevelTitle" X="0" Y="-40" Width="650" Height="25"
+                  text="下 一 級 屬 性 (Lv.7)"
+                  fontSize="20"
+                  color="#FFFFFF99"
+                  alignment="MiddleCenter"/>
+
+            <!-- 下一级属性列表 -->
+            <Panel Name="NextLevelStatsList" X="0" Y="0" Width="600" Height="60" Anchor="Center">
+                <!-- 攻击力提升 -->
+                <Panel Name="NextAttackStat" X="-180" Y="0" Width="180" Height="30" Anchor="MiddleLeft">
+                    <Image Name="NextAttackIcon" X="0" Y="0" Width="25" Height="25" Anchor="MiddleLeft" sprite=""/>
+                    <Text Name="NextAttackText" X="30" Y="0" Width="150" Height="30"
+                          text="攻擊力 +1050"
+                          fontSize="16"
+                          color="#FF99CCFF"
+                          alignment="MiddleLeft"/>
+                </Panel>
+
+                <!-- 暴击率提升 -->
+                <Panel Name="NextCritStat" X="0" Y="0" Width="180" Height="30" Anchor="MiddleLeft">
+                    <Image Name="NextCritIcon" X="0" Y="0" Width="25" Height="25" Anchor="MiddleLeft" sprite=""/>
+                    <Text Name="NextCritText" X="30" Y="0" Width="150" Height="30"
+                          text="暴擊率 +18%"
+                          fontSize="16"
+                          color="#FF99CCFF"
+                          alignment="MiddleLeft"/>
+                </Panel>
+
+                <!-- 火焰伤害提升 -->
+                <Panel Name="NextFireStat" X="180" Y="0" Width="180" Height="30" Anchor="MiddleLeft">
+                    <Image Name="NextFireIcon" X="0" Y="0" Width="25" Height="25" Anchor="MiddleLeft" sprite=""/>
+                    <Text Name="NextFireText" X="30" Y="0" Width="150" Height="30"
+                          text="火焰傷害 +150"
+                          fontSize="16"
+                          color="#FF99CCFF"
+                          alignment="MiddleLeft"/>
+                </Panel>
+            </Panel>
+        </Panel>
+
+        <!-- 升级材料区域 -->
+        <Panel Name="MaterialsPanel" X="0" Y="220" Width="650" Height="160" Anchor="Center">
+            <!-- 材料标题 -->
+            <Text Name="MaterialsTitle" X="0" Y="-60" Width="650" Height="25"
+                  text="升 級 材 料"
+                  fontSize="20"
+                  color="#FFFFFFFF"
+                  alignment="MiddleCenter"/>
+
+            <!-- 材料列表 -->
+            <Panel Name="MaterialsList" X="0" Y="0" Width="600" Height="80" Anchor="Center">
+                <!-- 金币 -->
+                <Panel Name="GoldPanel" X="-225" Y="0" Width="120" Height="70" Anchor="MiddleLeft">
+                    <Image Name="GoldIcon" X="0" Y="-10" Width="50" Height="50" Anchor="TopCenter" sprite=""/>
+                    <Text Name="GoldText" X="0" Y="25" Width="120" Height="25"
+                          text="12.5K"
+                          fontSize="16"
+                          color="#FFFFFFFF"
+                          alignment="MiddleCenter"/>
+                </Panel>
+
+                <!-- 铁锭 -->
+                <Panel Name="IronPanel" X="-75" Y="0" Width="120" Height="70" Anchor="MiddleLeft">
+                    <Image Name="IronIcon" X="0" Y="-10" Width="50" Height="50" Anchor="TopCenter" sprite=""/>
+                    <Text Name="IronText" X="0" Y="25" Width="120" Height="25"
+                          text="x15"
+                          fontSize="16"
+                          color="#FFFFFFFF"
+                          alignment="MiddleCenter"/>
+                </Panel>
+
+                <!-- 火焰精华 -->
+                <Panel Name="FireEssencePanel" X="75" Y="0" Width="120" Height="70" Anchor="MiddleLeft">
+                    <Image Name="FireEssenceIcon" X="0" Y="-10" Width="50" Height="50" Anchor="TopCenter" sprite=""/>
+                    <Text Name="FireEssenceText" X="0" Y="25" Width="120" Height="25"
+                          text="x8"
+                          fontSize="16"
+                          color="#FFFFFFFF"
+                          alignment="MiddleCenter"/>
+                </Panel>
+
+                <!-- 升级石 -->
+                <Panel Name="StonePanel" X="225" Y="0" Width="120" Height="70" Anchor="MiddleLeft">
+                    <Image Name="StoneIcon" X="0" Y="-10" Width="50" Height="50" Anchor="TopCenter" sprite=""/>
+                    <Text Name="StoneText" X="0" Y="25" Width="120" Height="25"
+                          text="x3"
+                          fontSize="16"
+                          color="#FFFFFFFF"
+                          alignment="MiddleCenter"/>
+                </Panel>
+            </Panel>
+        </Panel>
+
+        <!-- 底部按钮区域 -->
+        <Panel Name="ButtonPanel" X="0" Y="520" Width="600" Height="100" Anchor="BottomCenter">
+            <!-- 升级按钮 -->
+            <Button Name="UpgradeButton" X="-160" Y="0" Width="200" Height="70" Anchor="MiddleCenter">
+                <Text Name="UpgradeButtonText" X="0" Y="0" Width="200" Height="70"
+                      text="升 級"
+                      fontSize="22"
+                      color="#FFFFFFFF"
+                      alignment="MiddleCenter"/>
+            </Button>
+
+            <!-- 强化按钮 -->
+            <Button Name="EnhanceButton" X="160" Y="0" Width="200" Height="70" Anchor="MiddleCenter">
+                <Text Name="EnhanceButtonText" X="0" Y="0" Width="200" Height="70"
+                      text="強 化"
+                      fontSize="22"
+                      color="#FFFFFFFF"
+                      alignment="MiddleCenter"/>
+            </Button>
+        </Panel>
+
+    </Panel>
+</UI>

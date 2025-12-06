@@ -344,11 +344,13 @@ namespace GameLogic
         /// </summary>
         /// <param name="towerId">塔配置ID，如果为0则使用默认配置</param>
         /// <param name="position">塔的位置</param>
-        public void CreateTower(int towerId = 0, Vector2? position = null)
+        public GameActor CreateTower(int towerId = 0, Vector2? position = null)
         {
             var actor = new TowerActor(towerId);
             
             CreateActorInternal(actor, null, UnitTag.Tower, position);
+            
+            return actor;
         }
         
         /// <summary>

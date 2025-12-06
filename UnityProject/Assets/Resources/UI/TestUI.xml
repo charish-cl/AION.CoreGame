@@ -1,0 +1,40 @@
+<UI>
+    <Panel Name="MainPanel" X="100" Y="100" Width="400" Height="300">
+        <!-- Text 组件，直接使用 Unity 属性名 -->
+        <Text Name="Title"
+              X="20" Y="20" Width="360" Height="40"
+              text="游戏标题"
+              fontSize="24"
+              color="#FFFFFFFF"
+              alignment="MiddleCenter"
+              fontStyle="Bold"/>
+
+        <!-- Button -->
+        <Button Name="StartBtn"
+                X="100" Y="100" Width="200" Height="50"
+                Text="开始游戏"
+                FontSize="18"
+                OnClick="OnStartGame"/>
+
+        <!-- Image，使用 Unity 的 sprite 属性 -->
+        <Image Name="Logo"
+               X="150" Y="200" Width="100" Height="100"
+               sprite="Sprites/Logo"
+               color="#FFFFFFFF"/>
+
+        <!-- InputField -->
+        <InputField Name="NameInput"
+                    X="50" Y="160" Width="300" Height="35"
+                    text=""
+                    characterLimit="20"/>
+
+        <!-- Slider -->
+        <Slider Name="VolumeSlider"
+                X="50" Y="220" Width="300" Height="20"
+                minValue="0"
+                maxValue="100"
+                value="50"
+                wholeNumbers="true"/>
+    </Panel>
+</UI>
+
