@@ -13,9 +13,10 @@ namespace GameConfig
 { 
     public enum EBulletType
     {
-        PROJECTILE = 1,
-        SPAWN_UNIT = 2,
-        INSTANT_AURA = 3,
+        NONE = 0,
+        MELEE = 1,
+        PROJECTILE = 2,
+        SPAWN_UNIT = 3,
     }
 
 } 

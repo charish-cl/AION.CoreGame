@@ -29,12 +29,12 @@ namespace GameLogic
 			GameEvent.EventMgr.RegWrapInterface("ICommonUI", this);
 		}
 
-        public void ShowTip(System.String tip)
+        public void ShowTip(string tip)
         {
             _dispatcher.Send(ICommonUI_Event.ShowTip,tip);
         }
 
-        public void ShowError(System.String error)
+        public void ShowError(string error)
         {
             _dispatcher.Send(ICommonUI_Event.ShowError,error);
         }
@@ -44,7 +44,7 @@ namespace GameLogic
             _dispatcher.Send(ICommonUI_Event.ShowReward,reward);
         }
 
-        public void ShowAnnouncement(System.String announcement)
+        public void ShowAnnouncement(string announcement)
         {
             _dispatcher.Send(ICommonUI_Event.ShowAnnouncement,announcement);
         }

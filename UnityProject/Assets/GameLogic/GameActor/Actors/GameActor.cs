@@ -257,6 +257,15 @@ namespace GameLogic
                     Position = Transform.position;
                     Log.Info($"GameActor.InstantiateModel: 应用模型偏移 ({offset.x}, {offset.y})");
                 }
+
+                if (modelConfig.Scale > 0)
+                {
+                    Transform.localScale =  modelConfig.Scale * Vector3.one;
+                }
+                else
+                {
+                    Log.Info($"GameActor.InstantiateModel: 模型尺寸未设置，使用默认值");
+                }
             }
             
             Log.Info($"GameActor.InstantiateModel: 成功实例化模型，路径 = {modelConfig.Path}, Prefab名称 = {prefabName}");

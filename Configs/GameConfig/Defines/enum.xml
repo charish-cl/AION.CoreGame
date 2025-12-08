@@ -8,9 +8,10 @@
 
 <!-- 子弹类型 -->
 <enum name="EBulletType">
-    <var name="PROJECTILE" value="1"/>
-    <var name="SPAWN_UNIT" value="2"/>
-    <var name="INSTANT_AURA" value="3"/>
+    <var name="NONE" value="0"/>
+    <var name="MELEE" value="1"/>
+    <var name="PROJECTILE" value="2"/>
+    <var name="SPAWN_UNIT" value="3"/>
 </enum>
 
 <!-- 单位类型 -->

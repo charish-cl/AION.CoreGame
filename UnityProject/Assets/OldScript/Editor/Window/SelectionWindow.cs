@@ -7,6 +7,7 @@ using AION.CoreFramework;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;
+using UnityEditor.Animations;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -119,8 +120,51 @@ namespace GameDevKitEditor
         {
             
         }
+        [MenuItem("Assets/AnimatorTool/生成动画枚举", priority = 1)]
+        public static void GenerateAnimationEnum()
+        {
+            var controller = Selection.activeObject as AnimatorController;
+            if (controller == null)
+            {
+                Debug.LogError("请选中 Animator Controller！");
+                return;
+            }
 
+            // 收集所有动画名（遍历所有层的所有状态）
+            var clipNames = controller.layers
+                .SelectMany(layer => layer.stateMachine.states)
+                .Select(state => state.state.motion as AnimationClip)
+                .Where(clip => clip != null)
+                .Select(clip => clip.name)
+                .Distinct()
+                .OrderBy(name => name)
+                .ToList();
 
+            if (clipNames.Count == 0)
+            {
+                Debug.LogWarning("没有找到动画片段！");
+                return;
+            }
+
+            // 生成代码
+            var sb = new StringBuilder();
+            sb.AppendLine("// Auto Generated - Do Not Edit");
+            sb.AppendLine($"// Generated at {System.DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+            sb.AppendLine();
+            sb.AppendLine("public enum AnimationClipName");
+            sb.AppendLine("{");
+        
+            foreach (var name in clipNames)
+            {
+                string enumName = name.Replace(" ", "_").Replace("-", "_");
+                sb.AppendLine($"    {enumName},");
+            }
+        
+            sb.AppendLine("}");
+            
+            //copy
+            GUIUtility.systemCopyBuffer = sb.ToString();
+        }
 
         public GameObject SelectionObj;
 
@@ -227,5 +271,8 @@ namespace GameDevKitEditor
                 Debug.Log($"文件大小：{fileSizeInMB} MB");
             }
         }
+        
+        
+        
     }
 }

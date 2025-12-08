@@ -16,6 +16,7 @@ dotnet "${LUBAN_DLL}" \
     -t client \
     -c cs-bin \
     -d bin \
+    -s XmlSchemaLoader \
     --conf "${CONF_ROOT}/luban.conf" \
     --customTemplateDir "${CONF_ROOT}/CustomTemplate/CustomTemplate_Client_LazyLoad" \
     -x outputCodeDir="${CODE_OUTPATH}" \
