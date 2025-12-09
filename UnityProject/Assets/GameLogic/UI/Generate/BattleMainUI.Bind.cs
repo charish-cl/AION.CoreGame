@@ -14,6 +14,10 @@ namespace GameLogic
         public TextMeshProUGUI waveProcess { get; set; }
         public TextMeshProUGUI levelText { get; set; }
         public TextMeshProUGUI hpText { get; set; }
+        public Button button_BuyGrid { get; set; }
+        public TextMeshProUGUI buyText { get; set; }
+        public Transform m_tfDrawParent { get; set; }
+        public GameObject m_itemDraw { get; set; }
 
         public override void ScriptGenerator()
         {
@@ -35,9 +39,21 @@ namespace GameLogic
 
             levelText = transform.Find("TopInfo/Level/LevelText").GetComponent<TextMeshProUGUI>();
 
+            //
+            // hpText = transform.Find("").GetComponent<TextMeshProUGUI>();
+            //
+            // button_BuyGrid = transform.Find("").GetComponent<Button>();
+            // button_BuyGrid.onClick.AddListener(() => OnClick_button_BuyGrid());
+            //
+            //
+            // buyText = transform.Find("").GetComponent<TextMeshProUGUI>();
 
-            hpText = transform.Find("").GetComponent<TextMeshProUGUI>();
 
+            m_tfDrawParent = transform.Find("m_tfPanel/m_tfDrawParent").GetComponent<Transform>();
+
+
+            m_itemDraw = transform.Find("m_tfPanel/m_tfDrawParent/m_itemDraw").gameObject;
+            
         }
     }
 }

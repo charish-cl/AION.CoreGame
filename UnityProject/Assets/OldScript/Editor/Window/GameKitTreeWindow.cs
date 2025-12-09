@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using GameLogic;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
@@ -36,7 +37,10 @@ namespace GameDevKitEditor
             tree.DrawSearchToolbar();
             
             tree.AddAllAssetsAtPath("配置/", "Assets/Game/Configs", typeof(ScriptableObject), true);
-                // .AddThumbnailIcons();   
+                // .AddThumbnailIcons();
+            
+            // 添加所有 LocalSetting 配置
+            tree.AddAllAssetsAtPath("本地设置/", "Assets/Game/Config/LocalSettings", typeof(GameLocalSetting), true);   
             
             // tree.Add("TreeConfig",tree.Config);
             // tree.Add("TreeSelection",tree.Selection);

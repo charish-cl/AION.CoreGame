@@ -11,7 +11,7 @@ namespace GameLogic
         /// <summary>
         /// 创建塔
         /// </summary>
-        public static GameActor CreateTower(int towerId, Vector2 worldPosition, TowerDefenseGridSystem gridSystem = null)
+        public static GameActor CreateTower(int towerId, Vector2 worldPosition, GridHelper gridHelper = null)
         {
             if (ActorMgr.Instance == null)
             {
@@ -19,8 +19,7 @@ namespace GameLogic
                 return null;
             }
             
-            return  // 创建塔
-                ActorMgr.Instance.CreateTower(towerId, worldPosition);;
+            return ActorMgr.Instance.CreateTower(towerId, worldPosition);
         }
     }
 }

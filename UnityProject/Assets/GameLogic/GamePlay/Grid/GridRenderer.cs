@@ -10,9 +10,8 @@ namespace GameLogic
     [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
     public class GridRenderer : MonoBehaviour
     {
-        [Header("网格系统引用")]
-        [Tooltip("网格系统（如果不设置则自动查找）")]
-        public TowerDefenseGridSystem gridSystem;
+  
+        GridHelper gridHelper;
         
         [Header("渲染设置")]
         [Tooltip("是否显示网格线")]
@@ -40,6 +39,12 @@ namespace GameLogic
         {
             m_meshRenderer = GetComponent<MeshRenderer>();
             m_meshFilter = GetComponent<MeshFilter>();
+            
+            // 如果没有设置 gridHelper，使用单例
+            if (gridHelper == null)
+            {
+                gridHelper = GridHelper.Instance;
+            }
             
             // 创建材质
             Shader shader = Shader.Find("Custom/GridRenderer");
@@ -79,15 +84,22 @@ namespace GameLogic
         /// </summary>
         private void InitializeGrid()
         {
-            if (gridSystem == null || m_material == null)
+            if (gridHelper == null || m_material == null)
             {
-                Log.Warning("GridRenderer: 网格系统或材质为空，无法初始化");
+                Log.Warning("GridRenderer: GridHelper 或材质为空，无法初始化");
                 return;
             }
             
-            Vector2Int gridSize = gridSystem.gridSize;
-            Vector2 cellSize = gridSystem.cellSize;
-            Vector2 gridOrigin = gridSystem.gridOrigin;
+            var setting = gridHelper.GetSetting();
+            if (setting == null)
+            {
+                Log.Warning("GridRenderer: GridSetting 为空，无法初始化");
+                return;
+            }
+            
+            Vector2Int gridSize = setting.gridSize;
+            Vector2 cellSize = setting.cellSize;
+            Vector2 gridOrigin = setting.gridOrigin;
             
             // 创建网格状态纹理（每个像素代表一个cell）
             // R通道：isOccupied (1.0 = occupied, 0.0 = not occupied)
@@ -203,9 +215,12 @@ namespace GameLogic
         /// </summary>
         private void UpdateGridStateTexture()
         {
-            if (gridSystem == null || m_gridStateTexture == null) return;
+            if (gridHelper == null || m_gridStateTexture == null) return;
             
-            Vector2Int gridSize = gridSystem.gridSize;
+            var setting = gridHelper.GetSetting();
+            if (setting == null) return;
+            
+            Vector2Int gridSize = setting.gridSize;
             
             // 遍历所有cell，更新纹理
             Color[] pixels = new Color[gridSize.x * gridSize.y];
@@ -213,7 +228,7 @@ namespace GameLogic
             {
                 for (int x = 0; x < gridSize.x; x++)
                 {
-                    var cell = gridSystem.GetCellAt(new Vector2Int(x, y));
+                    var cell = gridHelper.GetCellAt(new Vector2Int(x, y));
                     if (cell != null)
                     {
                         // R通道：isOccupied
@@ -242,9 +257,12 @@ namespace GameLogic
         /// <param name="highlightCells">要高亮的网格位置列表</param>
         public void SetDragHighlight(List<Vector2Int> highlightCells)
         {
-            if (!m_isInitialized || m_highlightTexture == null || gridSystem == null) return;
+            if (!m_isInitialized || m_highlightTexture == null || gridHelper == null) return;
             
-            Vector2Int gridSize = gridSystem.gridSize;
+            var setting = gridHelper.GetSetting();
+            if (setting == null) return;
+            
+            Vector2Int gridSize = setting.gridSize;
             
             // 先清除所有高亮
             Color[] pixels = new Color[gridSize.x * gridSize.y];
@@ -276,9 +294,12 @@ namespace GameLogic
         /// </summary>
         public void ClearDragHighlight()
         {
-            if (!m_isInitialized || m_highlightTexture == null || gridSystem == null) return;
+            if (!m_isInitialized || m_highlightTexture == null || gridHelper == null) return;
             
-            Vector2Int gridSize = gridSystem.gridSize;
+            var setting = gridHelper.GetSetting();
+            if (setting == null) return;
+            
+            Vector2Int gridSize = setting.gridSize;
             Color[] pixels = new Color[gridSize.x * gridSize.y];
             for (int i = 0; i < pixels.Length; i++)
             {

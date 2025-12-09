@@ -1418,139 +1418,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &582809323
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 582809325}
-  - component: {fileID: 582809324}
-  - component: {fileID: 582809326}
-  - component: {fileID: 582809328}
-  - component: {fileID: 582809327}
-  m_Layer: 0
-  m_Name: TowerPlacementManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &582809324
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582809323}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57fff182073fa2d459280ebdee4d09ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  placementMode: 1
-  gridSystem: {fileID: 0}
-  worldCamera: {fileID: 370635147}
-  gridDragView: {fileID: 0}
-  selectedTowerId: 0
-  selectedTowerFootprint: []
---- !u!4 &582809325
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582809323}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &582809326
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582809323}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d98d845895fcec4479715fd79688b4de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes: []
-  testDragItems:
-  - itemId: 1
-    count: 1
-    footprint:
-    - {x: 0, y: 0}
-    uiElement: {fileID: 0}
-    countText: {fileID: 0}
-  - itemId: 2
-    count: 1
-    footprint:
-    - {x: 0, y: 0}
-    uiElement: {fileID: 0}
-    countText: {fileID: 0}
-  - itemId: 3
-    count: 1
-    footprint:
-    - {x: 0, y: 0}
-    uiElement: {fileID: 0}
-    countText: {fileID: 0}
-  generateRandomUnplaceableAreas: 1
-  randomUnplaceableAreaCount: 10
-  unplaceableAreaPercentage: 0.05
-  autoCreateOnStart: 1
-  uiButtonCount: 3
---- !u!114 &582809327
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582809323}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc6136900258a094ebaae04cfc02de31, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  showGridLines: 1
-  showGridAreas: 0
-  showOnlyVisibleGrid: 0
-  gridLineColor: {r: 1, g: 1, b: 1, a: 0.3}
-  validPlaceColor: {r: 0, g: 1, b: 0, a: 0.3}
-  invalidPlaceColor: {r: 1, g: 0, b: 0, a: 0.3}
-  occupiedColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.3}
---- !u!114 &582809328
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582809323}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3e014f3334984a4c9105ee2912ae5e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cellSize: {x: 2, y: 2}
-  gridOrigin: {x: 2.6995697, y: 0.26145935}
-  gridSize: {x: 10, y: 17}
-  debugSpriteRenderer: {fileID: 619804036}
 --- !u!1 &584630349
 GameObject:
   m_ObjectHideFlags: 0
@@ -12199,7 +12066,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &619804035
 Transform:
   m_ObjectHideFlags: 0
@@ -23718,37 +23585,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &1143230929
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1143230930}
-  m_Layer: 0
-  m_Name: KingEquipmentUI_Root
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1143230930
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1143230929}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -490.4845, y: -683.1467, z: -3145.8794}
-  m_LocalScale: {x: 41.782585, y: 41.782585, z: 41.782585}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1409953414}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1149942082
 GameObject:
   m_ObjectHideFlags: 0
@@ -24353,7 +24189,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 811804761}
-  - {fileID: 1143230930}
   m_Father: {fileID: 4752374}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -38814,4 +38649,3 @@ SceneRoots:
   - {fileID: 2087405287}
   - {fileID: 149922707}
   - {fileID: 619804035}
-  - {fileID: 582809325}

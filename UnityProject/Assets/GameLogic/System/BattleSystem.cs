@@ -333,7 +333,7 @@ namespace GameLogic
             m_currentExp = 0;
             m_level = 1;
             m_expToNextLevel = 100;
-            m_gold = 0;
+            m_gold = 50;
             m_drawCardCost = 1;
             m_drawCardHistory.Clear();
             m_drawBuffHistory.Clear();
@@ -494,7 +494,7 @@ namespace GameLogic
         /// 抽卡（本地逻辑）- 使用抽奖系统抽取1-3个建筑
         /// </summary>
         /// <returns>抽到的建筑ID列表，如果失败返回null</returns>
-        public List<int> DrawCard()
+        public List<int> DrawTowerCard()
         {
             // 检查金币是否足够
             if (!ConsumeGold(m_drawCardCost))

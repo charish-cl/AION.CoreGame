@@ -6,7 +6,6 @@ namespace GameLogic
     /// <summary>
     /// 网格系统调试绘制器 - 用于在Scene视图中绘制网格线
     /// </summary>
-    [RequireComponent(typeof(TowerDefenseGridSystem))]
     public class GridSystemDebugDrawer : MonoBehaviour
     {
         [Header("调试绘制设置")]
@@ -31,24 +30,24 @@ namespace GameLogic
         [Tooltip("已占用区域颜色")]
         public Color occupiedColor = new Color(0.5f, 0.5f, 0.5f, 0.3f);
         
-        private TowerDefenseGridSystem m_gridSystem;
+        private GridHelper m_gridHelper;
         private Vector2Int m_hoveredCell = new Vector2Int(-1, -1);
         
         private void Awake()
         {
-            m_gridSystem = GetComponent<TowerDefenseGridSystem>();
-            if (m_gridSystem == null)
+            m_gridHelper = GridHelper.Instance;
+            if (m_gridHelper == null || !m_gridHelper.IsInitialized)
             {
-                Log.Warning("GridSystemDebugDrawer: 未找到TowerDefenseGridSystem组件");
+                Log.Warning("GridSystemDebugDrawer: GridHelper 未初始化，请先调用 GridHelper.Instance.Initialize()");
             }
         }
         
         private void Update()
         {
             // 更新悬停的网格单元
-            if (m_gridSystem != null)
+            if (m_gridHelper != null && m_gridHelper.IsInitialized)
             {
-                Vector2Int currentHover = m_gridSystem.GetMouseGridPosition();
+                Vector2Int currentHover = m_gridHelper.GetMouseGridPosition();
                 if (currentHover != m_hoveredCell)
                 {
                     m_hoveredCell = currentHover;
@@ -72,14 +71,28 @@ namespace GameLogic
         
         private void OnDrawGizmos()
         {
-            if (!showGridLines || m_gridSystem == null) return;
+            if (!showGridLines) return;
+            
+            // 确保 GridHelper 已初始化
+            if (m_gridHelper == null)
+            {
+                m_gridHelper = GridHelper.Instance;
+            }
+            
+            if (m_gridHelper == null || !m_gridHelper.IsInitialized)
+            {
+                return;
+            }
+            
+            var setting = m_gridHelper.GetSetting();
+            if (setting == null) return;
             
             Camera camera = Camera.main;
             if (camera == null) camera = FindObjectOfType<Camera>();
             
-            Vector2Int gridSize = m_gridSystem.gridSize;
-            Vector2 cellSize = m_gridSystem.cellSize;
-            Vector2 gridOrigin = m_gridSystem.gridOrigin;
+            Vector2Int gridSize = setting.gridSize;
+            Vector2 cellSize = setting.cellSize;
+            Vector2 gridOrigin = setting.gridOrigin;
             
             // 计算可见区域
             Vector2Int minVisible = Vector2Int.zero;
@@ -91,8 +104,8 @@ namespace GameLogic
                 Vector3 bottomLeft = camera.ViewportToWorldPoint(new Vector3(0, 0, camera.nearClipPlane));
                 Vector3 topRight = camera.ViewportToWorldPoint(new Vector3(1, 1, camera.nearClipPlane));
                 
-                Vector2Int minGrid = m_gridSystem.WorldToGrid(new Vector2(bottomLeft.x, bottomLeft.y));
-                Vector2Int maxGrid = m_gridSystem.WorldToGrid(new Vector2(topRight.x, topRight.y));
+                Vector2Int minGrid = m_gridHelper.WorldToGrid(new Vector2(bottomLeft.x, bottomLeft.y));
+                Vector2Int maxGrid = m_gridHelper.WorldToGrid(new Vector2(topRight.x, topRight.y));
                 
                 minVisible = new Vector2Int(
                     Mathf.Max(0, minGrid.x - 1),
@@ -111,7 +124,7 @@ namespace GameLogic
                 {
                     for (int y = minVisible.y; y < maxVisible.y; y++)
                     {
-                        var cell = m_gridSystem.GetCellAt(new Vector2Int(x, y));
+                        var cell = m_gridHelper.GetCellAt(new Vector2Int(x, y));
                         if (cell == null) continue;
                         
                         // 计算cell左下角的世界坐标（与Shader保持一致）
@@ -174,7 +187,7 @@ namespace GameLogic
                 // cell中心点（用于DrawWireCube）
                 Vector2 cellCenter = cellBottomLeft + cellSize * 0.5f;
                 
-                var cell = m_gridSystem.GetCellAt(m_hoveredCell);
+                var cell = m_gridHelper.GetCellAt(m_hoveredCell);
                 if (cell != null)
                 {
                     // 绘制高亮边框

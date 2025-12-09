@@ -9,25 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b634591f3355036459772fcba6acd925, type: 3}
+  m_Script: {fileID: 11500000, guid: 7821e46e5f987c845bd1a6c90e1fc1fd, type: 3}
   m_Name: GridSetting
   m_EditorClassIdentifier: 
-  settingName: GridSetting
-  description: 
-  gridSize: {x: 10, y: 10}
-  cellSize: 1
-  gridOrigin: {x: 0, y: 0, z: 0}
-  showGridLines: 1
-  gridLineColor: {r: 1, g: 1, b: 1, a: 1}
-  gridLineWidth: 0.1
-  placeableColor: {r: 0, g: 1, b: 0, a: 0.3}
-  notPlaceableColor: {r: 1, g: 0, b: 0, a: 0.3}
-  occupiedColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.3}
-  enableGridAreaRendering: 1
-  useMeshRendering: 1
-  gridUpdateFrequency: 0.1
-  gridBackgroundAlpha: 0.1
-  gridLayerMask:
-    serializedVersion: 2
-    m_Bits: 1
-  raycastDistance: 100
+  cellSize: {x: 2, y: 2}
+  gridOrigin: {x: 2.69957, y: 2.69957}
+  gridSize: {x: 10, y: 17}

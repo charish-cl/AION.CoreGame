@@ -3,47 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using GameDevKit;
 using AION.CoreFramework;
-using Sirenix.OdinInspector;
 
 namespace GameLogic
 {
     /// <summary>
-    /// 塔防网格系统 - 核心网格逻辑，用于管理塔的放置、碰撞检测
+    /// 网格辅助类 - 单例Helper类，用于管理网格的放置、碰撞检测
     /// </summary>
-    public class TowerDefenseGridSystem : MonoBehaviour
+    public class GridHelper
     {
-        [Header("网格设置")]
-        [Tooltip("网格单元大小")]
-        public Vector2 cellSize = new Vector2(1f, 1f);
-        
-        [Tooltip("网格原点（世界坐标）")]
-        public Vector2 gridOrigin = Vector2.zero;
-        
-        [Tooltip("网格尺寸（单元数量）")]
-        public Vector2Int gridSize = new Vector2Int(50, 50);
-        
-        [Header("调试工具")]
-        [Tooltip("用于计算网格尺寸的SpriteRenderer（以左下角为原点）")]
-        public SpriteRenderer debugSpriteRenderer;
-        
         // 网格数据
         private Grid<GridCell> m_grid;
+        private GridSetting m_setting;
         
         // 当前选中的塔（用于显示攻击范围）
         private GameActor m_selectedTower;
-        
 
         public event Action OnGridChanged; // 网格状态改变事件（塔放置/移除时触发）
         
         // 单例
-        private static TowerDefenseGridSystem s_instance;
-        public static TowerDefenseGridSystem Instance
+        private static GridHelper s_instance;
+        public static GridHelper Instance
         {
             get
             {
                 if (s_instance == null)
                 {
-                    s_instance = FindObjectOfType<TowerDefenseGridSystem>();
+                    s_instance = new GridHelper();
                 }
                 return s_instance;
             }
@@ -56,7 +41,7 @@ namespace GameLogic
         {
             public Vector2Int coordinate;
             public bool isOccupied; // 是否被占用（有塔）
-            public bool isPlaceable{get; set; } // 是否可以放置
+            public bool isPlaceable { get; set; } // 是否可以放置
             public GameActor tower; // 放置的塔（如果有）
             
             public GridCell(Vector2Int coord)
@@ -69,23 +54,25 @@ namespace GameLogic
         }
         
         /// <summary>
-        /// 初始化网格系统（必须手动调用，不在Awake/Start中自动初始化）
+        /// 初始化网格系统
         /// </summary>
-        public void Initialize()
+        public void Initialize(GridSetting setting = null)
         {
-            if (s_instance == null)
+            m_setting = setting ?? LS.Get<GridSetting>();
+            
+            if (m_setting == null)
             {
-                s_instance = this;
-            }
-            else if (s_instance != this)
-            {
-                Log.Warning("TowerDefenseGridSystem: 已存在实例，跳过初始化");
-                return;
+                Log.Warning("GridHelper: GridSetting 未找到，使用默认配置");
+                m_setting = ScriptableObject.CreateInstance<GridSetting>();
             }
             
             InitializeGrid();
-            
         }
+        
+        /// <summary>
+        /// 检查是否已初始化
+        /// </summary>
+        public bool IsInitialized => m_grid != null;
         
         /// <summary>
         /// 初始化网格
@@ -94,9 +81,9 @@ namespace GameLogic
         {
             m_grid = new Grid<GridCell>(
                 (grid, coord) => new GridCell(coord),
-                gridSize,
-                cellSize,
-                gridOrigin,
+                m_setting.gridSize,
+                m_setting.cellSize,
+                m_setting.gridOrigin,
                 false
             );
         }
@@ -121,7 +108,7 @@ namespace GameLogic
         {
             if (m_grid == null) return Vector2.zero;
             
-            return m_grid.GetCellWorldPosition(gridPos.x, gridPos.y) + cellSize * 0.5f;
+            return m_grid.GetCellWorldPosition(gridPos.x, gridPos.y) + m_setting.cellSize * 0.5f;
         }
         
         /// <summary>
@@ -277,6 +264,7 @@ namespace GameLogic
             
             return true;
         }
+        
         /// <summary>
         /// 通知网格状态改变（用于更新高亮显示）
         /// </summary>
@@ -300,7 +288,6 @@ namespace GameLogic
                 cell.isPlaceable = placeable;
             }
         }
-        
         
         #endregion
         
@@ -339,60 +326,15 @@ namespace GameLogic
             return result;
         }
         
-        #endregion
-  
-        
-        #region 调试工具方法
-        
         /// <summary>
-        /// 根据SpriteRenderer自动计算网格尺寸（以Sprite左下角为原点）
-        /// 在Inspector中点击按钮即可使用
+        /// 获取网格设置
         /// </summary>
-        [Button("根据SpriteRenderer计算网格尺寸")]
-        private void CalculateGridFromSpriteRenderer()
+        public GridSetting GetSetting()
         {
-            if (debugSpriteRenderer == null)
-            {
-                Log.Warning("TowerDefenseGridSystem.CalculateGridFromSpriteRenderer: debugSpriteRenderer为空，请先设置SpriteRenderer");
-                return;
-            }
-            
-            if (debugSpriteRenderer.sprite == null)
-            {
-                Log.Warning("TowerDefenseGridSystem.CalculateGridFromSpriteRenderer: SpriteRenderer的Sprite为空");
-                return;
-            }
-            
-            // 获取Sprite的世界尺寸
-            Vector2 spriteSize = debugSpriteRenderer.bounds.size;
-            
-            // 计算Sprite左下角的世界坐标
-            Vector3 spritePos = debugSpriteRenderer.transform.position;
-            Vector2 spriteBottomLeft = new Vector2(
-                spritePos.x - spriteSize.x * 0.5f,
-                spritePos.y - spriteSize.y * 0.5f
-            );
-            
-            // 计算水平和垂直的cell数量
-            int width = Mathf.CeilToInt(spriteSize.x / cellSize.x);
-            int height = Mathf.CeilToInt(spriteSize.y / cellSize.y);
-            
-            Vector2Int calculatedSize = new Vector2Int(width, height);
-            
-            // 更新gridOrigin（以Sprite左下角为原点）
-            gridOrigin = spriteBottomLeft;
-            
-            // 更新gridSize
-            this.gridSize = calculatedSize;
-            
-            // 重新初始化网格
-            InitializeGrid();
-            
-            Log.Info($"TowerDefenseGridSystem.CalculateGridFromSpriteRenderer: " +
-                     $"Sprite尺寸={spriteSize}, Cell大小={cellSize}, " +
-                     $"计算出的网格尺寸={calculatedSize}, 网格原点={gridOrigin}");
+            return m_setting;
         }
         
         #endregion
     }
 }
+
