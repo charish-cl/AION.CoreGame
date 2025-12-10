@@ -241,6 +241,12 @@ namespace GameLogic
         
         public void RemoveActor(GameActor actor)
         {
+            // 从网格系统注销
+            if (actor.Tag == UnitTag.Enemy || actor.Tag == UnitTag.Player || actor.Tag == UnitTag.Base)
+            {
+                MeleeGridSystem.Instance.UnregisterActor(actor);
+            }
+            
             actor.OnDestroy();
             Actors.Remove(actor);
         }
@@ -414,7 +420,7 @@ namespace GameLogic
         /// <summary>
         /// 基础创建Actor方法（统一入口）
         /// </summary>
-        private void CreateActorInternal(GameActor actor, GameObject go, UnitTag tag, Vector2? position = null)
+        public void CreateActorInternal(GameActor actor, GameObject go, UnitTag tag, Vector2? position = null)
         {
             // 先设置位置（在 OnInit 之前，这样 BulletCmp.OnInit 可以正确读取初始位置）
             if (position.HasValue)
@@ -471,6 +477,12 @@ namespace GameLogic
             actor.SetTag(tag);
             Actors.Add(actor);
             
+            // 注册到近战网格系统（只注册需要检测的 Actor：敌人、玩家、基地）
+            if (tag == UnitTag.Enemy || tag == UnitTag.Player || tag == UnitTag.Base)
+            {
+                MeleeGridSystem.Instance.RegisterActor(actor);
+            }
+            
             // 自动添加ActorDebugComponent（如果GameObject上还没有）
             if (actor.m_Owner != null)
             {
@@ -484,6 +496,8 @@ namespace GameLogic
         
         public override bool OnInit()
         {
+            // 初始化近战网格系统
+            MeleeGridSystem.Instance.Initialize(1f); // 网格大小为 1 单位
             return true;
         }
 

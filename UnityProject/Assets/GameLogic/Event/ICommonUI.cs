@@ -18,5 +18,7 @@ namespace GameLogic
         
         //公告
         void ShowAnnouncement(string announcement);
+        
+        void CurrcyChanged(CurrencyType type, long num);
     }
 }

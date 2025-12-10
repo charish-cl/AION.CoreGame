@@ -20,10 +20,12 @@ public sealed partial class BulletConfig : Luban.BeanBase
         Name = _buf.ReadString();
         BulletType = (EBulletType)_buf.ReadInt();
         DebuffDuration = _buf.ReadFloat();
+        DamageRange = _buf.ReadFloat();
         Speed = _buf.ReadFloat();
         Damages = global::GameConfig.CDamageEffect.DeserializeCDamageEffect(_buf);
-        Buffs = _buf.ReadInt();
-        Buffs_Ref = null;
+        {int n0 = System.Math.Min(_buf.ReadSize(), _buf.Size);Buffs = new System.Collections.Generic.List<battle.BuffConfig>(n0);for(var i0 = 0 ; i0 < n0 ; i0++) { battle.BuffConfig _e0;  _e0 = global::GameConfig.battle.BuffConfig.DeserializeBuffConfig(_buf); Buffs.Add(_e0);}}
+        SpawnUnit = _buf.ReadInt();
+        SpawnUnit_Ref = null;
         PreCastAnimTime = _buf.ReadFloat();
         PostCastAnimTime = _buf.ReadFloat();
         ModelId = _buf.ReadInt();
@@ -52,6 +54,10 @@ public sealed partial class BulletConfig : Luban.BeanBase
     /// </summary>
     public readonly float DebuffDuration;
     /// <summary>
+    /// 伤害范围
+    /// </summary>
+    public readonly float DamageRange;
+    /// <summary>
     /// 飞行速度
     /// </summary>
     public readonly float Speed;
@@ -59,8 +65,12 @@ public sealed partial class BulletConfig : Luban.BeanBase
     /// <summary>
     /// 施加buff
     /// </summary>
-    public readonly int Buffs;
-    public battle.BuffConfig Buffs_Ref;
+    public readonly System.Collections.Generic.List<battle.BuffConfig> Buffs;
+    /// <summary>
+    /// 生成单位
+    /// </summary>
+    public readonly int SpawnUnit;
+    public battle.UnitConfig SpawnUnit_Ref;
     /// <summary>
     /// 前摇动画间隔
     /// </summary>
@@ -70,7 +80,7 @@ public sealed partial class BulletConfig : Luban.BeanBase
     /// </summary>
     public readonly float PostCastAnimTime;
     /// <summary>
-    /// 预制体路径
+    /// 子弹预制体路径
     /// </summary>
     public readonly int ModelId;
     public res.ModelConfig ModelId_Ref;
@@ -81,7 +91,8 @@ public sealed partial class BulletConfig : Luban.BeanBase
     public  void ResolveRef(Tables tables)
     {
         Damages?.ResolveRef(tables);
-        Buffs_Ref = tables.TbBuff.GetOrDefault(Buffs);
+        foreach (var _e in Buffs) { _e?.ResolveRef(tables); }
+        SpawnUnit_Ref = tables.TbUnit.GetOrDefault(SpawnUnit);
         ModelId_Ref = tables.TbModel.GetOrDefault(ModelId);
     }
 
@@ -92,9 +103,11 @@ public sealed partial class BulletConfig : Luban.BeanBase
         + "name:" + Name + ","
         + "bulletType:" + BulletType + ","
         + "debuffDuration:" + DebuffDuration + ","
+        + "damageRange:" + DamageRange + ","
         + "speed:" + Speed + ","
         + "damages:" + Damages + ","
-        + "buffs:" + Buffs + ","
+        + "buffs:" + Luban.StringUtil.CollectionToString(Buffs) + ","
+        + "spawnUnit:" + SpawnUnit + ","
         + "preCastAnimTime:" + PreCastAnimTime + ","
         + "postCastAnimTime:" + PostCastAnimTime + ","
         + "modelId:" + ModelId + ","

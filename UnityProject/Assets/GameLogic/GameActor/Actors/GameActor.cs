@@ -121,6 +121,28 @@ namespace GameLogic
         {
             Position = pos;
         }
+        
+        /// <summary>
+        /// 获取 Actor 的朝向方向（归一化）
+        /// </summary>
+        public Vector2 GetForwardDirection()
+        {
+            if (Transform != null)
+            {
+                // 使用 Transform 的 right 方向（Unity 中 right 是正方向）
+                return Transform.right;
+            }
+            
+            // 如果没有 Transform，尝试从 MoveLogicCmp 获取移动方向
+            var moveCmp = GetComponent<MoveLogicCmp>();
+            if (moveCmp != null && moveCmp.MoveDirection.magnitude > 0.01f)
+            {
+                return moveCmp.MoveDirection.normalized;
+            }
+            
+            // 默认向右
+            return Vector2.right;
+        }
         #region 事件
 
         private ActorEventDispatcher m_EventDispatcher;
@@ -298,7 +320,8 @@ namespace GameLogic
         protected virtual void BindCmp()
         {
         }
-        public  void OnInit()
+        
+        public void OnInit()
         {
             // 先初始化配置
             InitConfig();

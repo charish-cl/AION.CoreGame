@@ -420,7 +420,21 @@ namespace GameLogic
             
             return CreateBuff(config, targetActor);
         }
-        
+
+        public static void CreaAndAddBuffs(List<BuffConfig> configs, GameActor targetActor = null,
+            NumericComponent attackerNumeric = null, GameActor attackerActor = null)
+        {
+            if (configs == null || configs.Count == 0)
+            {
+                Log.Warning("BuffFactory.CreaBuffs: 参数无效");
+                return;
+            }
+
+            foreach (var buffConfig in configs)
+            {
+                CreateAndAddBuff(buffConfig, targetActor, attackerNumeric, attackerActor);
+            }
+        }
         /// <summary>
         /// 创建Buff并添加到目标的BuffCmp（处理完整的生命周期）
         /// </summary>

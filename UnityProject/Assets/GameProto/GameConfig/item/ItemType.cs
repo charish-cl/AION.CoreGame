@@ -11,7 +11,6 @@
 
 namespace GameConfig.item
 { 
-    [System.Flags]
     public enum ItemType
     {
         /// <summary>

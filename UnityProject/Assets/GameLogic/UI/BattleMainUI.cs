@@ -3,6 +3,7 @@ using AION.CoreFramework;
 using GameConfig;
 using GameConfig.battle;
 using GameConfig.item;
+using GameLogic.Player;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
@@ -29,11 +30,21 @@ namespace GameLogic
         {
             base.OnCreate();
 
-            // var currencyWidget = CreateWidgetByType<CurrencyWidget>(transform);
-            // currencyWidget.InitCurrency(CurrencyType.Coin);
-            //
+            // 初始化局内货币（BattleCoin）
+            InitializeBattleCurrency();
+            
             // 初始化拖拽系统
             InitializeDragDropSystem();
+        }
+        
+        /// <summary>
+        /// 初始化局内货币
+        /// </summary>
+        private void InitializeBattleCurrency()
+        {
+            // 初始化 BattleCoin 为 0（或从存档加载）
+            Player.PlayerData.Instance.UpdateMoney(CurrencyType.BattleCoin, 0);
+            Log.Info("BattleMainUI: 局内货币 BattleCoin 已初始化");
         }
         
         /// <summary>

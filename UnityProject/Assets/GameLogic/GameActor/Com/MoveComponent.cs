@@ -137,6 +137,12 @@ namespace GameLogic
             Position += normalizedDirection * (Velocity * Time.deltaTime);
             
             Actor.SetPosition(Position);
+            
+            // 更新网格系统中的位置（如果 Actor 已注册）
+            if (Actor.Tag == UnitTag.Enemy || Actor.Tag == UnitTag.Player || Actor.Tag == UnitTag.Base)
+            {
+                MeleeGridSystem.Instance.UpdateActorPosition(Actor);
+            }
         }
 
         public void SetVelocity(float velocity)

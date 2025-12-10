@@ -1,56 +1,91 @@
 using System.Collections.Generic;
 using GameBase;
 using AION.CoreFramework;
+using GameConfig.item;
 
 namespace GameLogic.Player
 {
-    public enum PlayerDataType
-    {
-        //钻石
-        Diamonds,
-        //金币
-        Coins,
-        //经验
-        Experience,
-        //体力
-        Stamina,
-        //力量
-        Power,
-    }
+
     public class PlayerData:Singleton<PlayerData>
     {
-        private Dictionary<PlayerDataType, int> _data = new Dictionary<PlayerDataType, int>();
+        
+        /// <summary>
+        /// 货币数据字典
+        /// </summary>
+        private Dictionary<CurrencyType, BaseCurrencyData> _currencyDataDict = new Dictionary<CurrencyType, BaseCurrencyData>();
 
 
         public PlayerData()
         {
-            _data.Add(PlayerDataType.Diamonds, 0);
-            _data.Add(PlayerDataType.Coins, 0);
-            _data.Add(PlayerDataType.Experience, 0);
-            _data.Add(PlayerDataType.Stamina, 0);
-            _data.Add(PlayerDataType.Power, 0);
+            // 初始化所有货币
+            InitializeCurrencies();
         }
 
-
-        //索引器访问字典
-        public int this[PlayerDataType dataType]
+        /// <summary>
+        /// 初始化所有货币
+        /// </summary>
+        private void InitializeCurrencies()
         {
-            get
+            foreach (CurrencyType currencyType in System.Enum.GetValues(typeof(CurrencyType)))
             {
-                if (!_data.ContainsKey(dataType))
+                if (currencyType == 0) continue; // 跳过 None 值
+                
+                var currencyData = CurrencyFactory.CreateCurrency(currencyType);
+                if (currencyData != null)
                 {
-                    Log.Error("PlayerData: " + dataType + " not exist");
-                    return 0;
+                    _currencyDataDict[currencyType] = currencyData;
                 }
-                return _data[dataType];
             }
-          
+        }
+
+        
+        /// <summary>
+        /// 获取货币数量
+        /// </summary>
+        public long GetMoney(CurrencyType currencyType)
+        {
+            if (!_currencyDataDict.TryGetValue(currencyType, out var currencyData))
+            {
+                Log.Warning($"PlayerData: 未找到货币类型 {currencyType}");
+                return 0;
+            }
+            
+            return currencyData.CurrentAmount;
+        }
+        
+        /// <summary>
+        /// 更新货币数量
+        /// </summary>
+        public void UpdateMoney(CurrencyType currencyType, long amount)
+        {
+            if (!_currencyDataDict.TryGetValue(currencyType, out var currencyData))
+            {
+                Log.Warning($"PlayerData: 未找到货币类型 {currencyType}");
+                return;
+            }
+            
+            currencyData.SetAmount(amount);
+            
+            // 触发货币更新事件
+            GameEvent.Get<ICommonUI>().CurrcyChanged(currencyType, currencyData.CurrentAmount);
         }
         
         
-        public bool CheckEnough(PlayerDataType dataType, int value)
+        /// <summary>
+        /// 检查货币是否足够
+        /// </summary>
+        public bool CheckMoneyEnough(CurrencyType currencyType, long amount)
         {
-            return _data[dataType] >= value;
+            return GetMoney(currencyType) >= amount;
+        }
+        
+        /// <summary>
+        /// 获取货币数据
+        /// </summary>
+        public BaseCurrencyData GetCurrencyData(CurrencyType currencyType)
+        {
+            _currencyDataDict.TryGetValue(currencyType, out var currencyData);
+            return currencyData;
         }
     }
 }

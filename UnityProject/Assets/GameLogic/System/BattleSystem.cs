@@ -4,6 +4,8 @@ using System.Linq;
 using AION.CoreFramework;
 using GameConfig;
 using GameConfig.battle;
+using GameConfig.item;
+using GameLogic.Player;
 using UnityEngine;
 
 namespace GameLogic
@@ -100,12 +102,12 @@ namespace GameLogic
         public int ExpToNextLevel => m_expToNextLevel;
         
         // ========== 金币 ==========
-        private int m_gold = 0;
+        // 使用 PlayerData 的 BattleCoin 货币系统
         
         /// <summary>
-        /// 已获取的金币（只读）
+        /// 已获取的金币（只读）- 从 PlayerData 获取
         /// </summary>
-        public int Gold => m_gold;
+        public int Gold => (int)PlayerData.Instance.GetMoney(CurrencyType.BattleCoin);
         
         // ========== 抽卡系统 ==========
         private int m_drawCardCost = 10; // 每次抽取的金币消耗
@@ -333,7 +335,8 @@ namespace GameLogic
             m_currentExp = 0;
             m_level = 1;
             m_expToNextLevel = 100;
-            m_gold = 50;
+            // 使用 PlayerData 的新接口重置 BattleCoin
+            PlayerData.Instance.UpdateMoney(CurrencyType.BattleCoin, 50);
             m_drawCardCost = 1;
             m_drawCardHistory.Clear();
             m_drawBuffHistory.Clear();
@@ -443,33 +446,39 @@ namespace GameLogic
         // ========== 金币管理 ==========
         
         /// <summary>
-        /// 添加金币
+        /// 添加金币（使用 PlayerData 的新接口）
         /// </summary>
         public void AddGold(int gold)
         {
             if (gold <= 0) return;
             
-            m_gold += gold;
-            OnGoldChanged?.Invoke(m_gold);
-            Log.Info($"BattleSystem: 获得金币 {gold}，当前金币 = {m_gold}");
+            long currentGold = PlayerData.Instance.GetMoney(CurrencyType.BattleCoin);
+            long newGold = currentGold + gold;
+            PlayerData.Instance.UpdateMoney(CurrencyType.BattleCoin, newGold);
+            
+            OnGoldChanged?.Invoke((int)newGold);
+            Log.Info($"BattleSystem: 获得金币 {gold}，当前金币 = {newGold}");
         }
         
         /// <summary>
-        /// 消耗金币
+        /// 消耗金币（使用 PlayerData 的新接口）
         /// </summary>
         public bool ConsumeGold(int gold)
         {
             if (gold <= 0) return true;
             
-            if (m_gold < gold)
+            long currentGold = PlayerData.Instance.GetMoney(CurrencyType.BattleCoin);
+            if (currentGold < gold)
             {
-                Log.Warning($"BattleSystem: 金币不足，需要 {gold}，当前只有 {m_gold}");
+                Log.Warning($"BattleSystem: 金币不足，需要 {gold}，当前只有 {currentGold}");
                 return false;
             }
             
-            m_gold -= gold;
-            OnGoldChanged?.Invoke(m_gold);
-            Log.Info($"BattleSystem: 消耗金币 {gold}，剩余金币 = {m_gold}");
+            long newGold = currentGold - gold;
+            PlayerData.Instance.UpdateMoney(CurrencyType.BattleCoin, newGold);
+            
+            OnGoldChanged?.Invoke((int)newGold);
+            Log.Info($"BattleSystem: 消耗金币 {gold}，剩余金币 = {newGold}");
             return true;
         }
         
@@ -797,7 +806,7 @@ namespace GameLogic
                 currentExp = m_currentExp,
                 level = m_level,
                 expToNextLevel = m_expToNextLevel,
-                gold = m_gold,
+                gold = (int)PlayerData.Instance.GetMoney(CurrencyType.BattleCoin),
                 drawCardCost = m_drawCardCost,
                 drawCardHistory = new List<DrawCardResult>(m_drawCardHistory),
                 drawBuffHistory = new List<DrawBuffResult>(m_drawBuffHistory),
@@ -822,7 +831,8 @@ namespace GameLogic
             m_currentExp = snapshot.currentExp;
             m_level = snapshot.level;
             m_expToNextLevel = snapshot.expToNextLevel;
-            m_gold = snapshot.gold;
+            // 使用 PlayerData 的新接口恢复 BattleCoin
+            PlayerData.Instance.UpdateMoney(CurrencyType.BattleCoin, snapshot.gold);
             m_drawCardCost = snapshot.drawCardCost;
             m_drawCardHistory = snapshot.drawCardHistory ?? new List<DrawCardResult>();
             m_drawBuffHistory = snapshot.drawBuffHistory ?? new List<DrawBuffResult>();

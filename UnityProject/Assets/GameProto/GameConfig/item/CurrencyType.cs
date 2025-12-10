@@ -11,7 +11,6 @@
 
 namespace GameConfig.item
 { 
-    [System.Flags]
     public enum CurrencyType
     {
         /// <summary>
@@ -22,6 +21,10 @@ namespace GameConfig.item
         /// 体力
         /// </summary>
         Energy = 2,
+        /// <summary>
+        /// 局内金币
+        /// </summary>
+        BattleCoin = 1001,
     }
 
 } 

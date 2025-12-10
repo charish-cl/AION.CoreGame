@@ -14,19 +14,19 @@ namespace GameConfig.item
     public enum ColorQuality
     {
         /// <summary>
-        /// 最差品质
+        /// 白, 最差品质
         /// </summary>
         WHITE = 1,
         /// <summary>
-        /// 蓝色的
+        /// 蓝, 蓝色的
         /// </summary>
         BLUE = 2,
         /// <summary>
-        /// 紫色的
+        /// 紫, 紫色的
         /// </summary>
         PURPLE = 3,
         /// <summary>
-        /// 最高品质
+        /// 红, 最高品质
         /// </summary>
         RED = 4,
     }

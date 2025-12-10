@@ -18,6 +18,7 @@ namespace GameLogic
 		public static readonly int ShowError = RuntimeId.ToRuntimeId("ICommonUI_Event.ShowError");
 		public static readonly int ShowReward = RuntimeId.ToRuntimeId("ICommonUI_Event.ShowReward");
 		public static readonly int ShowAnnouncement = RuntimeId.ToRuntimeId("ICommonUI_Event.ShowAnnouncement");
+		public static readonly int CurrcyChanged = RuntimeId.ToRuntimeId("ICommonUI_Event.CurrcyChanged");
 	}
 
 	public partial class ICommonUI_Gen : ICommonUI
@@ -49,5 +50,9 @@ namespace GameLogic
             _dispatcher.Send(ICommonUI_Event.ShowAnnouncement,announcement);
         }
 
+        public void CurrcyChanged(CurrencyType type, long num)
+        {
+	        _dispatcher.Send(ICommonUI_Event.ShowAnnouncement, num);
+        }
 	}
 }
