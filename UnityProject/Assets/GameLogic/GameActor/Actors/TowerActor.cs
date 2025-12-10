@@ -66,9 +66,15 @@ namespace GameLogic
             // 基础组件
             AddComponent<NumericComponent>();
             AddComponent<TowerFSMCmp>();
-            AddComponent<OrientationViewCmp>();
             AddComponent<ActorAnimViewCmp>();
+            
+            var towerConfig = GetConfig<TowerConfig>();
 
+            //只有攻击塔才需要朝向组件
+            if (towerConfig.AttackRange>0)
+            {
+                AddComponent<OrientationViewCmp>();
+            }
         }
         
         protected override void InitializeNumericFromConfig()

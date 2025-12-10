@@ -20,7 +20,6 @@ namespace GameLogic
             AddComponent<HPBarCmp>();
             AddComponent<MonsterFSMCmp>(); // 添加Monster状态机
             AddComponent<ActorAnimViewCmp>();
-
         }
     }
 }

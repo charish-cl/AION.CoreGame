@@ -27,46 +27,33 @@ namespace GameLogic
         public static GameActor FindAttackTarget(GameActor attacker, float attackRange)
         {
             if (attacker == null || attacker.IsDestroyed)
-            {
                 return null;
-            }
             
-            // 根据攻击者的类型查找目标
-            switch (attacker.Tag)
+            // 获取敌对标签列表
+            List<UnitTag> enemyTags = FactionHelper.GetEnemyTags(attacker.Tag);
+            if (enemyTags.Count == 0)
+                return null;
+            
+            // 敌人优先攻击基地，如果不在范围内则攻击英雄
+            if (attacker.Tag == UnitTag.Enemy)
             {
-                case UnitTag.Tower:
-                    // 塔攻击敌人
-                    if (ActorMgr.Instance.TryGetEnemy(attacker.Position, attackRange, out var enemy))
-                    {
-                        return enemy;
-                    }
-                    break;
-                    
-                case UnitTag.Player:
-                    // 英雄攻击敌人
-                    if (ActorMgr.Instance.TryGetEnemy(attacker.Position, attackRange, out var enemyForHero))
-                    {
-                        return enemyForHero;
-                    }
-                    break;
-                    
-                case UnitTag.Enemy:
-                    // 敌人优先攻击基地，如果不在范围内则攻击英雄
-                    if (ActorMgr.Instance.TryGetBase(out var baseActor))
-                    {
-                        float distanceToBase = Vector2.Distance(attacker.Position, baseActor.Position);
-                        if (distanceToBase <= attackRange)
-                        {
-                            return baseActor;
-                        }
-                    }
-                    
-                    // 如果基地不在范围内，攻击英雄
-                    if (ActorMgr.Instance.TryGetPlayer(attacker.Position, attackRange, out var player))
-                    {
-                        return player;
-                    }
-                    break;
+                // 优先查找基地
+                if (enemyTags.Contains(UnitTag.Base) && ActorMgr.Instance.TryGetBase(out var baseActor))
+                {
+                    float distanceToBase = Vector2.Distance(attacker.Position, baseActor.Position);
+                    if (distanceToBase <= attackRange)
+                        return baseActor;
+                }
+                
+                // 如果基地不在范围内，查找玩家
+                if (enemyTags.Contains(UnitTag.Player) && ActorMgr.Instance.TryGetPlayer(attacker.Position, attackRange, out var player))
+                    return player;
+            }
+            else
+            {
+                // 友方单位（Player, Tower, Base）查找敌人
+                if (enemyTags.Contains(UnitTag.Enemy) && ActorMgr.Instance.TryGetEnemy(attacker.Position, attackRange, out var enemy))
+                    return enemy;
             }
             
             return null;
@@ -242,26 +229,12 @@ namespace GameLogic
         /// </summary>
         private static float GetPreCastTimeFromAnimation(GameActor attacker)
         {
-            if (attacker == null || attacker.IsDestroyed || attacker.Transform == null)
-            {
-                return 0.2f; // 默认值
-            }
-            
-            var animator = attacker.Transform.GetComponentInChildren<UnityEngine.Animator>();
-            if (animator == null || animator.runtimeAnimatorController == null)
-            {
-                return 0.2f; // 默认值
-            }
-            
-            var wrapAnimator = new WrapAnimator(animator);
-            float attackAnimLength = wrapAnimator.GetAnimationLength("Attack");
-            if (attackAnimLength > 0f)
+            float animLength = GetAttackAnimationLength(attacker);
+            if (animLength > 0f)
             {
                 // 使用动画时长的前30%作为前摇（参考 LoL）
-                float basePreCastTime = attackAnimLength * 0.3f;
-                return CalculatePreCastTime(attacker, basePreCastTime);
+                return CalculatePreCastTime(attacker, animLength * 0.3f);
             }
-            
             return 0.2f; // 默认值
         }
         
@@ -270,27 +243,29 @@ namespace GameLogic
         /// </summary>
         private static float GetPostCastTimeFromAnimation(GameActor attacker)
         {
-            if (attacker == null || attacker.IsDestroyed || attacker.Transform == null)
+            float animLength = GetAttackAnimationLength(attacker);
+            if (animLength > 0f)
             {
-                return 0.2f; // 默认值
+                // 使用动画时长的后30%作为后摇（参考 LoL）
+                return CalculatePostCastTime(attacker, animLength * 0.3f);
             }
+            return 0.2f; // 默认值
+        }
+        
+        /// <summary>
+        /// 获取攻击动画时长
+        /// </summary>
+        private static float GetAttackAnimationLength(GameActor attacker)
+        {
+            if (attacker == null || attacker.IsDestroyed || attacker.Transform == null)
+                return 0f;
             
             var animator = attacker.Transform.GetComponentInChildren<UnityEngine.Animator>();
             if (animator == null || animator.runtimeAnimatorController == null)
-            {
-                return 0.2f; // 默认值
-            }
+                return 0f;
             
             var wrapAnimator = new WrapAnimator(animator);
-            float attackAnimLength = wrapAnimator.GetAnimationLength("Attack");
-            if (attackAnimLength > 0f)
-            {
-                // 使用动画时长的后30%作为后摇（参考 LoL）
-                float basePostCastTime = attackAnimLength * 0.3f;
-                return CalculatePostCastTime(attacker, basePostCastTime);
-            }
-            
-            return 0.2f; // 默认值
+            return wrapAnimator.GetAnimationLength("Attack");
         }
         
         /// <summary>
@@ -298,24 +273,15 @@ namespace GameLogic
         /// </summary>
         private static int GetBulletId(GameActor attacker)
         {
-            int bulletId = 0;
-            
             var unitConfig = attacker.GetConfig<UnitConfig>();
-            if (unitConfig != null)
-            {
-                bulletId = unitConfig.BulletId;
-            }
+            if (unitConfig != null && unitConfig.BulletId > 0)
+                return unitConfig.BulletId;
             
-            if (bulletId == 0)
-            {
-                var towerConfig = attacker.GetConfig<TowerConfig>();
-                if (towerConfig != null)
-                {
-                    bulletId = towerConfig.BulletId;
-                }
-            }
+            var towerConfig = attacker.GetConfig<TowerConfig>();
+            if (towerConfig != null && towerConfig.BulletId > 0)
+                return towerConfig.BulletId;
             
-            return bulletId;
+            return 0;
         }
         
         /// <summary>
@@ -324,9 +290,7 @@ namespace GameLogic
         private static bool PerformAttackInternal(GameActor attacker, GameActor target, int bulletId)
         {
             if (attacker == null || target == null || attacker.IsDestroyed || target.IsDestroyed)
-            {
                 return false;
-            }
             
             if (ActorMgr.Instance == null)
             {
@@ -340,7 +304,6 @@ namespace GameLogic
                 return false;
             }
             
-            // 获取攻击者的数值组件
             var attackerNumeric = attacker.GetComponent<NumericComponent>();
             if (attackerNumeric == null)
             {
@@ -348,37 +311,35 @@ namespace GameLogic
                 return false;
             }
             
-            // 获取目标的数值组件（用于判断暴击，虽然这里不需要防御值，但为了完整性保留）
-            var targetNumeric = target.GetComponent<NumericComponent>();
-            
-            // 获取子弹配置，在攻击起手时判断是否暴击（用于播放暴击动画）
-            bool isCrit = false;
-            if (ConfigSystem.Instance?.Tables?.TbBullet != null)
-            {
-                var bulletConfig = ConfigSystem.Instance.Tables.TbBullet.GetOrDefault(bulletId);
-                if (bulletConfig != null && bulletConfig.Damages != null)
-                {
-                    // 根据攻击者的暴击率判断是否暴击（在攻击起手时判断）
-                    float attackerCritRate = attackerNumeric.Get<float>(NumericType.CritRate);
-                    float randomValue = Random.Range(0f, 1f);
-                    float totalCritChance = Mathf.Clamp01(0.05f + attackerCritRate);
-                    isCrit = randomValue <= totalCritChance;
-                    
-                    // 如果暴击，发送暴击事件（攻击者触发，用于播放暴击动画）
-                    if (isCrit && attacker.EventDispatcher != null)
-                    {
-                        attacker.EventDispatcher.SendEvent(IActorEvent_Event.OnCriticalHit);
-                    }
-                }
-            }
+            // 判断是否暴击（在攻击起手时判断，用于播放暴击动画）
+            CheckAndTriggerCrit(attacker, attackerNumeric, bulletId);
             
             // 生成子弹
-            Vector2 attackerPos = attacker.Position;
-            Vector2 targetPos = target.Position;
-            
-            ActorMgr.Instance.SpawnBullet(attackerPos, targetPos, bulletId, attackerNumeric, attacker, target);
+            ActorMgr.Instance.SpawnBullet(attacker.Position, target.Position, bulletId, attackerNumeric, attacker, target);
             
             return true;
+        }
+        
+        /// <summary>
+        /// 检查并触发暴击事件
+        /// </summary>
+        private static void CheckAndTriggerCrit(GameActor attacker, NumericComponent attackerNumeric, int bulletId)
+        {
+            if (attacker.EventDispatcher == null || ConfigSystem.Instance?.Tables?.TbBullet == null)
+                return;
+            
+            var bulletConfig = ConfigSystem.Instance.Tables.TbBullet.GetOrDefault(bulletId);
+            if (bulletConfig?.Damages == null)
+                return;
+            
+            float attackerCritRate = attackerNumeric.Get<float>(NumericType.CritRate);
+            float randomValue = Random.Range(0f, 1f);
+            float totalCritChance = Mathf.Clamp01(0.05f + attackerCritRate);
+            
+            if (randomValue <= totalCritChance)
+            {
+                attacker.EventDispatcher.SendEvent(IActorEvent_Event.OnCriticalHit);
+            }
         }
         
         /// <summary>
@@ -390,17 +351,14 @@ namespace GameLogic
         public static UniTask<bool> PerformAttack(GameActor attacker, GameActor target)
         {
             if (attacker == null || target == null || attacker.IsDestroyed || target.IsDestroyed)
-            {
-                return  UniTask.FromResult(false);
-            }
+                return UniTask.FromResult(false);
             
             int bulletId = GetBulletId(attacker);
             if (bulletId == 0)
             {
                 Log.Warning($"CombatHelper.PerformAttack: 攻击者 {GetActorDisplayName(attacker)} 没有有效的子弹配置");
-                return  UniTask.FromResult(false);
+                return UniTask.FromResult(false);
             }
-            
             
             return PerformAttackWithCastTime(attacker, target);
         }

@@ -29,7 +29,7 @@ namespace GameLogic
         /// <summary>
         /// 攻击范围（从配置获取，如果没有配置则使用默认值）
         /// </summary>
-        public float AttackRange { get; set; } = 15f;
+        public float AttackRange { get; set; } = 0;
         
         public override void OnInit()
         {
@@ -40,10 +40,7 @@ namespace GameLogic
             if (towerConfig != null)
             {
                 float configAttackRange = towerConfig.AttackRange;
-                if (configAttackRange > 0f)
-                {
-                    AttackRange = configAttackRange;
-                }
+                AttackRange = configAttackRange;
             }
         }
     }
@@ -58,7 +55,7 @@ namespace GameLogic
             base.OnEnter();
             hasTarget = false;
             var towerFSM = Actor.GetComponent<TowerFSMCmp>();
-            m_attackRange = towerFSM?.AttackRange ?? 15f;
+            m_attackRange = towerFSM.AttackRange;
             DisableComponent<OrientationViewCmp>();
         }
         public override TowerState CheckConditions()
@@ -70,7 +67,12 @@ namespace GameLogic
         public override void OnUpdate()
         {
             base.OnUpdate();
-            
+
+            if (m_attackRange <= 0f)
+            {
+                hasTarget = true;
+                return;
+            }
             // 塔攻击敌人（ENEMY）
             if (ActorMgr.Instance.TryGetEnemy(Actor.Position, m_attackRange, out var enemy))
             {
@@ -119,7 +121,20 @@ namespace GameLogic
                 return;
             }
             
-            // 查找攻击目标
+            // 获取子弹配置，判断是否是生成单位类型且攻击范围为0
+            int bulletId = GetBulletId();
+            // 如果攻击范围为0，不需要找目标，因为这不是一个真正的攻击塔，直接生成子弹
+            if (m_attackRange <= 0f)
+            {
+                if (!hasShoot)
+                {
+                    hasShoot = true;
+                    SpawnBulletDirectly(bulletId);
+                }
+                return;
+            }
+            
+            // 其他情况需要找目标
             var enemy = CombatHelper.FindAttackTarget(Actor, m_attackRange);
             if (enemy == null)
             {
@@ -145,6 +160,31 @@ namespace GameLogic
                     CombatHelper.PerformAttackWithCastTime(Actor, enemy).Forget();
                 }
             }
+        }
+        
+        /// <summary>
+        /// 直接生成子弹（不需要目标，用于生成单位类型且攻击范围为0的情况）
+        /// </summary>
+        private void SpawnBulletDirectly(int bulletId)
+        {
+            var attackerNumeric = Actor.GetComponent<NumericComponent>();
+            if (attackerNumeric == null)
+            {
+                Log.Warning($"TowerAttackState: 塔没有NumericComponent");
+                return;
+            }
+            
+            // 生成子弹，目标位置使用攻击者位置（生成单位会在攻击者旁边生成）
+            ActorMgr.Instance.SpawnBullet(Actor.Position, Actor.Position, bulletId, attackerNumeric, Actor, null);
+        }
+        
+        /// <summary>
+        /// 获取子弹ID
+        /// </summary>
+        private int GetBulletId()
+        {
+            var towerConfig = Actor.GetConfig<TowerConfig>();
+            return towerConfig?.BulletId ?? 0;
         }
     }
 

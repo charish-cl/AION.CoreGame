@@ -177,19 +177,7 @@ namespace GameLogic
                 Position,
                 direction,
                 bulletConfig.DamageRange,
-                (actor) =>
-                {
-                    // 过滤：根据攻击者类型决定目标
-                    if (RealAttacker.Tag == UnitTag.Tower || RealAttacker.Tag == UnitTag.Player)
-                    {
-                        return actor.Tag == UnitTag.Enemy;
-                    }
-                    else if (RealAttacker.Tag == UnitTag.Enemy)
-                    {
-                        return actor.Tag == UnitTag.Player || actor.Tag == UnitTag.Base;
-                    }
-                    return false;
-                }
+                (actor) => FactionHelper.IsEnemyTarget(RealAttacker, actor)
             );
             
             // 获取攻击者的数值组件

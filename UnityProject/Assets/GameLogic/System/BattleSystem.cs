@@ -107,7 +107,7 @@ namespace GameLogic
         /// <summary>
         /// 已获取的金币（只读）- 从 PlayerData 获取
         /// </summary>
-        public int Gold => (int)PlayerData.Instance.GetMoney(CurrencyType.BattleCoin);
+        public int Gold =100;
         
         // ========== 抽卡系统 ==========
         private int m_drawCardCost = 10; // 每次抽取的金币消耗
@@ -467,7 +467,7 @@ namespace GameLogic
         {
             if (gold <= 0) return true;
             
-            long currentGold = PlayerData.Instance.GetMoney(CurrencyType.BattleCoin);
+            long currentGold = Gold;
             if (currentGold < gold)
             {
                 Log.Warning($"BattleSystem: 金币不足，需要 {gold}，当前只有 {currentGold}");

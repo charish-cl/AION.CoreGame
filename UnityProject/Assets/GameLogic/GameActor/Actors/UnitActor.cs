@@ -68,7 +68,6 @@ namespace GameLogic
             AddComponent<HealthCmp>();
             AddComponent<MoveViewCmp>();
             AddComponent<DirectionViewCmp>();
-            AddComponent<OrientationViewCmp>();
             AddComponent<ActorAnimViewCmp>();
 
             // 如果指定了unitId，添加UnitComponent
